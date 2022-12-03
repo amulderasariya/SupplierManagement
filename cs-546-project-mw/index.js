@@ -1,0 +1,39 @@
+import 'dotenv/config';
+import './database/connectdb.js';
+import cookieParser from 'cookie-parser';
+import express from 'express';
+import cors from 'cors';
+
+import authRouter from './routes/auth.route.js';
+import productRouter from './routes/products.route.js';
+import invoiceRouter from './routes/invoice.route.js';
+import lookupRouter from './routes/lookups.route.js';
+const app = express();
+
+const whiteList = [process.env.ORIGIN1, process.env.ORIGIN2];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || whiteList.includes(origin)) {
+        return callback(null, origin);
+      }
+      return callback('Error CORS origin: ' + origin + ' Not authorized!');
+    },
+    credentials: true,
+  })
+);
+
+app.use(express.json());
+app.use(cookieParser());
+
+app.use('/auth', authRouter);
+app.use('/products', productRouter);
+app.use('/invoice', invoiceRouter);
+app.use('/lookup', lookupRouter);
+
+app.use('/', (req, res) => res.json(`Server is up and running`));
+app.use('*', (req, res) => res.status(404).json('Not Found'));
+
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => console.log('http://localhost:' + PORT));
