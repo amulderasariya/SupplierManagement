@@ -104,4 +104,18 @@ export const validateProduct = {
   remove: [param('id', 'Incorrect id format').trim().custom(isValidMongooseId), validationResultExpress],
 };
 
-
+export const validateInvoice = {
+  get: [param('id', 'Incorrect id format').isString().trim().custom(isValidMongooseId), validationResultExpress],
+  remove: [param('id', 'Incorrect id format').trim().custom(isValidMongooseId), validationResultExpress],
+  create: [
+    body('ownerId', 'Incorrect id format').isString().trim().custom(isValidMongooseId),
+    body('invoiceProducts', 'Invoice product should be an array with min length 1').isArray({ min: 1 }),
+    body('invoiceProducts.*.productID', 'Invalid Product id').trim().custom(isValidMongooseId),
+    body('invoiceProducts.*.quantity', 'Quantity should be an integer with min 1').isInt({ min: 1 }),
+    body('invoiceProducts.*.price', 'Price should be an float with min 0').isFloat({ min: 0 }),
+    body('net_amount', 'Price should be an float with min 0').isFloat({ min: 0 }),
+    body('due_date', 'Due date is not a valid date').isISO8601().toDate(),
+    body('currency', 'Invalid currency').isString().trim().isIn(listOfCurrencies),
+    validationResultExpress,
+  ],
+};
