@@ -9,7 +9,7 @@
 			</div>
 			<div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
 				<div class="max-w-3xl mx-auto">
-					<img src=".././assets/page-not-found.jpg" />
+					<img src=".././assets/ship.jpg" />
 				</div>
 			</div>
 		</div>

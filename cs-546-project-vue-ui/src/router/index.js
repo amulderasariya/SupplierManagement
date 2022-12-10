@@ -7,10 +7,7 @@ const router = createRouter({
 		{
 			path: "/",
 			name: "hero",
-			components: {
-				default: HeroView,
-				LeftNavbar: () => import("../views/LoginView.vue"),
-			},
+			component: HeroView,
 		},
 		{
 			path: "/login",
@@ -29,5 +26,9 @@ const router = createRouter({
 		},
 	],
 });
+
+// router.beforeEach(() => {
+//     if()
+// });
 
 export default router;
