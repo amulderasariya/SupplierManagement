@@ -20,6 +20,29 @@ const router = createRouter({
 			component: () => import("../views/RegisterView.vue"),
 		},
 		{
+			path: "/dashboard",
+			name: "dashboard",
+			component: () => import("../views/DashboardView.vue"),
+			redirect: "/dashboard/analytics",
+			children: [
+				{
+					path: "analytics",
+					name: "analytics",
+					component: () => import("../views/AnalyticsView.vue"),
+				},
+				{
+					path: "products",
+					name: "products",
+					component: () => import("../views/ProductsView.vue"),
+				},
+				{
+					path: "orders",
+					name: "orders",
+					component: () => import("../views/OrderView.vue"),
+				},
+			],
+		},
+		{
 			path: "/:pathMatch(.*)*",
 			name: "not-found",
 			component: () => import("../views/PageNotFoundView.vue"),
@@ -27,8 +50,9 @@ const router = createRouter({
 	],
 });
 
-// router.beforeEach(() => {
-//     if()
-// });
+router.beforeEach(async (to, from) => {
+	if (!$cookies.isKey("token") && to.name !== "hero" && to.name !== "login" && to.name !== "register") return { name: "hero" };
+	if ($cookies.isKey("token") && (to.name === "hero" || to.name === "login" || to.name === "register")) return { name: "dashboard" };
+});
 
 export default router;
