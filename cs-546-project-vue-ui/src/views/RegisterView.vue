@@ -2,7 +2,7 @@
 	<div class="h-screen bg-gray-50">
 		<div class="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
 			<div class="sm:mx-auto sm:w-full sm:max-w-md">
-				<img class="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
+				<IconTruck class="mx-auto h-12 w-auto" alt="Truck Icon" />
 				<h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Register for an account</h2>
 				<p class="mt-2 text-center text-sm text-gray-600">
 					Or
@@ -63,7 +63,7 @@
 						</div>
 
 						<div>
-							<button type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Sign in</button>
+							<button type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Register</button>
 						</div>
 					</Form>
 				</div>
@@ -75,26 +75,54 @@
 <script setup>
 import { Field, Form, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
+import IconTruck from "../components/icons/IconTruck.vue";
 
-const schema = yup.object().shape({
-	companyName: yup.string().min(5, "Company name must be at least 5 characters").required("Company name is required").trim("Company name can't contain leading or trailing spaces"),
-	email: yup.string().email("Enter a valid email").required("Email field is required"),
-	password: yup
-		.string()
-		.matches(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/, "Password must contain at least one special character")
-		.matches(/[0-9]/, "Password must contain at least one number")
-		.matches(/[A-Z]/, "Password must contain at least one upper case letter")
-		.matches(/[a-z]/, "Password must contain at least one lower case letter")
-		.min(6, "Password must be at least 6 characters")
-		.max(25, "Password must be less than 25 characters")
-		.required("Password field is required")
-		.trim("Password can't contain leading or trailing spaces"),
-	confirmPassword: yup
-		.string()
-		.oneOf([yup.ref("password")], "Passwords do not match")
-		.required("Comfirm Password field is required"),
-	role: yup.string().required("Select a role"),
-});
+const schema = yup
+	.object()
+	.shape({
+		companyName: yup
+			.string()
+			.min(3, "Company name must be at least 3 characters")
+			.max(15, "Company name must be less than 15 characters")
+			.matches(/^((?!\s{2}).)*$/, "Multiple spaces in between")
+			.matches(/[a-zA-Z]/, "Company name must contain only alphabet")
+			.test({
+				message: "Company name can't contain number",
+				test: (value) => {
+					const numRegex = /[0-9]/;
+					if (numRegex.test(value)) return false;
+					return true;
+				},
+			})
+			.test({
+				message: "Company name can't contain special characters",
+				test: (value) => {
+					const specialRegex = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
+					if (specialRegex.test(value)) return false;
+					return true;
+				},
+			})
+			.required("Company name is required")
+			.trim("Company name can't contain leading or trailing spaces"),
+		email: yup.string().email("Enter a valid email").required("Email field is required").trim("Email can't contain leading or trailing spaces"),
+		password: yup
+			.string()
+			.matches(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/, "Password must contain at least one special character")
+			.matches(/^((?!\s).)*$/, "Password must not contain spaces")
+			.matches(/[0-9]/, "Password must contain at least one number")
+			.matches(/[A-Z]/, "Password must contain at least one upper case letter")
+			.matches(/[a-z]/, "Password must contain at least one lower case letter")
+			.min(6, "Password must be at least 6 characters")
+			.max(15, "Password must be less than 15 characters")
+			.required("Password field is required")
+			.trim("Password can't contain leading or trailing spaces"),
+		confirmPassword: yup
+			.string()
+			.oneOf([yup.ref("password")], "Passwords do not match")
+			.required("Comfirm Password field is required"),
+		role: yup.string().required("Select a role"),
+	})
+	.strict(true);
 
 const onSubmit = (values) => {
 	console.log(values);
