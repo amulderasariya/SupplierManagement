@@ -2,7 +2,7 @@
 	<div class="h-screen bg-gray-50">
 		<div class="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
 			<div class="sm:mx-auto sm:w-full sm:max-w-md">
-				<IconTruck class="mx-auto h-12 w-auto" alt="Truck Icon" />
+				<IconTruck class="mx-auto h-12 w-auto" />
 				<h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Register for an account</h2>
 				<p class="mt-2 text-center text-sm text-gray-600">
 					Or
@@ -46,11 +46,11 @@
 						</div>
 
 						<div>
-							<label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+							<label for="repassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
 							<div class="mt-1">
-								<Field id="confirmPassword" name="confirmPassword" type="password" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+								<Field id="repassword" name="repassword" type="password" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
 							</div>
-							<ErrorMessage class="mt-2 text-sm text-red-600" name="confirmPassword" />
+							<ErrorMessage class="mt-2 text-sm text-red-600" name="repassword" />
 						</div>
 
 						<div>
@@ -73,9 +73,14 @@
 </template>
 
 <script setup>
+import axios from "axios";
+import router from "../router";
 import { Field, Form, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
+import { useToast } from "vue-toastification";
 import IconTruck from "../components/icons/IconTruck.vue";
+
+const toast = useToast();
 
 const schema = yup
 	.object()
@@ -116,7 +121,7 @@ const schema = yup
 			.max(15, "Password must be less than 15 characters")
 			.required("Password field is required")
 			.trim("Password can't contain leading or trailing spaces"),
-		confirmPassword: yup
+		repassword: yup
 			.string()
 			.oneOf([yup.ref("password")], "Passwords do not match")
 			.required("Comfirm Password field is required"),
@@ -124,7 +129,21 @@ const schema = yup
 	})
 	.strict(true);
 
-const onSubmit = (values) => {
-	console.log(values);
+const onSubmit = async (values) => {
+	try {
+		const res = await axios.post("/auth/register", values);
+		$cookies.set("token", res.data.token);
+		axios.defaults.headers.common["Authorization"] = `Bearer ${$cookies.get("token")}`;
+
+		const user = await axios.get("/auth/userInfo");
+		$cookies.set("user", user.data);
+
+		toast.success("User Registered!");
+		router.push("/dashboard/analytics");
+	} catch (e) {
+		e.response.data.errors.forEach((error) => {
+			toast.error(error.msg);
+		});
+	}
 };
 </script>
