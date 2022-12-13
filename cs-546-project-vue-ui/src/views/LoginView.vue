@@ -2,7 +2,7 @@
 	<div class="h-screen bg-gray-50">
 		<div class="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
 			<div class="sm:mx-auto sm:w-full sm:max-w-md">
-				<IconTruck class="mx-auto h-12 w-auto" alt="Truck Icon" />
+				<IconTruck class="mx-auto h-12 w-auto" />
 				<h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
 				<p class="mt-2 text-center text-sm text-gray-600">
 					Or
@@ -72,6 +72,11 @@ const onSubmit = async (values) => {
 	try {
 		const res = await axios.post("/auth/login", values);
 		$cookies.set("token", res.data.token);
+		axios.defaults.headers.common["Authorization"] = `Bearer ${$cookies.get("token")}`;
+
+		const user = await axios.get("/auth/userInfo");
+		$cookies.set("user", user.data);
+
 		toast.success("Logged In!");
 		router.push("/dashboard/analytics");
 	} catch (e) {
