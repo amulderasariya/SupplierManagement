@@ -994,3 +994,5 @@ const seedProduct = async () => {
 };
 await seedUsers();
 await seedProduct();
+console.log("seeding completed")
+process.exit(0)
