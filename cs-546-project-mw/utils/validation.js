@@ -5,6 +5,8 @@ import { validationResultExpress } from '../middlewares/validationResultExpress.
 
 import hierJSON from '../hier.json' assert { type: 'json' };
 const emptySpaceregex = /^((?!\s).)*/;
+const onlyCharAndNumberRegex = /^[a-zA-Z0-9-\s]*$/;
+const onlyCharAndSpaceRegex = /^[a-zA-Z\s]*$/;
 // prettier-ignore
 export const listOfCurrencies = new CurrencyConverter().currencyCode;
 
@@ -31,6 +33,10 @@ export const validateAuth = {
       .isStrongPassword({ minLength: 6, minLowercase: 1, minNumbers: 1, minSymbols: 1, minUppercase: 1 }),
     body('password', 'Incorrect password format').custom(matchPassword),
     body('role', 'Role should be "OWNER", "SUPPLIER"').trim().isIn(['OWNER', 'SUPPLIER']),
+    body('city', 'Invalid City').exists().matches(onlyCharAndSpaceRegex),
+    body('state', 'Invalid State').exists().matches(onlyCharAndSpaceRegex),
+    body('organization', 'Invalid Organization').exists().matches(onlyCharAndSpaceRegex),
+    body('zip', 'Invalid Zip').exists().matches(onlyCharAndNumberRegex),
     validationResultExpress,
   ],
   login: [
