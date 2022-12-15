@@ -1,10 +1,13 @@
 import CurrencyConverter from 'currency-converter-lt';
 import { body, oneOf, param } from 'express-validator';
 import { isValidObjectId } from 'mongoose';
+import { Country, State, City } from 'country-state-city';
 import { validationResultExpress } from '../middlewares/validationResultExpress.js';
 
 import hierJSON from '../hier.json' assert { type: 'json' };
 const emptySpaceregex = /^((?!\s).)*/;
+const onlyCharAndNumberRegex = /^[a-zA-Z0-9-\s]*$/;
+const onlyCharAndSpaceRegex = /^[a-zA-Z\s]*$/;
 // prettier-ignore
 export const listOfCurrencies = new CurrencyConverter().currencyCode;
 
@@ -23,28 +26,33 @@ const matchPassword = (value, { req }) => {
 export const validateAuth = {
   register: [
     body('email', 'Incorrect email format').trim().isEmail().normalizeEmail(),
-    body(
-      'password',
-      'Password should have minimun 6 characters One uppercase, One lower case, one digit and a special char'
-    )
+    body('password', 'Password should have minimun 6 characters One uppercase, One lower case, one digit and a special char')
       .trim()
       .isStrongPassword({ minLength: 6, minLowercase: 1, minNumbers: 1, minSymbols: 1, minUppercase: 1 }),
     body('password', 'Incorrect password format').custom(matchPassword),
     body('role', 'Role should be "OWNER", "SUPPLIER"').trim().isIn(['OWNER', 'SUPPLIER']),
+    body('organization', 'Invalid Organization').exists().matches(onlyCharAndSpaceRegex),
     validationResultExpress,
   ],
   login: [
     body('email', 'Incorrect email format').trim().isEmail().normalizeEmail(),
-    body(
-      'password',
-      'Password should have minimun 6 characters One uppercase, One lower case, one digit and a special char'
-    )
+    body('password', 'Password should have minimun 6 characters One uppercase, One lower case, one digit and a special char')
       .trim()
       .isStrongPassword({ minLength: 6, minLowercase: 1, minNumbers: 1, minSymbols: 1, minUppercase: 1 }),
     validationResultExpress,
   ],
-  users: [
-    param('role', 'Role should be "OWNER", "SUPPLIER"').trim().isIn(['OWNER', 'SUPPLIER']),
+  user: [
+    body('country', 'Invalid City').isIn(Country.getAllCountries().map((v) => v.isoCode)),
+    body('state', 'Invalid State').custom((value, { req }) =>
+      State.getStatesOfCountry(req.body.country)
+        .map((v) => v.isoCode)
+        .includes(value)
+    ),
+    body('city', 'Invalid City').custom((value, { req }) =>
+      City.getCitiesOfState(req.body.country, req.body.state)
+        .map((v) => v.name)
+        .includes(value)
+    ),
     validationResultExpress,
   ],
 };
@@ -55,10 +63,7 @@ export const validateProduct = {
       [body('id', 'Incorrect id format').trim().custom(isValidMongooseId), body('id', 'Incorrect id format').isEmpty()],
       'Either ID should be correct or should not exist'
     ),
-    oneOf(
-      [body('name').isString().trim().matches(emptySpaceregex), body('id').exists()],
-      'Either id or name should exist'
-    ),
+    oneOf([body('name').isString().trim().matches(emptySpaceregex), body('id').exists()], 'Either id or name should exist'),
 
     oneOf(
       [body('department', 'Invalid Department').isString().trim().isIn(Object.keys(hierJSON)), body('id').exists()],

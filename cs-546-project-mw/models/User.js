@@ -19,6 +19,26 @@ const userSchema = new mongoose.Schema({
     enum: ['OWNER', 'SUPPLIER'],
     required: true,
   },
+  organization: {
+    type: String,
+    required: true,
+  },
+  city: {
+    type: String,
+    required: true,
+  },
+  state: {
+    type: String,
+    required: true,
+  },
+  country: {
+    type: String,
+    required: true,
+  },
+  avatar: {
+    type: Buffer, // casted to MongoDB's BSON type: binData
+    required: false,
+  },
 });
 
 userSchema.pre('save', async function (next) {
