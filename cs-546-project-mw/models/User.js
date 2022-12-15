@@ -31,9 +31,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  zip: {
+  country: {
     type: String,
     required: true,
+  },
+  avatar: {
+    type: Buffer, // casted to MongoDB's BSON type: binData
+    required: false,
   },
 });
 

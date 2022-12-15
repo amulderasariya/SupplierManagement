@@ -2,12 +2,12 @@ import { User } from '../models/User.js';
 import { generateRefreshToken, generateToken } from '../utils/tokenManager.js';
 
 export const register = async (req, res) => {
-  const { email, password, role, city, state, zip, organization } = req.body;
+  const { email, password, role } = req.body;
   try {
     let user = await User.findOne({ email });
     if (user) throw { code: 400 };
 
-    user = new User({ email, password, role, city, state, zip, organization });
+    user = new User({ email, password, role });
     await user.save();
 
     const { token, expiresIn } = generateToken(user.id, user.role);
@@ -39,6 +39,16 @@ export const login = async (req, res) => {
     return res.json({ token, expiresIn });
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ errors: [{ msg: 'Something went wrong' }] });
+  }
+};
+
+export const updateUser = async (req, res) => {
+  try {
+    const { avatar, city, state, organization, country } = req.body;
+    let user = await User.findByIdAndUpdate(req.user.uid, { avatar, city, state, organization, country });
+    userInfo(req, res);
+  } catch (e) {
     return res.status(500).json({ errors: [{ msg: 'Something went wrong' }] });
   }
 };
