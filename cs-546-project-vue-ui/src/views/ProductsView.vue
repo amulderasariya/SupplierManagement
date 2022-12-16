@@ -89,9 +89,48 @@ const products = [
 		price: "$35",
 		color: "Black",
 	},
+	{
+		id: 1,
+		name: "Basic Tee",
+		href: "#",
+		imageSrc: "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-04.jpg",
+		imageAlt: "Front of men's Basic Tee in black.",
+		price: "$35",
+		color: "Black",
+	},
+	{
+		id: 1,
+		name: "Basic Tee",
+		href: "#",
+		imageSrc: "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-04.jpg",
+		imageAlt: "Front of men's Basic Tee in black.",
+		price: "$35",
+		color: "Black",
+	},
+	{
+		id: 1,
+		name: "Basic Tee",
+		href: "#",
+		imageSrc: "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-04.jpg",
+		imageAlt: "Front of men's Basic Tee in black.",
+		price: "$35",
+		color: "Black",
+	},
 ];
 
 const categories = [
+	{ id: 1, name: "Entertainment" },
+	{ id: 2, name: "Food" },
+	{ id: 3, name: "Apparel" },
+	{ id: 4, name: "HL" },
+	{ id: 5, name: "Consumables" },
+	{ id: 6, name: "Health & Wellness" },
+	{ id: 7, name: "Home" },
+	{ id: 8, name: "Toys/Seasonal" },
+	{ id: 9, name: "Others" },
+];
+
+const subCategories = [
 	{ id: 1, name: "Entertainment" },
 	{ id: 2, name: "Food" },
 	{ id: 3, name: "Apparel" },

@@ -6,9 +6,12 @@
 				<p class="mt-2 text-sm text-gray-700">{{ props.orders.description }}</p>
 			</div>
 			<div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-				<button type="button" class="inline-flex items-center justify-center rounded-md borders borders-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">
+				<JsonCSV
+					:data="props.orders.data"
+					class="inline-flex items-center cursor-pointer justify-center rounded-md borders borders-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+				>
 					Export
-				</button>
+				</JsonCSV>
 			</div>
 		</div>
 		<div class="mt-8 flex flex-col">
@@ -25,8 +28,17 @@
 									<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Price</th>
 									<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Quantity</th>
 									<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Net amount</th>
+									<th scope="col" v-if="orders.name === 'Pending Orders'" class="relative whitespace-nowrap py-3.5 pl-3 pr-4 sm:pr-6">
+										<span class="sr-only">Approve</span>
+									</th>
+									<th scope="col" v-if="orders.name === 'Pending Orders'" class="relative whitespace-nowrap py-3.5 pl-3 pr-4 sm:pr-6">
+										<span class="sr-only">Reject</span>
+									</th>
+									<th scope="col" v-if="orders.name === 'Active Orders'" class="relative whitespace-nowrap py-3.5 pl-3 pr-4 sm:pr-6">
+										<span class="sr-only">Mark Fullfilled</span>
+									</th>
 									<th scope="col" v-if="orders.name === 'Fulfilled Orders'" class="relative whitespace-nowrap py-3.5 pl-3 pr-4 sm:pr-6">
-										<span class="sr-only">Edit</span>
+										<span class="sr-only">Rate</span>
 									</th>
 								</tr>
 							</thead>
@@ -39,6 +51,25 @@
 									<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ transaction.price }}</td>
 									<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ transaction.quantity }}</td>
 									<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ transaction.netAmount }}</td>
+									<td v-if="orders.name === 'Pending Orders'" class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+										<button type="button" @click="open = true" class="inline-flex items-center rounded-md border border-transparent bg-green-600 px-2 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+											Approve
+										</button>
+									</td>
+									<td v-if="orders.name === 'Pending Orders'" class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+										<button type="button" @click="open = true" class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-2 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+											Reject
+										</button>
+									</td>
+									<td v-if="orders.name === 'Active Orders'" class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+										<button
+											type="button"
+											@click="open = true"
+											class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-2 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+										>
+											Received
+										</button>
+									</td>
 									<td v-if="orders.name === 'Fulfilled Orders'" class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
 										<button
 											type="button"
@@ -64,6 +95,7 @@
 import { ref } from "vue";
 import { StarIcon } from "@heroicons/vue/24/solid";
 import ProductModal from "./ProductModal.vue";
+import JsonCSV from "vue-json-csv";
 
 let open = ref(false);
 const props = defineProps(["orders"]);

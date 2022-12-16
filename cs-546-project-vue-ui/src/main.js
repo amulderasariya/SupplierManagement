@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import { createPinia } from "pinia";
+// import { createPinia } from "pinia";
 import axios from "axios";
 import VueCookies from "vue-cookies";
 import HighchartsVue from "highcharts-vue";
@@ -33,7 +33,7 @@ const toastOptions = {
 	rtl: false,
 };
 
-app.use(createPinia());
+// app.use(createPinia());
 app.use(router);
 app.use(HighchartsVue);
 app.use(VueCookies, { expires: "7d" });
