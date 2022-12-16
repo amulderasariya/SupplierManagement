@@ -11,5 +11,4 @@ productRouter.get('/:id', requireToken(), validateProduct.get, getProduct);
 productRouter.post('/', requireToken(['SUPPLIER']), validateProduct.upsert, upsertProduct);
 productRouter.delete('/:id', requireToken(['SUPPLIER']), validateProduct.remove, removeProduct);
 
-
 export default productRouter;
