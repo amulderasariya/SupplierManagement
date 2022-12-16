@@ -25,19 +25,15 @@ const userSchema = new mongoose.Schema({
   },
   city: {
     type: String,
-    required: true,
   },
   state: {
     type: String,
-    required: true,
   },
   country: {
     type: String,
-    required: true,
   },
   avatar: {
     type: Buffer, // casted to MongoDB's BSON type: binData
-    required: false,
   },
 });
 
