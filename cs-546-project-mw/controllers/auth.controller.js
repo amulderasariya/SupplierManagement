@@ -43,6 +43,16 @@ export const login = async (req, res) => {
   }
 };
 
+export const updateUser = async (req, res) => {
+  try {
+    const { avatar, city, state, organization, country } = req.body;
+    let user = await User.findByIdAndUpdate(req.user.uid, { avatar, city, state, organization, country });
+    userInfo(req, res);
+  } catch (e) {
+    return res.status(500).json({ errors: [{ msg: 'Something went wrong' }] });
+  }
+};
+
 export const userInfo = async (req, res) => {
   try {
     const user = await User.findById(req.user.uid);
@@ -56,7 +66,7 @@ export const getUsers = async (req, res) => {
   try {
     const { role } = req.params;
     const users = await User.find({ role });
-    return res.json(users.map((user) => ({ _id: user._id, email: user.email })));
+    return res.json(users.map((user) => ({ ...user, password: undefined })));
   } catch (error) {
     return res.status(500).json({ errors: [{ msg: 'Something went wrong' }] });
   }

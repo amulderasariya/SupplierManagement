@@ -3,6 +3,7 @@
 		<div class="sm:flex sm:items-center">
 			<div class="sm:flex-auto">
 				<h1 class="text-xl font-semibold text-gray-900">Suppliers</h1>
+				<<<<<<< HEAD
 				<p class="mt-2 text-sm text-gray-700">A list of all the suppliers in your account including their name, title, email and rating.</p>
 			</div>
 			<div class="w-1/5 pl-1 pb-4 mt-5">
@@ -15,6 +16,9 @@
 					</div>
 					<input id="search" v-model="search" type="text" name="search" class="focus:ring-blue-200 focus:border-blue-200 block w-full pl-9 sm:text-sm border-gray-300 rounded-md" placeholder="Search" />
 				</div>
+				=======
+				<p class="mt-2 text-sm text-gray-700">A list of all the suppliers in your account including their name, title, email and role.</p>
+				>>>>>>> d792c6f32b0dca661e1a9d54d63a07348f10d0a9
 			</div>
 		</div>
 		<div class="mt-8 flex flex-col">

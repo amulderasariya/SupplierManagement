@@ -20,7 +20,7 @@ export const generateRefreshToken = (uid, role, res) => {
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: !(process.env.MODE === 'developer'),
-      expires: expiresIn,
+      expires: Date.parse(expiresIn),
       sameSite: 'none',
     });
   } catch (error) {
