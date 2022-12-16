@@ -53,15 +53,15 @@ export const approveInvoice = async (req, res) => {
   try {
     const { due_date, paidAmount, net_amount } = req.body;
     const invoice = await Invoice.findById(req.param.id);
-    if (invoice.gross_amount < net_amount) {
+    if (invoice.gross_amount <= net_amount) {
       return res.status(400).json({ errors: [{ msg: 'Net amount cant be less than gross amount' }] });
     }
     if (paidAmount > net_amount) {
       return res.status(400).json({ errors: [{ msg: 'Paid amount cant be less than net amount' }] });
     } else if (paidAmount === net_amount) {
-      invoice.paymentStatus = 'PENDING';
-    } else {
       invoice.paymentStatus = 'PAID';
+    } else {
+      invoice.paymentStatus = 'PENDING';
     }
     invoice.due_date = due_date;
     invoice.paidAmount = paidAmount;
