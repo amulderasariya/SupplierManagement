@@ -42,13 +42,14 @@
 
 <script setup>
 import axios from "axios";
-import router from "../router";
+import { useRouter } from "vue-router";
 import { Field, Form, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 import { useToast } from "vue-toastification";
 import IconTruck from "../components/icons/IconTruck.vue";
 
 const toast = useToast();
+const router = useRouter();
 
 const schema = yup
 	.object()
@@ -62,7 +63,7 @@ const schema = yup
 			.matches(/[A-Z]/, "Password must contain at least one upper case letter")
 			.matches(/[a-z]/, "Password must contain at least one lower case letter")
 			.min(6, "Password must be at least 6 characters")
-			.max(15, "Password must be less than 15 characters")
+			.max(25, "Password must be less than 25 characters")
 			.required("Password field is required")
 			.trim("Password can't contain leading or trailing spaces"),
 	})
@@ -74,7 +75,7 @@ const onSubmit = async (values) => {
 		$cookies.set("token", res.data.token);
 		axios.defaults.headers.common["Authorization"] = `Bearer ${$cookies.get("token")}`;
 
-		const user = await axios.get("/auth/userInfo");
+		const user = await axios.get("/auth/user");
 		$cookies.set("user", user.data);
 
 		toast.success("Logged In!");

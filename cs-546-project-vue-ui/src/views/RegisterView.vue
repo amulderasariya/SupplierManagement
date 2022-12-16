@@ -74,13 +74,14 @@
 
 <script setup>
 import axios from "axios";
-import router from "../router";
+import { useRouter } from "vue-router";
 import { Field, Form, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 import { useToast } from "vue-toastification";
 import IconTruck from "../components/icons/IconTruck.vue";
 
 const toast = useToast();
+const router = useRouter();
 
 const schema = yup
 	.object()

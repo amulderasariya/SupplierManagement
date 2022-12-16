@@ -20,7 +20,7 @@
 								<img class="inline-block h-9 w-9 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
 							</div>
 							<div class="ml-3">
-								<p class="text-sm font-medium text-white">{{ $cookies.get("user").companyName }}</p>
+								<p class="text-sm font-medium text-white">{{ $cookies.get("user").organization }}</p>
 								<p class="text-xs font-medium text-gray-300 group-hover:text-gray-200">View profile</p>
 							</div>
 						</div>
@@ -28,11 +28,11 @@
 				</div>
 			</div>
 		</div>
-		<div class="flex flex-col md:pl-64">
+		<div class="flex flex-col md:pl-64 bg-gray-100">
 			<div class="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow">
 				<div class="flex flex-1 justify-between px-4">
 					<div class="flex flex-1">
-						<h1 class="mt-6 font-semibold text-gray-900">Welcome, {{ $cookies.get("user").email }}</h1>
+						<h1 class="mt-6 font-semibold text-gray-900">Welcome, {{ $cookies.get("user").organization }}</h1>
 					</div>
 					<div class="ml-4 flex items-center md:ml-6">
 						<div class="relative ml-3">
@@ -44,7 +44,14 @@
 
 			<main class="flex-1">
 				<div class="py-6">
-					<RouterView />
+					<Suspense>
+						<template #default>
+							<RouterView />
+						</template>
+						<template #fallback>
+							<Loading />
+						</template>
+					</Suspense>
 				</div>
 			</main>
 		</div>
@@ -54,8 +61,9 @@
 <script setup>
 import { reactive } from "vue";
 import router from "../router";
-import { RouterLink, RouterView, useRoute } from "vue-router";
+import { RouterLink, RouterView } from "vue-router";
 import { UsersIcon, PlusCircleIcon, ChartBarIcon, FolderIcon, NewspaperIcon } from "@heroicons/vue/24/outline";
+import Loading from "../components/icons/Loading.vue";
 import IconTruck from "../components/icons/IconTruck.vue";
 import axios from "axios";
 import { useToast } from "vue-toastification";

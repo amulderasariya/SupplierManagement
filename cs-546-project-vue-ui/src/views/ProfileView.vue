@@ -20,7 +20,7 @@
 							</div>
 						</div>
 
-						<div class="grid grid-cols-3 gap-6">
+						<!-- <div class="grid grid-cols-3 gap-6">
 							<div class="col-span-3 sm:col-span-2">
 								<label for="company-website" class="block text-sm font-medium text-gray-700">Website</label>
 								<div class="mt-1 flex rounded-md shadow-sm">
@@ -28,27 +28,27 @@
 									<input type="text" name="company-website" id="company-website" class="block w-full flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="www.example.com" />
 								</div>
 							</div>
-						</div>
+						</div> -->
 
 						<div class="grid grid-cols-6 gap-6">
 							<div class="col-span-6 sm:col-span-3">
-								<label for="first-name" class="block text-sm font-medium text-gray-700">First name</label>
-								<input type="text" name="first-name" id="first-name" autocomplete="given-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+								<label for="first-name" class="block text-sm font-medium text-gray-700">Company name</label>
+								<input type="text" name="first-name" id="first-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
 							</div>
 
-							<div class="col-span-6 sm:col-span-3">
+							<!-- <div class="col-span-6 sm:col-span-3">
 								<label for="last-name" class="block text-sm font-medium text-gray-700">Last name</label>
 								<input type="text" name="last-name" id="last-name" autocomplete="family-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
-							</div>
+							</div> -->
 
 							<div class="col-span-6 sm:col-span-4">
 								<label for="email-address" class="block text-sm font-medium text-gray-700">Email address</label>
-								<input type="text" name="email-address" id="email-address" autocomplete="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+								<input type="text" name="email-address" id="email-address" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
 							</div>
 
 							<div class="col-span-6 sm:col-span-3">
 								<label for="country" class="block text-sm font-medium text-gray-700">Country</label>
-								<select id="country" name="country" autocomplete="country-name" class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+								<select id="country" name="country" class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
 									<option>United States</option>
 									<option>Canada</option>
 									<option>Mexico</option>
@@ -57,23 +57,23 @@
 
 							<div class="col-span-6">
 								<label for="street-address" class="block text-sm font-medium text-gray-700">Street address</label>
-								<input type="text" name="street-address" id="street-address" autocomplete="street-address" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+								<input type="text" name="street-address" id="street-address" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
 							</div>
 
 							<div class="col-span-6 sm:col-span-6 lg:col-span-2">
 								<label for="city" class="block text-sm font-medium text-gray-700">City</label>
-								<input type="text" name="city" id="city" autocomplete="address-level2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+								<input type="text" name="city" id="city" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
 							</div>
 
 							<div class="col-span-6 sm:col-span-3 lg:col-span-2">
 								<label for="region" class="block text-sm font-medium text-gray-700">State / Province</label>
-								<input type="text" name="region" id="region" autocomplete="address-level1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+								<input type="text" name="region" id="region" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
 							</div>
 
-							<div class="col-span-6 sm:col-span-3 lg:col-span-2">
+							<!-- <div class="col-span-6 sm:col-span-3 lg:col-span-2">
 								<label for="postal-code" class="block text-sm font-medium text-gray-700">ZIP / Postal code</label>
-								<input type="text" name="postal-code" id="postal-code" autocomplete="postal-code" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
-							</div>
+								<input type="text" name="postal-code" id="postal-code" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+							</div> -->
 						</div>
 					</div>
 				</div>

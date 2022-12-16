@@ -4,7 +4,7 @@
 			<div class="sm:flex-auto">
 				<h1 class="text-xl font-semibold text-gray-900">Suppliers</h1>
 
-				<p class="mt-2 text-sm text-gray-700">A list of all the suppliers in your account including their name, title, email and rating.</p>
+				<p class="mt-2 text-sm text-gray-700">A list of all the suppliers including their name, email, address and rating.</p>
 			</div>
 			<div class="w-1/5 pl-1 pb-4 mt-5">
 				<label for="search" class="sr-only">Search</label>
@@ -30,7 +30,6 @@
 									<th scope="col" class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">Country</th>
 									<th scope="col" class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">City</th>
 									<th scope="col" class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">State</th>
-									<th scope="col" class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">Zip</th>
 									<th scope="col" class="py-3.5 pl-4 pr-4 text-left text-sm font-semibold text-gray-900 sm:pr-6">Rating</th>
 								</tr>
 							</thead>
@@ -41,7 +40,6 @@
 									<td class="whitespace-nowrap p-4 text-sm text-gray-500">{{ person.country }}</td>
 									<td class="whitespace-nowrap p-4 text-sm text-gray-500">{{ person.city }}</td>
 									<td class="whitespace-nowrap p-4 text-sm text-gray-500">{{ person.state }}</td>
-									<td class="whitespace-nowrap p-4 text-sm text-gray-500">{{ person.zip }}</td>
 									<td class="whitespace-nowrap py-4 pl-4 pr-4 text-sm text-gray-500 sm:pr-6">
 										<div class="flex items-center">
 											<div class="flex items-center">
@@ -62,22 +60,30 @@
 <script setup>
 import { ref, reactive, computed } from "vue";
 import { StarIcon } from "@heroicons/vue/20/solid";
+import axios from "axios";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 const search = ref("");
 
 const filteredPeople = computed(() => {
 	return people.filter((person) => {
-		return (
-			person.organization.toLowerCase().indexOf(search.value.toLowerCase()) != -1 || person.email.toLowerCase().indexOf(search.value.toLowerCase()) != -1 || person.city.toLowerCase().indexOf(search.value.toLowerCase()) != -1 || person.email.toLowerCase().indexOf(search.value.toLowerCase()) != -1
-		);
+		if (person.organization) return person.organization.toLowerCase().indexOf(search.value.toLowerCase()) != -1;
+		if (person.email) return person.email.toLowerCase().indexOf(search.value.toLowerCase()) != -1;
+		if (person.country) return person.country.toLowerCase().indexOf(search.value.toLowerCase()) != -1;
+		if (person.city) return person.city.toLowerCase().indexOf(search.value.toLowerCase()) != -1;
+		if (person.state) return person.state.toLowerCase().indexOf(search.value.toLowerCase()) != -1;
 	});
 });
 
-const people = reactive([
-	{ organization: "Lindsay", city: "Hobboken", email: "lindsay@example.com", country: "United States", state: "New Jersey", zip: "07307", overallRating: 1.5 },
-	{ organization: "John", city: "Bronx", email: "lilly@example.com", country: "United States", state: "New Jersey", zip: "07307", overallRating: 4.5 },
-	{ organization: "Godwyn", city: "Queens", email: "raj@example.com", country: "United States", state: "New Jersey", zip: "07307", overallRating: 3.5 },
-	{ organization: "Walton", city: "Manhattan", email: "macy@example.com", country: "United States", state: "New Jersey", zip: "07307", overallRating: 2.5 },
-	{ organization: "Anna", city: "Central", email: "dennis@example.com", country: "United States", state: "New Jersey", zip: "07307", overallRating: 1.5 },
-]);
+var people = reactive([]);
+
+try {
+	people = await axios.get("/auth/users/suppliers");
+	people = people.data;
+} catch (e) {
+	e.response.data.errors.forEach((error) => {
+		toast.error(error.msg);
+	});
+}
 </script>

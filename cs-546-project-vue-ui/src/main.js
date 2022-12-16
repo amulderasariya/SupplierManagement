@@ -12,6 +12,10 @@ import router from "./router";
 import "./assets/main.css";
 
 axios.defaults.baseURL = "http://localhost:8000";
+axios.interceptors.request.use((config) => {
+	config.headers["Authorization"] = `Bearer ${$cookies.get("token")}`;
+	return config;
+});
 
 const app = createApp(App);
 
