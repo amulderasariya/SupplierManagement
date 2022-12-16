@@ -2,12 +2,12 @@ import { User } from '../models/User.js';
 import { generateRefreshToken, generateToken } from '../utils/tokenManager.js';
 
 export const register = async (req, res) => {
-  const { email, password, role } = req.body;
+  const { email, password, role, organization } = req.body;
   try {
     let user = await User.findOne({ email });
     if (user) throw { code: 400 };
 
-    user = new User({ email, password, role });
+    user = new User({ email, password, role, organization });
     await user.save();
 
     const { token, expiresIn } = generateToken(user.id, user.role);
@@ -64,9 +64,8 @@ export const userInfo = async (req, res) => {
 
 export const getUsers = async (req, res) => {
   try {
-    const { role } = req.params;
-    const users = await User.find({ role });
-    return res.json(users.map((user) => ({ ...user, password: undefined })));
+    const users = await User.find({ role: 'SUPPLIER' });
+    return res.json(users.map((user) => ({ ...user.toJSON(), password: undefined })));
   } catch (error) {
     return res.status(500).json({ errors: [{ msg: 'Something went wrong' }] });
   }
