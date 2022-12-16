@@ -8,7 +8,6 @@ import hierJSON from '../hier.json' assert { type: 'json' };
 const emptySpaceregex = /^((?!\s).)*/;
 const onlyCharAndNumberRegex = /^[a-zA-Z0-9-\s]*$/;
 const onlyCharAndSpaceRegex = /^[a-zA-Z\s]*$/;
-// prettier-ignore
 export const listOfCurrencies = new CurrencyConverter().currencyCode;
 
 const isValidMongooseId = (value, { req }) => {

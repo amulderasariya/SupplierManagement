@@ -5,7 +5,7 @@ export const getProducts = async (req, res) => {
     const query = { department, category, subCategory };
     // name: { $regex: name || '.*' }
     Object.keys(query).forEach((key) => query[key] === undefined && delete query[key]);
-    let products = await Product.find({ 'suppliers.supplierID': req.user.uid, ...query, name: { $regex: name, $options: 'i' } });
+    let products = await Product.find({ 'suppliers.supplierID': req.user.uid, ...query, name: { $regex: name || '.*', $options: 'i' } });
     products = products.map((product) => {
       const { stock, price, currency } = product.suppliers.find((supplier) => supplier.supplierID === req.user.uid);
       return { ...product.toJSON(), stock, price, currency, suppliers: undefined };

@@ -32,7 +32,7 @@ app.use('/products', productRouter);
 app.use('/invoice', invoiceRouter);
 app.use('/lookup', lookupRouter);
 
-app.use('/', (req, res) => res.json(`Server is up and running`));
+app.route('/', (req, res) => res.json(`Server is up and running`));
 app.use('*', (req, res) => res.status(404).json('Not Found'));
 
 const PORT = process.env.PORT || 8000;
