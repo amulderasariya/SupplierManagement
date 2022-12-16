@@ -6,10 +6,10 @@ import { User } from '../models/User.js';
 
 export const createInvoice = async (req, res) => {
   try {
-    const { ownerId, invoiceProducts, due_date, net_amount, currency, invoiceFileURL } = req.body;
-    const supplierID = req.user.uid;
-    const ownerExists = await User.findById(ownerId);
-    if (!ownerExists) return res.status(400).json({ errors: [{ msg: 'Invalid owner id' }] });
+    const { supplierID, invoiceProducts, currency, invoiceFileURL } = req.body;
+    const ownerId = req.user.uid;
+    const supplierExists = await User.findById(supplierID);
+    if (!supplierExists) return res.status(400).json({ errors: [{ msg: 'Invalid supplier id' }] });
     const productErrors = [];
     let gross_amount = 0;
     for (let i = 0; i < invoiceProducts.length; i++) {
@@ -26,11 +26,7 @@ export const createInvoice = async (req, res) => {
       }
       try {
         const currenyConvertor = new CC();
-        gross_amount += await currenyConvertor
-          .from(supplierExists.currency)
-          .to(currency)
-          .amount(product.price)
-          .convert();
+        gross_amount += await currenyConvertor.from(supplierExists.currency).to(currency).amount(product.price).convert();
       } catch (e) {
         product.push({ msg: e.message });
       }
@@ -39,7 +35,6 @@ export const createInvoice = async (req, res) => {
     const invoice = new Invoice({
       ownerId,
       supplierID,
-      due_date,
       net_amount,
       currency,
       invoiceProducts,
@@ -51,5 +46,68 @@ export const createInvoice = async (req, res) => {
   } catch (e) {
     console.log(e);
     res.status(500).json('Something went wrong');
+  }
+};
+
+export const approveInvoice = async (req, res) => {
+  try {
+    const { due_date, paidAmount, net_amount } = req.body;
+    const invoice = await Invoice.findById(req.param.id);
+    if (invoice.gross_amount < net_amount) {
+      return res.status(400).json({ errors: [{ msg: 'Net amount cant be less than gross amount' }] });
+    }
+    if (paidAmount > net_amount) {
+      return res.status(400).json({ errors: [{ msg: 'Paid amount cant be less than net amount' }] });
+    } else if (paidAmount === net_amount) {
+      invoice.paymentStatus = 'PENDING';
+    } else {
+      invoice.paymentStatus = 'PAID';
+    }
+    invoice.due_date = due_date;
+    invoice.paidAmount = paidAmount;
+    invoice.net_amount = net_amount;
+    invoice.deliveredDate;
+    invoice.save();
+    res.json(invoice.toJSON());
+  } catch (e) {
+    console.log(e);
+    res.status(500).json('Something went wrong');
+  }
+};
+
+export const completeInvoice = async (req, res) => {
+  try {
+    const { deliveredDate } = req.body;
+
+    const invoice = await Invoice.findById(req.param.id);
+
+    invoice.deliveredDate = deliveredDate;
+    invoice.paymentStatus = 'PAID';
+    invoice.paidAmount = invoice.net_amount;
+    invoice.save();
+    res.json(invoice.toJSON());
+  } catch (e) {
+    console.log(e);
+    res.status(500).json('Something went wrong');
+  }
+};
+
+export const getInvoices = async (req, res) => {
+  try {
+    const invoices = await Invoice.find({});
+    res.json(invoices.map((invoice) => invoice.toJSON()));
+  } catch (e) {
+    console.log(e);
+    res.status(500).json('Something went wrong');
+  }
+};
+
+export const getInvoice = async (req, res) => {
+  try {
+    const invoice = await Invoice.findById(req.param.id);
+    res.json(invoice.toJSON());
+  } catch (e) {
+    console.log(e);
+    res.status(500).json('Something went wrong');
   }
 };
