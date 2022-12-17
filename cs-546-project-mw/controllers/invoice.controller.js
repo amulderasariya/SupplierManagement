@@ -62,6 +62,9 @@ export const createInvoice = async (req, res) => {
 export const approveInvoice = async (req, res) => {
   try {
     const isSeedRunning= await PreBuild.find();
+    if (invoice.supplierID !== req.user.uid) {
+      return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
+    }
     const { due_date, paidAmount, net_amount } = req.body;
     const invoice = await Invoice.findById(req.params.id);
     if (invoice === null) {
@@ -105,6 +108,9 @@ export const approveInvoice = async (req, res) => {
 
 export const rejectInvoice = async (req, res) => {
   try {
+    if (invoice.supplierID !== req.user.uid) {
+      return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
+    }
     const invoice = await Invoice.findById(req.params.id);
     if (invoice === null) {
       return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
@@ -120,6 +126,9 @@ export const rejectInvoice = async (req, res) => {
 
 export const completeInvoice = async (req, res) => {
   try {
+    if (invoice.ownerID !== req.user.uid) {
+      return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
+    }
     const { deliveredDate } = req.body;
     const invoice = await Invoice.findById(req.params.id);
     const isSeedRunning= await PreBuild.find();
