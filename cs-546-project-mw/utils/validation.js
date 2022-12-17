@@ -119,6 +119,8 @@ export const validateInvoice = {
     body('paidAmount', 'Paid Amount should be an float with min 0').isFloat({ min: 0 }),
     validationResultExpress,
   ],
+  
+  reject: [param('id', 'Incorrect id format').trim().custom(isValidMongooseId), validationResultExpress],
 
   complete: [
     param('id', 'Incorrect id format').isString().trim().custom(isValidMongooseId),
