@@ -14,7 +14,7 @@ export const createInvoice = async (req, res) => {
     let gross_amount = 0;
     for (let i = 0; i < invoiceProducts.length; i++) {
       const product = {};
-      product.id = invoiceProducts[i].id;
+      product.productID = invoiceProducts[i].productID;
       product.quantity = invoiceProducts[i].quantity;
       const productExists = await Product.findById(product.productID);
       if (!productExists) {
@@ -124,8 +124,17 @@ export const completeInvoice = async (req, res) => {
 
 export const getInvoices = async (req, res) => {
   try {
-    const invoices = await Invoice.find({});
-    res.json(invoices.map((invoice) => invoice.toJSON()));
+    const invoices_data = await Invoice.find({ $or: [{ ownerId: req.user.uid }, { supplierID: req.user.uid }] });
+    const invoices_segregated = {};
+    invoices_segregated.PENDING = [];
+    invoices_segregated.APPROVED = [];
+    invoices_segregated.REJECTED = [];
+    invoices_segregated.COMPLETED = [];
+    for (let i = 0; i < invoices_data.length; i++) {
+      let invoice = invoices_data[i];
+      invoices_segregated[invoice.status].push(invoice);
+    }
+    res.json(invoices_segregated);
   } catch (e) {
     console.log(e);
     res.status(500).json('Something went wrong');

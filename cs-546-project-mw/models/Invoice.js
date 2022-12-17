@@ -55,6 +55,10 @@ const invoiceSchema = new Schema({
   paymentStatus: {
     type: String,
   },
+  status: {
+    type: String,
+    required: true,
+  },
   supplierRating: {
     type: Number,
   },
