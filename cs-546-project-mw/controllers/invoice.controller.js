@@ -1,6 +1,7 @@
 import CC from 'currency-converter-lt';
 
 import { Invoice } from '../models/Invoice.js';
+import { PreBuild } from '../models/preBuild.js';
 import { Product } from '../models/Product.js';
 import { User } from '../models/User.js';
 
@@ -60,6 +61,10 @@ export const createInvoice = async (req, res) => {
 
 export const approveInvoice = async (req, res) => {
   try {
+    const isSeedRunning= await PreBuild.find();
+    if (invoice.supplierID !== req.user.uid) {
+      return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
+    }
     const { due_date, paidAmount, net_amount } = req.body;
     const invoice = await Invoice.findById(req.params.id);
     if (invoice === null) {
@@ -75,21 +80,25 @@ export const approveInvoice = async (req, res) => {
     } else {
       invoice.paymentStatus = 'PENDING';
     }
-    if (due_date <= new Date().toISOString()) {
-      return res.status(400).json({ errors: [{ msg: 'Due date cannot be in the past' }] });
-    }
+    if (isSeedRunning[0] && !isSeedRunning[0].isSeedRunning) {
+			if (due_date.getTime() < new Date().getTime()) {
+				return res
+					.status(400)
+					.json({ errors: [{ msg: "Due date cannot be in the past" }] });
+			}
+		}
     invoice.due_date = due_date;
     invoice.paidAmount = paidAmount;
     invoice.net_amount = net_amount;
     invoice.status = 'APPROVED';
     await invoice.save();
-    // for (let i = 0; i < invoice.invoiceProducts.length; i++) {
-    //   let product = invoice.invoiceProducts[i];
-    //   const productExists = await Product.findById(product.productID);
-    //   const supplierExists = productExists.suppliers.find((supp) => supp.supplierID === supplierID);
-    //   supplierExists.stock = supplierExists.stock - product.quantity;
-    //   await productExists.save();
-    // }
+    for (let i = 0; i < invoice.invoiceProducts.length; i++) {
+      let product = invoice.invoiceProducts[i].toJSON();
+      const productExists = await Product.findById(product.productID);
+      const supplierExists = productExists.suppliers.find((supp) => supp.supplierID === invoice.supplierID);
+      supplierExists.stock = supplierExists.stock - product.quantity;
+      await productExists.save();
+    }
     res.json(invoice.toJSON());
   } catch (e) {
     console.log(e);
@@ -99,6 +108,9 @@ export const approveInvoice = async (req, res) => {
 
 export const rejectInvoice = async (req, res) => {
   try {
+    if (invoice.supplierID !== req.user.uid) {
+      return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
+    }
     const invoice = await Invoice.findById(req.params.id);
     if (invoice === null) {
       return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
@@ -114,11 +126,24 @@ export const rejectInvoice = async (req, res) => {
 
 export const completeInvoice = async (req, res) => {
   try {
+    if (invoice.ownerID !== req.user.uid) {
+      return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
+    }
     const { deliveredDate } = req.body;
     const invoice = await Invoice.findById(req.params.id);
+    const isSeedRunning= await PreBuild.find();
     if (invoice === null) {
       return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
     }
+    if (isSeedRunning[0] && !isSeedRunning[0].isSeedRunning) {
+			if (deliveredDate.getTime() > new Date().getTime()) {
+				return res
+					.status(400)
+					.json({
+						errors: [{ msg: "Delivered date date cannot be in the future" }],
+					});
+			}
+		}
     invoice.deliveredDate = deliveredDate;
     invoice.paymentStatus = 'PAID';
     invoice.paidAmount = invoice.net_amount;
@@ -161,13 +186,14 @@ export const getInvoices = async (req, res) => {
 export const getInvoice = async (req, res) => {
   try {
     const invoice = await Invoice.findById(req.params.id);
-    if (invoice.ownerID) {
-      return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
-    }
     if (invoice === null) {
       return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
     }
-    res.json(invoice.toJSON());
+    if (invoice.ownerID === req.user.uid || invoice.supplierID === req.user.uid) {
+      res.json(invoice.toJSON());
+    } else {
+      return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
+    }
   } catch (e) {
     console.log(e);
     res.status(500).json('Something went wrong');

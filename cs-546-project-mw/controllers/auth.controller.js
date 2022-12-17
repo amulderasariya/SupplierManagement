@@ -13,7 +13,7 @@ export const register = async (req, res) => {
     const { token, expiresIn } = generateToken(user.id, user.role);
     generateRefreshToken(user.id, user.role, res);
 
-    return res.status(201).json({ token, expiresIn });
+    return res.status(201).json({ token, expiresIn, id: user._id });
   } catch (error) {
     console.log(error);
     if (error.code === 400) {
