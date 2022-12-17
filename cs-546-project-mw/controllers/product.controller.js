@@ -29,7 +29,7 @@ export const getProduct = async (req, res) => {
     }
     const supplier = product.suppliers.find((supplier) => supplier.supplierID === req.user.uid);
     if (supplier === undefined) {
-      return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
+      return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
     }
     const { stock, price, currency } = product.suppliers.find((supplier) => supplier.supplierID === req.user.uid);
     return res.json({ ...product.toJSON(), stock, price, currency, suppliers: undefined });

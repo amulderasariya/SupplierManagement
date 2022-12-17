@@ -15,18 +15,18 @@
 				<div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
 					<Form class="space-y-6" @submit="onSubmit" :validation-schema="schema">
 						<div>
-							<label for="companyName" class="block text-sm font-medium text-gray-700">Company Name</label>
+							<label for="organization" class="block text-sm font-medium text-gray-700">Company Name</label>
 							<div class="mt-1">
 								<Field
-									id="companyName"
-									name="companyName"
+									id="organization"
+									name="organization"
 									type="text"
-									autocomplete="companyName"
+									autocomplete="organization"
 									required="true"
 									class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								/>
 							</div>
-							<ErrorMessage class="mt-2 text-sm text-red-600" name="companyName" />
+							<ErrorMessage class="mt-2 text-sm text-red-600" name="organization" />
 						</div>
 
 						<div>
@@ -86,7 +86,7 @@ const router = useRouter();
 const schema = yup
 	.object()
 	.shape({
-		companyName: yup
+		organization: yup
 			.string()
 			.min(3, "Company name must be at least 3 characters")
 			.max(15, "Company name must be less than 15 characters")
@@ -136,7 +136,7 @@ const onSubmit = async (values) => {
 		$cookies.set("token", res.data.token);
 		axios.defaults.headers.common["Authorization"] = `Bearer ${$cookies.get("token")}`;
 
-		const user = await axios.get("/auth/userInfo");
+		const user = await axios.get("/auth/user");
 		$cookies.set("user", user.data);
 
 		toast.success("User Registered!");
