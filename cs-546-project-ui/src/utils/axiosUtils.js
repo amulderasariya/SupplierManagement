@@ -20,13 +20,14 @@ const postData = (url) => async (data) => {
   }
 };
 
-const getData = (url) => async () => {
+const getData = (url) => async (data) => {
   try {
     const token = JSON.parse(localStorage.getItem('token'));
     const response = await axios.get(API_URL + url, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      ...data,
     });
     if (response.data.token) {
       localStorage.setItem('token', JSON.stringify(response.data.token));

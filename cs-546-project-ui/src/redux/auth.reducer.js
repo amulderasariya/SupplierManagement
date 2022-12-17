@@ -8,7 +8,7 @@ export const register = createAsyncThunk('auth/register', axiosUtils.postData('a
 export const login = createAsyncThunk('auth/login', axiosUtils.postData('auth/login'));
 
 export const logout = createAsyncThunk('auth/logout', axiosUtils.getData('auth/logout'));
-export const userInfo = createAsyncThunk('auth/userInfo', axiosUtils.getData('auth/userInfo'));
+export const userInfo = createAsyncThunk('auth/user', axiosUtils.getData('auth/user'));
 
 export const getSuppliers = createAsyncThunk('auth/users/SUPPLIERS', axiosUtils.getData('auth/users/SUPPLIERS'));
 export const getOwners = createAsyncThunk('auth/users/OWNER', axiosUtils.getData('auth/users/OWNER'));
