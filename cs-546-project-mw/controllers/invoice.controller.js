@@ -13,7 +13,9 @@ export const createInvoice = async (req, res) => {
     const productErrors = [];
     let gross_amount = 0;
     for (let i = 0; i < invoiceProducts.length; i++) {
-      const product = invoiceProducts[i];
+      const product = {};
+      product.id = invoiceProducts[i].id;
+      product.quantity = invoiceProducts[i].quantity;
       const productExists = await Product.findById(product.productID);
       if (!productExists) {
         productErrors.push({ msg: `Product ${product.productID} does not exist` });
@@ -34,8 +36,9 @@ export const createInvoice = async (req, res) => {
           .amount(supplierExists.price * product.quantity)
           .convert();
       } catch (e) {
-        product.push({ msg: e.message });
+        productErrors.push({ msg: e.message });
       }
+      invoiceProducts[i] = product;
     }
     let status = 'PENDING';
     if (productErrors.length > 0) return res.status(400).json({ errors: productErrors });
@@ -59,7 +62,9 @@ export const approveInvoice = async (req, res) => {
   try {
     const { due_date, paidAmount, net_amount } = req.body;
     const invoice = await Invoice.findById(req.params.id);
-    console.log(invoice.gross_amount, net_amount);
+    if (invoice === null) {
+      return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
+    }
     if (invoice.gross_amount > net_amount) {
       return res.status(400).json({ errors: [{ msg: 'Net amount cannot be less than gross amount' }] });
     }
@@ -77,6 +82,21 @@ export const approveInvoice = async (req, res) => {
     invoice.paidAmount = paidAmount;
     invoice.net_amount = net_amount;
     invoice.status = 'APPROVED';
+    invoice.save();
+    res.json(invoice.toJSON());
+  } catch (e) {
+    console.log(e);
+    res.status(500).json('Something went wrong');
+  }
+};
+
+export const rejectInvoice = async (req, res) => {
+  try {
+    const invoice = await Invoice.findById(req.params.id);
+    if (invoice === null) {
+      return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
+    }
+    invoice.status = 'REJECTED';
     invoice.save();
     res.json(invoice.toJSON());
   } catch (e) {
