@@ -11,10 +11,12 @@
 							<p>Filter products by supplier & catergory</p>
 						</div>
 					</div>
-					<SimpleSelect heading="Categories" :options="categories" class="w-1/4" />
-					<SimpleSelect heading="Suppliers" :options="suppliers" class="w-1/4" />
+					<SimpleSelect heading="Categories" v-model="selectCategory" :options="categories" class="w-1/4" />
+					<SimpleSelect heading="Suppliers" v-model="selectSupplier" :options="suppliers" class="w-1/4" />
 					<div class="mt-5 items-center">
-						<button type="button" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm">Clear All</button>
+						<button type="button" @click="clearFilters" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm">
+							Clear All
+						</button>
 					</div>
 				</div>
 			</div>
@@ -51,6 +53,13 @@ import ProductModal from "../components/ProductModal.vue";
 import SimpleSelect from "../components/SimpleSelect.vue";
 
 let open = ref(false);
+const selectCategory = ref(null);
+const selectSupplier = ref(null);
+
+const clearFilters = () => {
+	selectCategory.value = null;
+	selectSupplier.value = null;
+};
 
 const products = [
 	{
