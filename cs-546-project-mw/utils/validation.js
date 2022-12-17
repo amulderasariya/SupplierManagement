@@ -8,6 +8,7 @@ import hierJSON from '../hier.json' assert { type: 'json' };
 const emptySpaceregex = /^((?!\s).)*/;
 const onlyCharAndNumberRegex = /^[a-zA-Z0-9-\s]*$/;
 const onlyCharAndSpaceRegex = /^[a-zA-Z\s]*$/;
+// prettier-ignore
 export const listOfCurrencies = new CurrencyConverter().currencyCode;
 
 const isValidMongooseId = (value, { req }) => {
@@ -110,15 +111,27 @@ export const validateProduct = {
 
 export const validateInvoice = {
   get: [param('id', 'Incorrect id format').isString().trim().custom(isValidMongooseId), validationResultExpress],
+
+  approve: [
+    param('id', 'Incorrect id format').isString().trim().custom(isValidMongooseId),
+    body('due_date', 'Due date is not a valid date').isISO8601().toDate(),
+    body('net_amount', 'Net Amount should be an float with min 0').isFloat({ min: 0 }),
+    body('paidAmount', 'Paid Amount should be an float with min 0').isFloat({ min: 0 }),
+    validationResultExpress,
+  ],
+
+  complete: [
+    param('id', 'Incorrect id format').isString().trim().custom(isValidMongooseId),
+    body('deliveredDate', 'Delivered date is not a valid date').isISO8601().toDate(),
+    validationResultExpress,
+  ],
   remove: [param('id', 'Incorrect id format').trim().custom(isValidMongooseId), validationResultExpress],
   create: [
-    body('ownerId', 'Incorrect id format').isString().trim().custom(isValidMongooseId),
+    body('supplierID', 'Incorrect id format').isString().trim().custom(isValidMongooseId),
     body('invoiceProducts', 'Invoice product should be an array with min length 1').isArray({ min: 1 }),
     body('invoiceProducts.*.productID', 'Invalid Product id').trim().custom(isValidMongooseId),
     body('invoiceProducts.*.quantity', 'Quantity should be an integer with min 1').isInt({ min: 1 }),
-    body('invoiceProducts.*.price', 'Price should be an float with min 0').isFloat({ min: 0 }),
-    body('net_amount', 'Price should be an float with min 0').isFloat({ min: 0 }),
-    body('due_date', 'Due date is not a valid date').isISO8601().toDate(),
+    // body('invoiceProducts.*.price', 'Price should be an float with min 0').isFloat({ min: 0 }),
     body('currency', 'Invalid currency').isString().trim().isIn(listOfCurrencies),
     validationResultExpress,
   ],
