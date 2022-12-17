@@ -240,7 +240,7 @@ const seedProduct = async () => {
 				subCategory: "4K MOVIES",
 				stock: 1000,
 				price: 999,
-				currency: "INR",
+				currency: "USD",
 			},
 			{ headers: { Authorization: "Bearer " + supplier_token1 } }
 		);
@@ -250,7 +250,7 @@ const seedProduct = async () => {
 				id: prod0.data._id,
 				stock: 400,
 				price: 799,
-				currency: "INR",
+				currency: "USD",
 			},
 			{ headers: { Authorization: "Bearer " + supplier_token2 } }
 		);
@@ -260,7 +260,7 @@ const seedProduct = async () => {
 				id: prod0.data._id,
 				stock: 500,
 				price: 899,
-				currency: "INR",
+				currency: "USD",
 			},
 			{ headers: { Authorization: "Bearer " + supplier_token5 } }
 		);
@@ -915,7 +915,7 @@ const seedInvoices = async () => {
 				"http://localhost:8000/invoice",
 				{
 					supplierID: res1.data.id,
-					currency: "CHF",
+					currency: "USD",
 					invoiceProducts: [
 						{
 							productID: prod1.data._id,
@@ -958,7 +958,7 @@ const seedInvoices = async () => {
 				"http://localhost:8000/invoice",
 				{
 					supplierID: res2.data.id,
-					currency: "EUR",
+					currency: "USD",
 					invoiceProducts: [
 						{
 							productID: prod13.data._id,
@@ -1000,7 +1000,7 @@ const seedInvoices = async () => {
 				"http://localhost:8000/invoice",
 				{
 					supplierID: res3.data.id,
-					currency: "ETH",
+					currency: "USD",
 					invoiceProducts: [
 						{
 							productID: prod7.data._id,
@@ -1042,7 +1042,7 @@ const seedInvoices = async () => {
 				"http://localhost:8000/invoice",
 				{
 					supplierID: res4.data.id,
-					currency: "ZMW",
+					currency: "USD",
 					invoiceProducts: [
 						{
 							productID: prod7.data._id,
