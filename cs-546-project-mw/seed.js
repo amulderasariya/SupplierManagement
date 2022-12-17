@@ -1282,7 +1282,7 @@ const seedInvoices = async () => {
 					{
 						productID: prod7.data._id,
 						quantity: "10",
-					},
+					}, 
 					{
 						productID: prod8.data._id,
 						quantity: "100",
