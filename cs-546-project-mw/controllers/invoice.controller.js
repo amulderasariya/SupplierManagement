@@ -108,7 +108,10 @@ export const getInvoices = async (req, res) => {
 
 export const getInvoice = async (req, res) => {
   try {
-    const invoice = await Invoice.findById(req.param.id);
+    const invoice = await Invoice.findById(req.params.id);
+    if (invoice === null) {
+      return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
+    }
     res.json(invoice.toJSON());
   } catch (e) {
     console.log(e);

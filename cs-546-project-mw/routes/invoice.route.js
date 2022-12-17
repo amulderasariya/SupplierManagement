@@ -11,9 +11,9 @@ import { validateInvoice } from '../utils/validation.js';
 
 const invoiceRouter = Router();
 
-invoiceRouter.get('/', requireToken, getInvoices);
+invoiceRouter.get('/', requireToken(), getInvoices);
 invoiceRouter.post('/', requireToken(['OWNER']), validateInvoice.create, createInvoice);
-invoiceRouter.get('/:id', requireToken, validateInvoice.get, getInvoice);
+invoiceRouter.get('/:id', requireToken(), validateInvoice.get, getInvoice);
 invoiceRouter.post('/:id/approve', requireToken(['SUPPLIER']), validateInvoice.approve, approveInvoice);
 invoiceRouter.post('/:id/complete', requireToken(['OWNER']), validateInvoice.complete, completeInvoice);
 
