@@ -7,7 +7,7 @@ import { User } from '../models/User.js';
 export const createInvoice = async (req, res) => {
   try {
     const { supplierID, invoiceProducts, currency } = req.body;
-    const ownerId = req.user.uid;
+    const ownerID = req.user.uid;
     const supplierExists = await User.findById(supplierID);
     if (!supplierExists) return res.status(400).json({ errors: [{ msg: 'Invalid supplier id' }] });
     const productErrors = [];
@@ -43,7 +43,7 @@ export const createInvoice = async (req, res) => {
     let status = 'PENDING';
     if (productErrors.length > 0) return res.status(400).json({ errors: productErrors });
     const invoice = new Invoice({
-      ownerId,
+      ownerID,
       supplierID,
       currency,
       invoiceProducts,
@@ -133,7 +133,7 @@ export const completeInvoice = async (req, res) => {
 
 export const getInvoices = async (req, res) => {
   try {
-    const invoices_data = await Invoice.find({ $or: [{ ownerId: req.user.uid }, { supplierID: req.user.uid }] });
+    const invoices_data = await Invoice.find({ $or: [{ ownerID: req.user.uid }, { supplierID: req.user.uid }] });
     const invoices_segregated = {};
     invoices_segregated.PENDING = [];
     invoices_segregated.APPROVED = [];
@@ -141,7 +141,7 @@ export const getInvoices = async (req, res) => {
     invoices_segregated.COMPLETED = [];
     for (let i = 0; i < invoices_data.length; i++) {
       let invoice = invoices_data[i].toJSON();
-      let owner = await User.findById(invoice.ownerId);
+      let owner = await User.findById(invoice.ownerID);
       let supplier = await User.findById(invoice.supplierID);
       invoice.ownerName = owner.organization;
       invoice.supplierName = supplier.organization;
@@ -161,6 +161,9 @@ export const getInvoices = async (req, res) => {
 export const getInvoice = async (req, res) => {
   try {
     const invoice = await Invoice.findById(req.params.id);
+    if (invoice.ownerID) {
+      return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
+    }
     if (invoice === null) {
       return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
     }
