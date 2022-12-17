@@ -7,7 +7,7 @@ export const getProducts = async (req, res) => {
     // name: { $regex: name || '.*' }
     Object.keys(query).forEach((key) => query[key] === undefined && delete query[key]);
     if (req.user.role === 'SUPPLIER') {
-      supplierID = req.user.id;
+      supplierID = req.user.uid;
     }
     let products = await Product.find({ 'suppliers.supplierID': supplierID, ...query });
     products = products.map((product) => {

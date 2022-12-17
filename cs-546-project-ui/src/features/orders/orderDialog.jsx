@@ -18,6 +18,7 @@ export default function OrderDialog(props) {
   const [user, setUser] = useState({});
   const lookups = useSelector((state) => state.lookups);
   const productState = useSelector((state) => state.products);
+  const orderState = useSelector((state) => state.orders);
 
   const [currency, setCurrency] = useState('USD');
   const [invoiceProducts, setInvoiceProducts] = useState([]);
@@ -29,6 +30,11 @@ export default function OrderDialog(props) {
       dispatch(getSuppliers());
     }
   }, []);
+  useEffect(() => {
+    if (orderState.createOrderStatus) {
+      handleDialogClose();
+    }
+  }, [orderState.createOrderStatus]);
   useEffect(() => {
     if (user) {
       dispatch(getProducts({ params: { supplierID: user.id } }));
@@ -125,6 +131,7 @@ export default function OrderDialog(props) {
                 value={product.producName}
                 onChange={(e, product) => {
                   invoiceProducts[i].producName = product.label;
+                  invoiceProducts[i].productID = product._id;
                   setInvoiceProducts([...invoiceProducts]);
                 }}
                 renderInput={(params) => <TextField {...params} label="Product Name" />}

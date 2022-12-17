@@ -2,10 +2,10 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { get } from 'lodash';
 import axiosUtils from '../utils/axiosUtils';
 
-export const createOrders = createAsyncThunk('addOrder', axiosUtils.postData('orders'));
+export const createOrders = createAsyncThunk('addOrder', axiosUtils.postData('invoice'));
 
-export const getOrders = createAsyncThunk('getOrder', axiosUtils.getData('orders'));
-const initialState = { createOrderStatus: false, allOrders: [], errors: [], fetchOrders: true };
+export const getOrders = createAsyncThunk('getOrder', axiosUtils.getData('invoice'));
+const initialState = { createOrderStatus: false, allOrders: {}, errors: [], fetchOrders: true };
 const orderSlice = createSlice({
   name: 'order',
   initialState,

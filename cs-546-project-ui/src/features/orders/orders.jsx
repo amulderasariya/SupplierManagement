@@ -4,13 +4,19 @@ import { Accordion, AccordionDetails, AccordionSummary, Button, Grid, TextField,
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import OrderTable from './orderTable';
 import OrderDialog from './orderDialog';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getOrders } from '../../redux/order.reducer';
 
 export default function Orders() {
   const [open, setOpen] = React.useState(false);
 
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
 
+  const orderState = useSelector((state) => state.orders);
+  useEffect(() => {
+    if (orderState.fetchOrders) dispatch(getOrders());
+  }, [orderState.fetchOrders]);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -37,7 +43,7 @@ export default function Orders() {
           <Typography variant="h6">Pending orders</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <OrderTable />
+          <OrderTable columns={['Name', 'Currency', 'Gross Amount']} rows= {orderState.allOrders.PENDING}/>
         </AccordionDetails>
       </Accordion>
       <Accordion m={1} defaultExpanded>
