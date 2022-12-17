@@ -61,14 +61,14 @@ export const createInvoice = async (req, res) => {
 
 export const approveInvoice = async (req, res) => {
   try {
-    const isSeedRunning= await PreBuild.find();
-    if (invoice.supplierID !== req.user.uid) {
-      return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
-    }
+    const isSeedRunning = await PreBuild.find();
     const { due_date, paidAmount, net_amount } = req.body;
     const invoice = await Invoice.findById(req.params.id);
     if (invoice === null) {
       return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
+    }
+    if (invoice.supplierID !== req.user.uid) {
+      return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
     }
     if (invoice.gross_amount > net_amount) {
       return res.status(400).json({ errors: [{ msg: 'Net amount cannot be less than gross amount' }] });
@@ -81,12 +81,10 @@ export const approveInvoice = async (req, res) => {
       invoice.paymentStatus = 'PENDING';
     }
     if (isSeedRunning[0] && !isSeedRunning[0].isSeedRunning) {
-			if (due_date.getTime() < new Date().getTime()) {
-				return res
-					.status(400)
-					.json({ errors: [{ msg: "Due date cannot be in the past" }] });
-			}
-		}
+      if (due_date.getTime() < new Date().getTime()) {
+        return res.status(400).json({ errors: [{ msg: 'Due date cannot be in the past' }] });
+      }
+    }
     invoice.due_date = due_date;
     invoice.paidAmount = paidAmount;
     invoice.net_amount = net_amount;
@@ -108,12 +106,12 @@ export const approveInvoice = async (req, res) => {
 
 export const rejectInvoice = async (req, res) => {
   try {
-    if (invoice.supplierID !== req.user.uid) {
-      return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
-    }
     const invoice = await Invoice.findById(req.params.id);
     if (invoice === null) {
       return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
+    }
+    if (invoice.supplierID !== req.user.uid) {
+      return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
     }
     invoice.status = 'REJECTED';
     await invoice.save();
@@ -126,24 +124,22 @@ export const rejectInvoice = async (req, res) => {
 
 export const completeInvoice = async (req, res) => {
   try {
-    if (invoice.ownerID !== req.user.uid) {
-      return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
-    }
     const { deliveredDate } = req.body;
     const invoice = await Invoice.findById(req.params.id);
-    const isSeedRunning= await PreBuild.find();
+    const isSeedRunning = await PreBuild.find();
     if (invoice === null) {
       return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
     }
+    if (invoice.ownerID !== req.user.uid) {
+      return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
+    }
     if (isSeedRunning[0] && !isSeedRunning[0].isSeedRunning) {
-			if (deliveredDate.getTime() > new Date().getTime()) {
-				return res
-					.status(400)
-					.json({
-						errors: [{ msg: "Delivered date date cannot be in the future" }],
-					});
-			}
-		}
+      if (deliveredDate.getTime() > new Date().getTime()) {
+        return res.status(400).json({
+          errors: [{ msg: 'Delivered date date cannot be in the future' }],
+        });
+      }
+    }
     invoice.deliveredDate = deliveredDate;
     invoice.paymentStatus = 'PAID';
     invoice.paidAmount = invoice.net_amount;
@@ -196,6 +192,65 @@ export const getInvoice = async (req, res) => {
     }
   } catch (e) {
     console.log(e);
-    res.status(500).json('Something went wrong');
+    res.status(500).json('Something went wrong');
+  }
+};
+
+export const addRating = async (req, res) => {
+  try {
+    const { rating, review } = req.body;
+    const invoice = await Invoice.findById(req.params.id);
+    if (invoice === null) {
+      return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
+    }
+    if (invoice.ownerID === req.user.uid || invoice.supplierID === req.user.uid) {
+      if (invoice.status == 'COMPLETED') {
+        if (rating <= 5) {
+          if (req.user.role == 'OWNER') {
+            invoice.ownerRating = rating;
+            invoice.ownerReview = review;
+          } else {
+            invoice.supplierRating = rating;
+            invoice.supplierReview = review;
+          }
+          await invoice.save();
+          // await computeOverallRating(req.user.uid)
+          res.json(invoice.toJSON());
+        }
+      }
+    } else {
+      return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
+    }
+  } catch (e) {
+    console.log(e);
+    res.status(500).json('Something went wrong');
+  }
+};
+
+let computeOverallRating = async (userID) => {
+  try {
+    const { rating } = req.body;
+    const invoice = await Invoice.findById(req.params.id);
+    if (invoice === null) {
+      return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
+    }
+    if (invoice.ownerID === req.user.uid || invoice.supplierID === req.user.uid) {
+      if (invoice.status == 'COMPLETED') {
+        if (rating <= 5) {
+          if (req.user.role == 'OWNER') {
+            invoice.ownerRating = rating;
+          } else {
+            invoice.supplierRating = rating;
+          }
+          await invoice.save();
+          res.json(invoice.toJSON());
+        }
+      }
+    } else {
+      return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
+    }
+  } catch (e) {
+    console.log(e);
+    res.status(500).json('Something went wrong');
   }
 };
