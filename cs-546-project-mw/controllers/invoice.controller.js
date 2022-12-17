@@ -82,7 +82,14 @@ export const approveInvoice = async (req, res) => {
     invoice.paidAmount = paidAmount;
     invoice.net_amount = net_amount;
     invoice.status = 'APPROVED';
-    invoice.save();
+    await invoice.save();
+    // for (let i = 0; i < invoice.invoiceProducts.length; i++) {
+    //   let product = invoice.invoiceProducts[i];
+    //   const productExists = await Product.findById(product.productID);
+    //   const supplierExists = productExists.suppliers.find((supp) => supp.supplierID === supplierID);
+    //   supplierExists.stock = supplierExists.stock - product.quantity;
+    //   await productExists.save();
+    // }
     res.json(invoice.toJSON());
   } catch (e) {
     console.log(e);
@@ -97,7 +104,7 @@ export const rejectInvoice = async (req, res) => {
       return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
     }
     invoice.status = 'REJECTED';
-    invoice.save();
+    await invoice.save();
     res.json(invoice.toJSON());
   } catch (e) {
     console.log(e);
@@ -108,13 +115,15 @@ export const rejectInvoice = async (req, res) => {
 export const completeInvoice = async (req, res) => {
   try {
     const { deliveredDate } = req.body;
-
     const invoice = await Invoice.findById(req.params.id);
-
+    if (invoice === null) {
+      return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
+    }
     invoice.deliveredDate = deliveredDate;
     invoice.paymentStatus = 'PAID';
     invoice.paidAmount = invoice.net_amount;
-    invoice.save();
+    invoice.status = 'COMPLETED';
+    await invoice.save();
     res.json(invoice.toJSON());
   } catch (e) {
     console.log(e);
@@ -131,7 +140,15 @@ export const getInvoices = async (req, res) => {
     invoices_segregated.REJECTED = [];
     invoices_segregated.COMPLETED = [];
     for (let i = 0; i < invoices_data.length; i++) {
-      let invoice = invoices_data[i];
+      let invoice = invoices_data[i].toJSON();
+      let owner = await User.findById(invoice.ownerId);
+      let supplier = await User.findById(invoice.supplierID);
+      invoice.ownerName = owner.organization;
+      invoice.supplierName = supplier.organization;
+      for (let j = 0; j < invoice.invoiceProducts.length; j++) {
+        let product = await Product.findById(invoice.invoiceProducts[j].productID);
+        invoice.invoiceProducts[j].productName = product.name;
+      }
       invoices_segregated[invoice.status].push(invoice);
     }
     res.json(invoices_segregated);
