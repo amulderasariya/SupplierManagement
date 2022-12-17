@@ -5,6 +5,8 @@ import { User } from "./models/User.js";
 // import { upsertProduct } from "./controllers/product.controller.js";
 import { Product } from "./models/Product.js";
 import axios from "axios";
+import { Invoice } from "./models/Invoice.js";
+import { PreBuild } from "./models/preBuild.js";
 
 let supplier_token1,
 	supplier_token2,
@@ -15,12 +17,40 @@ let supplier_token1,
 	owner_token2,
 	owner_token3,
 	owner_token4,
-	owner_token5;
+	owner_token5,
+	res,
+	res1,
+	res2,
+	res3,
+	res4,
+	res5,
+	res6,
+	res7,
+	res8,
+	res9,
+	prod0,
+	prod1,
+	prod2,
+	prod3,
+	prod4,
+	// prod5,
+	prod6,
+	prod7,
+	prod8,
+	prod9,
+	prod10,
+	prod11,
+	prod12,
+	prod13,
+	prod14,
+	prod15,
+	prod16,
+	prod17;
 
 const seedUsers = async () => {
 	try {
 		await User.collection.drop();
-		let res = await axios.post("http://localhost:8000/auth/register", {
+		res = await axios.post("http://localhost:8000/auth/register", {
 			email: "supplier1@gmail.com",
 			password: "Babloo@1",
 			repassword: "Babloo@1",
@@ -38,7 +68,7 @@ const seedUsers = async () => {
 			},
 			{ headers: { Authorization: "Bearer " + supplier_token1 } }
 		);
-		let res1 = await axios.post("http://localhost:8000/auth/register", {
+		res1 = await axios.post("http://localhost:8000/auth/register", {
 			email: "supplier2@gmail.com",
 			password: "Hello@12",
 			repassword: "Hello@12",
@@ -55,7 +85,7 @@ const seedUsers = async () => {
 			},
 			{ headers: { Authorization: "Bearer " + supplier_token2 } }
 		);
-		let res2 = await axios.post("http://localhost:8000/auth/register", {
+		res2 = await axios.post("http://localhost:8000/auth/register", {
 			email: "supplier3@gmail.com",
 			password: "Hello@12",
 			repassword: "Hello@12",
@@ -72,7 +102,7 @@ const seedUsers = async () => {
 			},
 			{ headers: { Authorization: "Bearer " + supplier_token3 } }
 		);
-		let res3 = await axios.post("http://localhost:8000/auth/register", {
+		res3 = await axios.post("http://localhost:8000/auth/register", {
 			email: "supplier4@gmail.com",
 			password: "Hello@12",
 			repassword: "Hello@12",
@@ -89,7 +119,7 @@ const seedUsers = async () => {
 			},
 			{ headers: { Authorization: "Bearer " + supplier_token4 } }
 		);
-		let res4 = await axios.post("http://localhost:8000/auth/register", {
+		res4 = await axios.post("http://localhost:8000/auth/register", {
 			email: "supplier5@gmail.com",
 			password: "Hello@12",
 			repassword: "Hello@12",
@@ -106,7 +136,7 @@ const seedUsers = async () => {
 			},
 			{ headers: { Authorization: "Bearer " + supplier_token5 } }
 		);
-		let res5 = await axios.post("http://localhost:8000/auth/register", {
+		res5 = await axios.post("http://localhost:8000/auth/register", {
 			email: "owner1@gmail.com",
 			password: "Babloo@1",
 			repassword: "Babloo@1",
@@ -124,7 +154,7 @@ const seedUsers = async () => {
 			},
 			{ headers: { Authorization: "Bearer " + owner_token1 } }
 		);
-		let res6 = await axios.post("http://localhost:8000/auth/register", {
+		res6 = await axios.post("http://localhost:8000/auth/register", {
 			email: "owner2@gmail.com",
 			password: "Hello@12",
 			repassword: "Hello@12",
@@ -141,7 +171,7 @@ const seedUsers = async () => {
 			},
 			{ headers: { Authorization: "Bearer " + owner_token2 } }
 		);
-		let res7 = await axios.post("http://localhost:8000/auth/register", {
+		res7 = await axios.post("http://localhost:8000/auth/register", {
 			email: "owner3@gmail.com",
 			password: "Hello@12",
 			repassword: "Hello@12",
@@ -158,7 +188,7 @@ const seedUsers = async () => {
 			},
 			{ headers: { Authorization: "Bearer " + owner_token3 } }
 		);
-		let res8 = await axios.post("http://localhost:8000/auth/register", {
+		res8 = await axios.post("http://localhost:8000/auth/register", {
 			email: "owner4@gmail.com",
 			password: "Hello@12",
 			repassword: "Hello@12",
@@ -175,7 +205,7 @@ const seedUsers = async () => {
 			},
 			{ headers: { Authorization: "Bearer " + owner_token4 } }
 		);
-		let res9 = await axios.post("http://localhost:8000/auth/register", {
+		res9 = await axios.post("http://localhost:8000/auth/register", {
 			email: "owner5@gmail.com",
 			password: "Hello@12",
 			repassword: "Hello@12",
@@ -201,7 +231,7 @@ const seedProduct = async () => {
 		//const users= await axios.get("http://localhost:8000/auth/users/suppliers", {header: {Authorization: "Bearer "+ supplier_token}})
 		await Product.collection.drop();
 		// prod 0
-		let prod0 = await axios.post(
+		prod0 = await axios.post(
 			"http://localhost:8000/products",
 			{
 				name: "Ahaa Subscription",
@@ -236,7 +266,7 @@ const seedProduct = async () => {
 		);
 
 		// prod 1
-		let prod1 = await axios.post(
+		prod1 = await axios.post(
 			"http://localhost:8000/products",
 			{
 				name: "GO PRO",
@@ -271,7 +301,7 @@ const seedProduct = async () => {
 			{ headers: { Authorization: "Bearer " + supplier_token4 } }
 		);
 		// prod 2
-		let prod2 = await axios.post(
+		prod2 = await axios.post(
 			"http://localhost:8000/products",
 			{
 				name: "Dunkin' Donuts Breads",
@@ -307,7 +337,7 @@ const seedProduct = async () => {
 		);
 
 		// prod 3
-		let prod3 = await axios.post(
+		prod3 = await axios.post(
 			"http://localhost:8000/products",
 			{
 				name: "Cream O Land Diary Creams",
@@ -342,7 +372,7 @@ const seedProduct = async () => {
 		);
 
 		// prod 4
-		let prod4 = await axios.post(
+		prod4 = await axios.post(
 			"http://localhost:8000/products",
 			{
 				name: "Trousers",
@@ -412,7 +442,7 @@ const seedProduct = async () => {
 		// );
 
 		// prod 6
-		let prod6 = await axios.post(
+		prod6 = await axios.post(
 			"http://localhost:8000/products",
 			{
 				name: "Volks A/C",
@@ -446,7 +476,7 @@ const seedProduct = async () => {
 			{ headers: { Authorization: "Bearer " + supplier_token3 } }
 		);
 		// prod 7
-		let prod7 = await axios.post(
+		prod7 = await axios.post(
 			"http://localhost:8000/products",
 			{
 				name: "Car Batteries",
@@ -480,7 +510,7 @@ const seedProduct = async () => {
 			{ headers: { Authorization: "Bearer " + supplier_token4 } }
 		);
 		// prod 8
-		let prod8 = await axios.post(
+		prod8 = await axios.post(
 			"http://localhost:8000/products",
 			{
 				name: "Hair Shampoo",
@@ -514,7 +544,7 @@ const seedProduct = async () => {
 			{ headers: { Authorization: "Bearer " + supplier_token5 } }
 		);
 		// prod 9
-		let prod9 = await axios.post(
+		prod9 = await axios.post(
 			"http://localhost:8000/products",
 			{
 				name: "Home Trash Bags",
@@ -550,7 +580,7 @@ const seedProduct = async () => {
 			{ headers: { Authorization: "Bearer " + supplier_token4 } }
 		);
 		// prod 10
-		let prod10 = await axios.post(
+		prod10 = await axios.post(
 			"http://localhost:8000/products",
 			{
 				name: "Stamulo-T",
@@ -584,7 +614,7 @@ const seedProduct = async () => {
 			{ headers: { Authorization: "Bearer " + supplier_token3 } }
 		);
 		// prod 11
-		let prod11 = await axios.post(
+		prod11 = await axios.post(
 			"http://localhost:8000/products",
 			{
 				name: "Blue-Lens",
@@ -618,7 +648,7 @@ const seedProduct = async () => {
 			{ headers: { Authorization: "Bearer " + supplier_token4 } }
 		);
 		// prod 12
-		let prod12 = await axios.post(
+		prod12 = await axios.post(
 			"http://localhost:8000/products",
 			{
 				name: "Showmen Pillows",
@@ -652,7 +682,7 @@ const seedProduct = async () => {
 			{ headers: { Authorization: "Bearer " + supplier_token2 } }
 		);
 		// prod 13
-		let prod13 = await axios.post(
+		prod13 = await axios.post(
 			"http://localhost:8000/products",
 			{
 				name: "HOME-OFFICE DECORS",
@@ -686,7 +716,7 @@ const seedProduct = async () => {
 			{ headers: { Authorization: "Bearer " + supplier_token1 } }
 		);
 		// prod 14
-		let prod14 = await axios.post(
+		prod14 = await axios.post(
 			"http://localhost:8000/products",
 			{
 				name: "KIDS BIKES",
@@ -720,7 +750,7 @@ const seedProduct = async () => {
 			{ headers: { Authorization: "Bearer " + supplier_token3 } }
 		);
 		// prod 15
-		let prod15 = await axios.post(
+		prod15 = await axios.post(
 			"http://localhost:8000/products",
 			{
 				name: "JINGLE BELLS",
@@ -754,7 +784,7 @@ const seedProduct = async () => {
 			{ headers: { Authorization: "Bearer " + supplier_token2 } }
 		);
 		// // prod 16
-		let prod16 = await axios.post(
+		prod16 = await axios.post(
 			"http://localhost:8000/products",
 			{
 				name: "CLINICS",
@@ -788,7 +818,7 @@ const seedProduct = async () => {
 			{ headers: { Authorization: "Bearer " + supplier_token3 } }
 		);
 		// prod 17
-		let prod17 = await axios.post(
+		prod17 = await axios.post(
 			"http://localhost:8000/products",
 			{
 				name: "The Fishing Store",
@@ -826,7 +856,237 @@ const seedProduct = async () => {
 	}
 };
 
+const seedInvoices = async () => {
+	try {
+		let dueDate= new Date();
+		let delDate= new Date();
+		await Invoice.collection.drop();
+		await PreBuild.collection.drop();
+		let isSeedRunning=new PreBuild({isSeedRunning:true});
+		await isSeedRunning.save();
+		for (let i = 0; i < 100; i++) {
+			//1
+			let inv1 = await axios.post(
+				"http://localhost:8000/invoice",
+				{
+					supplierID: res.data.id,
+					currency: "USD",
+					invoiceProducts: [
+						{
+							productID: prod0.data._id,
+							quantity: "10",
+						},
+						{
+							productID: prod2.data._id,
+							quantity: "100",
+						},
+						{
+							productID: prod6.data._id,
+							quantity: "90",
+						},
+					],
+				},
+				{ headers: { Authorization: "Bearer " + owner_token1 } }
+			);
+
+			dueDate.setDate(dueDate.getDate()-7);
+			delDate.setDate(dueDate.getDate()+7);
+
+			inv1=await axios.post(
+				`http://localhost:8000/invoice/${inv1.data._id}/approve`,
+				{
+					due_date: dueDate.toISOString(),
+					paidAmount: 80,
+					net_amount: inv1.data.gross_amount + 0.1*(inv1.data.gross_amount),
+				},
+				{ headers: { Authorization: "Bearer " + supplier_token1 } }
+			);
+			
+			inv1=await axios.post(
+				`http://localhost:8000/invoice/${inv1.data._id}/complete`,
+				{
+					deliveredDate:delDate.toISOString(),
+				},
+				{ headers: { Authorization: "Bearer " + owner_token1 } }
+			);
+
+			//2
+			let inv2= await axios.post(
+				"http://localhost:8000/invoice",
+				{
+					supplierID: res1.data.id,
+					currency: "CHF",
+					invoiceProducts: [
+						{
+							productID: prod1.data._id,
+							quantity: "10",
+						},
+						{
+							productID: prod3.data._id,
+							quantity: "100",
+						},
+						{
+							productID: prod7.data._id,
+							quantity: "90",
+						},
+					],
+				},
+				{ headers: { Authorization: "Bearer " + owner_token2 } }
+			);
+
+
+			inv2=await axios.post(
+				`http://localhost:8000/invoice/${inv2.data._id}/approve`,
+				{
+					due_date: dueDate.toISOString(),
+					paidAmount: 80,
+					net_amount: inv2.data.gross_amount + 0.1*(inv2.data.gross_amount),
+				},
+				{ headers: { Authorization: "Bearer " + supplier_token2 } }
+			);
+			
+			inv2=await axios.post(
+				`http://localhost:8000/invoice/${inv2.data._id}/complete`,
+				{
+					deliveredDate:delDate.toISOString(),
+				},
+				{ headers: { Authorization: "Bearer " + owner_token2 } }
+			);
+
+			// 3
+			let inv3= await axios.post(
+				"http://localhost:8000/invoice",
+				{
+					supplierID: res2.data.id,
+					currency: "EUR",
+					invoiceProducts: [
+						{
+							productID: prod13.data._id,
+							quantity: "10",
+						},
+						{
+							productID: prod16.data._id,
+							quantity: "100",
+						},
+						{
+							productID: prod17.data._id,
+							quantity: "90",
+						},
+					],
+				},
+				{ headers: { Authorization: "Bearer " + owner_token3 } }
+			);
+
+			inv3=await axios.post(
+				`http://localhost:8000/invoice/${inv3.data._id}/approve`,
+				{
+					due_date: dueDate.toISOString(),
+					paidAmount: 8,
+					net_amount: inv3.data.gross_amount + 0.1*(inv3.data.gross_amount),
+				},
+				{ headers: { Authorization: "Bearer " + supplier_token3 } }
+			);
+			
+			inv3=await axios.post(
+				`http://localhost:8000/invoice/${inv3.data._id}/complete`,
+				{
+					deliveredDate:delDate.toISOString(),
+				},
+				{ headers: { Authorization: "Bearer " + owner_token3 } }
+			);
+			// 4
+
+			let inv4= await axios.post(
+				"http://localhost:8000/invoice",
+				{
+					supplierID: res3.data.id,
+					currency: "ETH",
+					invoiceProducts: [
+						{
+							productID: prod7.data._id,
+							quantity: "10",
+						},
+						{
+							productID: prod9.data._id,
+							quantity: "100",
+						},
+						{
+							productID: prod11.data._id,
+							quantity: "90",
+						},
+					],
+				},
+				{ headers: { Authorization: "Bearer " + owner_token4 } }
+			);
+
+			inv4=await axios.post(
+				`http://localhost:8000/invoice/${inv4.data._id}/approve`,
+				{
+					due_date: dueDate.toISOString(),
+					paidAmount: 8,
+					net_amount: inv4.data.gross_amount + 0.1*(inv4.data.gross_amount),
+				},
+				{ headers: { Authorization: "Bearer " + supplier_token4 } }
+			);
+			
+			inv4=await axios.post(
+				`http://localhost:8000/invoice/${inv4.data._id}/complete`,
+				{
+					deliveredDate:delDate.toISOString(),
+				},
+				{ headers: { Authorization: "Bearer " + owner_token4 } }
+			);
+			// 5
+
+			let inv5=await axios.post(
+				"http://localhost:8000/invoice",
+				{
+					supplierID: res4.data.id,
+					currency: "ZMW",
+					invoiceProducts: [
+						{
+							productID: prod7.data._id,
+							quantity: "10",
+						},
+						{
+							productID: prod8.data._id,
+							quantity: "100",
+						},
+						{
+							productID: prod12.data._id,
+							quantity: "90",
+						},
+					],
+				},
+				{ headers: { Authorization: "Bearer " + owner_token5 } }
+			);
+
+			inv5=await axios.post(
+				`http://localhost:8000/invoice/${inv5.data._id}/approve`,
+				{
+					due_date: dueDate.toISOString(),
+					paidAmount: 8,
+					net_amount: inv5.data.gross_amount + 0.1*(inv5.data.gross_amount),
+				},
+				{ headers: { Authorization: "Bearer " + supplier_token5 } }
+			);
+			
+			inv5=await axios.post(
+				`http://localhost:8000/invoice/${inv5.data._id}/complete`,
+				{
+					deliveredDate:delDate.toISOString(),
+				},
+				{ headers: { Authorization: "Bearer " + owner_token5 } }
+			);
+		}
+		await PreBuild.collection.drop();
+	} catch (error) {
+		console.error(error.response.data.errors);
+	}
+};
+
 await seedUsers();
 await seedProduct();
+await seedInvoices();
 console.log("seeding completed");
 process.exit(0);
