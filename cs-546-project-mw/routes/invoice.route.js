@@ -1,11 +1,5 @@
 import { Router } from 'express';
-import {
-  approveInvoice,
-  completeInvoice,
-  createInvoice,
-  getInvoice,
-  getInvoices,
-} from '../controllers/invoice.controller.js';
+import { approveInvoice, completeInvoice, createInvoice, getInvoice, getInvoices } from '../controllers/invoice.controller.js';
 import { requireToken } from '../middlewares/token.js';
 import { validateInvoice } from '../utils/validation.js';
 

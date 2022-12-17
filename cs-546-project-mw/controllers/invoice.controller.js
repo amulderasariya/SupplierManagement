@@ -37,6 +37,7 @@ export const createInvoice = async (req, res) => {
         product.push({ msg: e.message });
       }
     }
+    let status = 'PENDING';
     if (productErrors.length > 0) return res.status(400).json({ errors: productErrors });
     const invoice = new Invoice({
       ownerId,
@@ -44,6 +45,7 @@ export const createInvoice = async (req, res) => {
       currency,
       invoiceProducts,
       gross_amount,
+      status,
     });
     await invoice.save();
     res.json(invoice.toJSON());
@@ -56,21 +58,25 @@ export const createInvoice = async (req, res) => {
 export const approveInvoice = async (req, res) => {
   try {
     const { due_date, paidAmount, net_amount } = req.body;
-    const invoice = await Invoice.findById(req.param.id);
-    if (invoice.gross_amount <= net_amount) {
-      return res.status(400).json({ errors: [{ msg: 'Net amount cant be less than gross amount' }] });
+    const invoice = await Invoice.findById(req.params.id);
+    console.log(invoice.gross_amount, net_amount);
+    if (invoice.gross_amount > net_amount) {
+      return res.status(400).json({ errors: [{ msg: 'Net amount cannot be less than gross amount' }] });
     }
     if (paidAmount > net_amount) {
-      return res.status(400).json({ errors: [{ msg: 'Paid amount cant be less than net amount' }] });
+      return res.status(400).json({ errors: [{ msg: 'Paid amount cannot be more than net amount' }] });
     } else if (paidAmount === net_amount) {
       invoice.paymentStatus = 'PAID';
     } else {
       invoice.paymentStatus = 'PENDING';
     }
+    if (due_date <= new Date().toISOString()) {
+      return res.status(400).json({ errors: [{ msg: 'Due date cannot be in the past' }] });
+    }
     invoice.due_date = due_date;
     invoice.paidAmount = paidAmount;
     invoice.net_amount = net_amount;
-    invoice.deliveredDate;
+    invoice.status = 'APPROVED';
     invoice.save();
     res.json(invoice.toJSON());
   } catch (e) {
@@ -83,7 +89,7 @@ export const completeInvoice = async (req, res) => {
   try {
     const { deliveredDate } = req.body;
 
-    const invoice = await Invoice.findById(req.param.id);
+    const invoice = await Invoice.findById(req.params.id);
 
     invoice.deliveredDate = deliveredDate;
     invoice.paymentStatus = 'PAID';
