@@ -31,7 +31,7 @@ const invoiceSchema = new Schema({
   ],
   due_date: {
     type: Date,
-    required: true,
+    required: false,
   },
   gross_amount: {
     type: Number,
@@ -39,15 +39,11 @@ const invoiceSchema = new Schema({
   },
   net_amount: {
     type: Number,
-    required: true,
+    required: false,
   },
   currency: {
     type: String,
     required: true,
-    trim: true,
-  },
-  invoiceFileURL: {
-    type: String,
     trim: true,
   },
   deliveredDate: {

@@ -6,7 +6,7 @@ import { User } from '../models/User.js';
 
 export const createInvoice = async (req, res) => {
   try {
-    const { supplierID, invoiceProducts, currency, invoiceFileURL } = req.body;
+    const { supplierID, invoiceProducts, currency } = req.body;
     const ownerId = req.user.uid;
     const supplierExists = await User.findById(supplierID);
     if (!supplierExists) return res.status(400).json({ errors: [{ msg: 'Invalid supplier id' }] });
@@ -26,7 +26,13 @@ export const createInvoice = async (req, res) => {
       }
       try {
         const currenyConvertor = new CC();
-        gross_amount += await currenyConvertor.from(supplierExists.currency).to(currency).amount(product.price).convert();
+        let price = await currenyConvertor.from(supplierExists.currency).to(currency).amount(supplierExists.price).convert();
+        product.price = price;
+        gross_amount += await currenyConvertor
+          .from(supplierExists.currency)
+          .to(currency)
+          .amount(supplierExists.price * product.quantity)
+          .convert();
       } catch (e) {
         product.push({ msg: e.message });
       }
@@ -35,10 +41,8 @@ export const createInvoice = async (req, res) => {
     const invoice = new Invoice({
       ownerId,
       supplierID,
-      net_amount,
       currency,
       invoiceProducts,
-      invoiceFileURL,
       gross_amount,
     });
     await invoice.save();
