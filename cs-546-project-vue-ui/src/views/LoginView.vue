@@ -54,7 +54,7 @@ const router = useRouter();
 const schema = yup
 	.object()
 	.shape({
-		email: yup.string().email("Enter a valid email").required("Email field is required").trim("Email can't contain leading or trailing spaces"),
+		email: yup.string().email("Enter a valid email").required("Email field is required").max(50, "Email must be less than 50 characters").trim("Email can't contain leading or trailing spaces"),
 		password: yup
 			.string()
 			.matches(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/, "Password must contain at least one special character")
@@ -63,7 +63,7 @@ const schema = yup
 			.matches(/[A-Z]/, "Password must contain at least one upper case letter")
 			.matches(/[a-z]/, "Password must contain at least one lower case letter")
 			.min(6, "Password must be at least 6 characters")
-			.max(25, "Password must be less than 25 characters")
+			.max(50, "Password must be less than 50 characters")
 			.required("Password field is required")
 			.trim("Password can't contain leading or trailing spaces"),
 	})
