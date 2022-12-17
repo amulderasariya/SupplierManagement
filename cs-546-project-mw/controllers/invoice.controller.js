@@ -229,28 +229,21 @@ export const addRating = async (req, res) => {
 
 let computeOverallRating = async (userID) => {
   try {
-    const { rating } = req.body;
-    const invoice = await Invoice.findById(req.params.id);
-    if (invoice === null) {
-      return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
-    }
-    if (invoice.ownerID === req.user.uid || invoice.supplierID === req.user.uid) {
-      if (invoice.status == 'COMPLETED') {
-        if (rating <= 5) {
-          if (req.user.role == 'OWNER') {
-            invoice.ownerRating = rating;
-          } else {
-            invoice.supplierRating = rating;
-          }
-          await invoice.save();
-          res.json(invoice.toJSON());
-        }
-      }
-    } else {
-      return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
+    let user = await User.findById(userID);
+    let current_rating = user.rating;
+    const invoices_data = await Invoice.find({
+      $and: [{ $or: [{ ownerID: req.user.uid }, { supplierID: req.user.uid }] }, { status: '' }],
+    });
+    if (invoices_data.length !== 0) {
+      invoices_data.forEach((element) => {
+        total += element.rating;
+      });
+      average = total / invoices_data.length;
+      // console.log("total =", total);
+      average = average.toFixed(2);
     }
   } catch (e) {
     console.log(e);
-    res.status(500).json('Something went wrong');
+    // res.status(500).json('Something went wrong');
   }
 };
