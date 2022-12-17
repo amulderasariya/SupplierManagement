@@ -111,7 +111,6 @@ export const validateProduct = {
 
 export const validateInvoice = {
   get: [param('id', 'Incorrect id format').isString().trim().custom(isValidMongooseId), validationResultExpress],
-
   approve: [
     param('id', 'Incorrect id format').isString().trim().custom(isValidMongooseId),
     body('due_date', 'Due date is not a valid date').isISO8601().toDate(),
@@ -119,12 +118,16 @@ export const validateInvoice = {
     body('paidAmount', 'Paid Amount should be an float with min 0').isFloat({ min: 0 }),
     validationResultExpress,
   ],
-  
   reject: [param('id', 'Incorrect id format').trim().custom(isValidMongooseId), validationResultExpress],
-
   complete: [
     param('id', 'Incorrect id format').isString().trim().custom(isValidMongooseId),
     body('deliveredDate', 'Delivered date is not a valid date').isISO8601().toDate(),
+    validationResultExpress,
+  ],
+  rating: [
+    param('id', 'Incorrect id format').isString().trim().custom(isValidMongooseId),
+    body('rating', 'Rating should be an float with values between min 0 and max 5.0').isFloat({ min: 0.0, max: 5.0 }),
+    body('review', 'Review should be string').isString().trim(),
     validationResultExpress,
   ],
   remove: [param('id', 'Incorrect id format').trim().custom(isValidMongooseId), validationResultExpress],
@@ -133,7 +136,6 @@ export const validateInvoice = {
     body('invoiceProducts', 'Invoice product should be an array with min length 1').isArray({ min: 1 }),
     body('invoiceProducts.*.productID', 'Invalid Product id').trim().custom(isValidMongooseId),
     body('invoiceProducts.*.quantity', 'Quantity should be an integer with min 1').isInt({ min: 1 }),
-    // body('invoiceProducts.*.price', 'Price should be an float with min 0').isFloat({ min: 0 }),
     body('currency', 'Invalid currency').isString().trim().isIn(listOfCurrencies),
     validationResultExpress,
   ],

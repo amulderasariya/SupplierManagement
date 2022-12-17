@@ -96,9 +96,7 @@ var selectCity = ref(data.city || "");
 try {
 	countryDropdown.value = await axios.get("/lookup/country");
 } catch (e) {
-	e.response.data.errors.forEach((error) => {
-		toast.error(error.msg);
-	});
+	toast.error(e.response.data.message);
 }
 
 const onSelectCountry = async () => {
@@ -111,9 +109,7 @@ const onSelectCountry = async () => {
 			},
 		});
 	} catch (e) {
-		e.response.data.errors.forEach((error) => {
-			toast.error(error.msg);
-		});
+		toast.error(e.response.data.message);
 	}
 };
 
@@ -127,9 +123,7 @@ const onSelectState = async () => {
 			},
 		});
 	} catch (e) {
-		e.response.data.errors.forEach((error) => {
-			toast.error(error.msg);
-		});
+		toast.error(e.response.data.message);
 	}
 };
 
@@ -150,7 +144,7 @@ const schema = yup
 		organization: yup
 			.string()
 			.min(3, "Company name must be at least 3 characters")
-			.max(15, "Company name must be less than 15 characters")
+			.max(50, "Company name must be less than 50 characters")
 			.matches(/^((?!\s{2}).)*$/, "Multiple spaces in between")
 			.matches(/[a-zA-Z]/, "Company name must contain only alphabet")
 			.test({
@@ -171,7 +165,7 @@ const schema = yup
 			})
 			.required("Company name is required")
 			.trim("Company name can't contain leading or trailing spaces"),
-		email: yup.string().email("Enter a valid email").required("Email field is required").trim("Email can't contain leading or trailing spaces"),
+		email: yup.string().email("Enter a valid email").required("Email field is required").max(50, "Email must be less than 50 characters").trim("Email can't contain leading or trailing spaces"),
 	})
 	.strict(true);
 

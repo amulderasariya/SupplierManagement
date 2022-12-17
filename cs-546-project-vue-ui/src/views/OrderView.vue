@@ -197,12 +197,6 @@ const changeCurrentTab = (item) => {
 	}
 };
 
-// const heading = () => {
-// 	for (let i = 0; i < tabs.length; i++) {
-// 		if (tabs[i].current) return tabs[i].name;
-// 	}
-// };
-
 const transactions = () => {
 	for (let i = 0; i < tabs.length; i++) {
 		if (tabs[i].current) return tabs[i];
