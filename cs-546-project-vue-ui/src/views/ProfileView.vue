@@ -96,9 +96,7 @@ var selectCity = ref(data.city || "");
 try {
 	countryDropdown.value = await axios.get("/lookup/country");
 } catch (e) {
-	e.response.data.errors.forEach((error) => {
-		toast.error(error.msg);
-	});
+	toast.error(e.response.data.message);
 }
 
 const onSelectCountry = async () => {
@@ -111,9 +109,7 @@ const onSelectCountry = async () => {
 			},
 		});
 	} catch (e) {
-		e.response.data.errors.forEach((error) => {
-			toast.error(error.msg);
-		});
+		toast.error(e.response.data.message);
 	}
 };
 
@@ -127,9 +123,7 @@ const onSelectState = async () => {
 			},
 		});
 	} catch (e) {
-		e.response.data.errors.forEach((error) => {
-			toast.error(error.msg);
-		});
+		toast.error(e.response.data.message);
 	}
 };
 

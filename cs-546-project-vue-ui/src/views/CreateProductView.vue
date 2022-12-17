@@ -19,13 +19,26 @@
 				</button>
 			</nav>
 		</div>
-		<CreateProductTable v-if="tabs[0].current === true" />
+		<CreateProductTable v-if="tabs[0].current" />
+		<CreateProductForm v-if="tabs[1].current" :hierarchy="hierarchy.data" />
 	</div>
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
+import { useToast } from "vue-toastification";
+import axios from "axios";
+import CreateProductForm from "../components/CreateProductForm.vue";
 import CreateProductTable from "../components/CreateProductTable.vue";
+
+const hierarchy = ref({});
+const toast = useToast();
+
+try {
+	hierarchy.value = await axios.get("/lookup/hierarchy");
+} catch (e) {
+	toast.error(e.response.data.message);
+}
 
 const tabs = reactive([
 	{ name: "Join as supplier on existing product", current: true },

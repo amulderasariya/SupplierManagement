@@ -24,34 +24,13 @@
 								</button>
 
 								<div class="w-full items-start gap-y-8 gap-x-6">
-									<!-- <div class="aspect-w-2 aspect-h-3 overflow-hidden rounded-lg bg-gray-100 sm:col-span-4 lg:col-span-5">
-										<img :src="product.imageSrc" :alt="product.imageAlt" class="object-cover object-center" />
-									</div> -->
-
 									<h2 class="text-2xl font-bold text-gray-900 sm:pr-12">{{ props.product.name }}</h2>
 									<h4 class="text-l text-gray-900 sm:pr-12">(Edit your price and stock parameters before you join as a supplier for this product listing)</h4>
-
-									<!-- <section aria-labelledby="information-heading" class="mt-2">
-                                            <h3 id="information-heading" class="sr-only">Product information</h3>
-
-                                            <p class="text-2xl text-gray-900">{{ product.price }}</p>
-
-
-                                            <div class="mt-6">
-                                                <h4 class="sr-only">Reviews</h4>
-                                                <div class="flex items-center">
-                                                    <div class="flex items-center">
-                                                        <StarIcon v-for="rating in [0, 1, 2, 3, 4]" :key="rating" :class="[product.rating > rating ? 'text-yellow-400' : 'text-gray-500', 'h-5 w-5 flex-shrink-0']" aria-hidden="true" />
-                                                    </div>
-                                                    <p class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">{{ product.rating }} out of 5 stars</p>
-                                                </div>
-                                            </div>
-                                        </section> -->
 
 									<section aria-labelledby="options-heading" class="mt-10">
 										<h3 id="options-heading" class="sr-only">Product options</h3>
 
-										<form>
+										<Form @submit="onSubmit" :validation-schema="schema">
 											<div class="-mx-4 mt-8 flex flex-col sm:-mx-6 md:mx-0">
 												<dl class="min-w-full flex justify-between border-b border-gray-200">
 													<dt>Name</dt>
@@ -70,24 +49,27 @@
 													<dd class="pt-4 text-right text-sm text-gray-500">{{ props.product.subCategory }}</dd>
 												</dl>
 												<dl class="min-w-full flex justify-between border-b border-gray-200">
-													<dt>Currency</dt>
-													<dd class="pt-4 text-right text-sm text-gray-500">{{ props.product.currency }}</dd>
+													<label for="currency" class="flex items-center"><span class="pr-2">Currency</span><PencilIcon class="h-4 w-4 cursor-pointer" /></label>
+													<Field as="select" id="currency" name="currency" :value="selectedCurrency" class="border-none pt-4 text-right text-sm text-gray-500">
+														<option v-for="(currency, code) in lookupCurrency.data" :value="code">{{ currency }}</option>
+													</Field>
 												</dl>
+												<ErrorMessage class="mt-2 text-sm text-red-600" name="currency" />
 												<dl class="min-w-full flex justify-between border-b border-gray-200">
 													<label for="price" class="flex items-center"><span class="pr-2">Price</span><PencilIcon class="h-4 w-4 cursor-pointer" /></label>
-													<input id="price" name="price" :value="props.product.price" class="pt-4 text-right text-sm text-gray-500" />
-													<!-- <dt>Price</dt>
-													<dd class="pt-4 text-right text-sm text-gray-500">{{ props.product.price }}</dd> -->
+													<Field id="price" type="text" name="price" :value="props.product.price.toString()" class="border-none pt-4 text-right text-sm text-gray-500" />
 												</dl>
+												<ErrorMessage class="mt-2 text-sm text-red-600" name="price" />
 												<dl class="min-w-full flex justify-between border-b border-gray-200">
 													<label for="stock" class="flex items-center"><span class="pr-2">Stock</span><PencilIcon class="h-4 w-4 cursor-pointer" /></label>
-													<input id="stock" name="stock" :value="props.product.stock" class="pt-4 text-right text-sm text-gray-500" />
+													<Field id="stock" type="text" name="stock" :value="props.product.stock.toString()" class="border-none pt-4 text-right text-sm text-gray-500" />
 												</dl>
+												<ErrorMessage class="mt-2 text-sm text-red-600" name="stock" />
 											</div>
 											<button type="submit" class="mt-6 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
 												Join Product Listing
 											</button>
-										</form>
+										</Form>
 									</section>
 								</div>
 							</div>
@@ -100,9 +82,62 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { Form, ErrorMessage, Field } from "vee-validate";
+import * as yup from "yup";
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from "@headlessui/vue";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 import { PencilIcon } from "@heroicons/vue/24/solid";
+import { useToast } from "vue-toastification";
+import axios from "axios";
 
+const toast = useToast();
+const router = useRouter();
 const props = defineProps(["open", "product"]);
+const selectedCurrency = ref(props.product.currency);
+const lookupCurrency = ref([]);
+
+try {
+	lookupCurrency.value = await axios.get("/lookup/currencies");
+} catch (e) {
+	toast.error(e.response.data.message);
+}
+
+const schema = yup
+	.object({
+		currency: yup.string().required("Currency is required").oneOf(Object.keys(lookupCurrency.value.data), "Currency selected can only be from the currency dropdown list"),
+		price: yup
+			.string()
+			.required("Price field is required")
+			.matches(/^[0-9]/, "Price must contain only number")
+			.trim("Price can't contain leading or trailing spaces")
+			.nullable(),
+		stock: yup
+			.string()
+			.required("Stock field is required")
+			.matches(/^[0-9]/, "Price must contain only number")
+			.trim("Stock can't contain leading or trailing spaces")
+			.nullable(),
+	})
+	.strict(true);
+
+const onSubmit = async (values) => {
+	const product = {
+		id: props.product._id,
+		currency: values.currency,
+		price: values.price,
+		stock: values.stock,
+	};
+
+	try {
+		await axios.post("/products", product);
+		toast.success("Added to existing product listing");
+		router.push("/dashboard/products");
+	} catch (e) {
+		e.response.data.errors.forEach((error) => {
+			toast.error(error.msg);
+		});
+	}
+};
 </script>

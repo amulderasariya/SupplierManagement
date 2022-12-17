@@ -60,7 +60,7 @@
 			</div>
 		</div>
 	</div>
-	<CreateProductModal :open="open" @close="open = false" :product="selectedProduct" />
+	<CreateProductModal v-if="open" :open="open" @close="open = false" :product="selectedProduct" />
 </template>
 
 <script setup>
