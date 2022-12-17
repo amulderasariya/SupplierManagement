@@ -11,8 +11,8 @@
 							<p>Filter products by supplier & catergory</p>
 						</div>
 					</div>
-					<SimpleSelect heading="Categories" :data="categories" />
-					<SimpleSelect heading="Suppliers" :data="suppliers" />
+					<SimpleSelect heading="Categories" :options="categories" class="w-1/4" />
+					<SimpleSelect heading="Suppliers" :options="suppliers" class="w-1/4" />
 					<div class="mt-5 items-center">
 						<button type="button" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm">Clear All</button>
 					</div>
