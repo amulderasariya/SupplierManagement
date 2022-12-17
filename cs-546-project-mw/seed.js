@@ -863,7 +863,6 @@ const seedInvoices = async () => {
 		await Invoice.collection.drop();
 		await PreBuild.collection.drop();
 		let isSeedRunning = new PreBuild({ isSeedRunning: true });
-		await isSeedRunning.save();
 		dueDate.setDate(dueDate.getDate() - 7);
 		delDate.setDate(dueDate.getDate() + 7);
 
@@ -1307,6 +1306,7 @@ const seedInvoices = async () => {
 		 );
 
 
+		await isSeedRunning.save();
 		for (let i = 0; i < 100; i++) {
 			//1
 			let inv1 = await axios.post(
