@@ -32,6 +32,9 @@ const userSchema = new mongoose.Schema({
   country: {
     type: String,
   },
+  rating: {
+    type: Number,
+  },
   avatar: {
     type: Buffer, // casted to MongoDB's BSON type: binData
   },
