@@ -12,7 +12,7 @@
 						</div>
 					</div>
 					<SimpleSelect heading="Categories" v-model="selectCategory" :options="categories" class="w-1/4" />
-					<SimpleSelect heading="Suppliers" v-model="selectSupplier" :options="suppliers" class="w-1/4" />
+					<SimpleSelect v-if="$cookies.get('user').role === 'OWNER'" heading="Suppliers" v-model="selectSupplier" :options="suppliers" class="w-1/4" />
 					<div class="mt-5 items-center">
 						<button type="button" @click="clearFilters" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm">
 							Clear All
@@ -22,7 +22,7 @@
 			</div>
 		</div>
 
-		<div class="mx-auto max-w-2xl lg:max-w-7xl">
+		<!-- <div class="mx-auto max-w-2xl lg:max-w-7xl">
 			<div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
 				<div v-for="product in products" @click="open = true" :key="product.id" class="group relative">
 					<div class="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-80">
@@ -42,7 +42,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</div>
 	<ProductModal :open="open" @close="open = false" />
 </template>

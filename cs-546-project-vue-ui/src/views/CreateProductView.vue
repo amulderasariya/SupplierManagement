@@ -19,8 +19,8 @@
 				</button>
 			</nav>
 		</div>
-		<CreateProductTable v-if="tabs[0].current" />
-		<CreateProductForm v-if="tabs[1].current" :hierarchy="hierarchy.data" />
+		<CreateProductTable v-if="tabs[0].current" :currencies="currencies.data" />
+		<CreateProductForm v-if="tabs[1].current" :hierarchy="hierarchy.data" :currencies="currencies.data" />
 	</div>
 </template>
 
@@ -32,10 +32,12 @@ import CreateProductForm from "../components/CreateProductForm.vue";
 import CreateProductTable from "../components/CreateProductTable.vue";
 
 const hierarchy = ref({});
+const currencies = ref([]);
 const toast = useToast();
 
 try {
 	hierarchy.value = await axios.get("/lookup/hierarchy");
+	currencies.value = await axios.get("/lookup/currencies");
 } catch (e) {
 	toast.error(e.response.data.message);
 }
