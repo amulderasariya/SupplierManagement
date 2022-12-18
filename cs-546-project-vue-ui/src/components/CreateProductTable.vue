@@ -60,18 +60,29 @@
 			</div>
 		</div>
 	</div>
-	<CreateProductModal v-if="open" :open="open" @close="open = false" :product="selectedProduct" />
+	<CreateProductModal v-if="open" :open="open" @close="open = false" :product="selectedProduct" :currencies="props.currencies" />
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
 import axios from "axios";
 import CreateProductModal from "./CreateProductModal.vue";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
+const props = defineProps(["currencies"]);
 const open = ref(false);
 const search = ref("");
 const selectedProduct = ref({});
-const products = await axios.get("/products");
+const products = ref([]);
+
+try {
+	products.value = await axios.get("/products");
+} catch (e) {
+	e.response.data.errors.forEach((error) => {
+		toast.error(error.msg);
+	});
+}
 
 const onJoinProduct = (product) => {
 	selectedProduct.value = product;
@@ -87,7 +98,7 @@ const currencyFilter = (product) => {
 };
 
 const filteredProducts = computed(() => {
-	return products.data.filter((product) => {
+	return products.value.data.filter((product) => {
 		let flag = false;
 		if (product.name && !flag) flag = product.name.toLowerCase().indexOf(search.value.toLowerCase()) !== -1;
 		if (product.department && !flag) flag = product.department.toLowerCase().indexOf(search.value.toLowerCase()) !== -1;

@@ -50,8 +50,8 @@
 												</dl>
 												<dl class="min-w-full flex justify-between border-b border-gray-200">
 													<label for="currency" class="flex items-center"><span class="pr-2">Currency</span><PencilIcon class="h-4 w-4 cursor-pointer" /></label>
-													<Field as="select" id="currency" name="currency" :value="selectedCurrency" class="border-none pt-4 text-right text-sm text-gray-500">
-														<option v-for="(currency, code) in lookupCurrency.data" :value="code">{{ currency }}</option>
+													<Field as="select" id="currency" name="currency" v-model="selectedCurrency" class="border-none pt-4 text-right text-sm text-gray-500">
+														<option v-for="(currency, code) in props.currencies" :value="code">{{ currency }}</option>
 													</Field>
 												</dl>
 												<ErrorMessage class="mt-2 text-sm text-red-600" name="currency" />
@@ -94,31 +94,22 @@ import axios from "axios";
 
 const toast = useToast();
 const router = useRouter();
-const props = defineProps(["open", "product"]);
+const props = defineProps(["open", "product", "currencies"]);
 const selectedCurrency = ref(props.product.currency);
-const lookupCurrency = ref([]);
-
-try {
-	lookupCurrency.value = await axios.get("/lookup/currencies");
-} catch (e) {
-	toast.error(e.response.data.message);
-}
 
 const schema = yup
 	.object({
-		currency: yup.string().required("Currency is required").oneOf(Object.keys(lookupCurrency.value.data), "Currency selected can only be from the currency dropdown list"),
+		currency: yup.string().required("Currency is required").oneOf(Object.keys(props.currencies), "Currency selected can only be from the currency dropdown list"),
 		price: yup
 			.string()
 			.required("Price field is required")
 			.matches(/^[0-9]/, "Price must contain only number")
-			.trim("Price can't contain leading or trailing spaces")
-			.nullable(),
+			.trim("Price can't contain leading or trailing spaces"),
 		stock: yup
 			.string()
 			.required("Stock field is required")
-			.matches(/^[0-9]/, "Price must contain only number")
-			.trim("Stock can't contain leading or trailing spaces")
-			.nullable(),
+			.matches(/^[0-9]/, "Stock must contain only number")
+			.trim("Stock can't contain leading or trailing spaces"),
 	})
 	.strict(true);
 
