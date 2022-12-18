@@ -204,18 +204,16 @@ export const addRating = async (req, res) => {
     }
     if (invoice.ownerID === req.user.uid || invoice.supplierID === req.user.uid) {
       if (invoice.status == 'COMPLETED') {
-        if (rating <= 5) {
-          if (req.user.role == 'OWNER') {
-            invoice.ownerRating = rating;
-            invoice.ownerReview = review;
-          } else {
-            invoice.supplierRating = rating;
-            invoice.supplierReview = review;
-          }
-          await invoice.save();
-          // await computeOverallRating(req.user.uid)
-          res.json(invoice.toJSON());
+        if (req.user.role == 'OWNER') {
+          invoice.ownerRating = rating;
+          invoice.ownerReview = review;
+        } else {
+          invoice.supplierRating = rating;
+          invoice.supplierReview = review;
         }
+        await invoice.save();
+        await computeOverallRating(req.user.uid);
+        res.json(invoice.toJSON());
       }
     } else {
       return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
@@ -230,8 +228,10 @@ let computeOverallRating = async (userID) => {
   try {
     let user = await User.findById(userID);
     let current_rating = user.rating;
+    let total = 0;
+    let average = 0;
     const invoices_data = await Invoice.find({
-      $and: [{ $or: [{ ownerID: req.user.uid }, { supplierID: req.user.uid }] }, { status: '' }],
+      $and: [{ $or: [{ ownerID: req.user.uid }, { supplierID: req.user.uid }] }, { status: 'COMPLETED' }],
     });
     if (invoices_data.length !== 0) {
       invoices_data.forEach((element) => {
@@ -240,9 +240,11 @@ let computeOverallRating = async (userID) => {
       average = total / invoices_data.length;
       // console.log("total =", total);
       average = average.toFixed(2);
+      // console.log("average =", average);
+      user.rating = average;
+      await user.save();
     }
   } catch (e) {
     console.log(e);
-    // res.status(500).json('Something went wrong');
   }
 };
