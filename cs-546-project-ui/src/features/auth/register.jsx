@@ -37,6 +37,7 @@ export default function RegisterScreen() {
         password: data.get('password'),
         repassword: data.get('repassword'),
         role: role,
+        organization: data.get('organization'),
       })
     );
   };
@@ -59,7 +60,8 @@ export default function RegisterScreen() {
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           {authState.errors.length > 0 && authState.errors.map((error) => <Alert severity="error">{error.msg}</Alert>)}
-          <TextField margin="normal" required fullWidth id="email" label="Email Address" name="email" autoFocus />
+          <TextField margin="normal" required fullWidth id="name" label="Organization Name" name="organization" autoFocus />
+          <TextField margin="normal" required fullWidth id="email" label="Email Address" name="email" />
           <TextField
             margin="normal"
             required
@@ -89,15 +91,7 @@ export default function RegisterScreen() {
             helperText={isPassMismatch && "Passwords doesn't match"}
           />
           <InputLabel htmlFor="role">Role</InputLabel>
-          <Select
-            required
-            fullWidth
-            labelId="role"
-            id="role"
-            value={role}
-            label="Role"
-            onChange={(event) => setRole(event.target.value)}
-          >
+          <Select required fullWidth labelId="role" id="role" value={role} label="Role" onChange={(event) => setRole(event.target.value)}>
             <MenuItem value={'SUPPLIER'}>Supplier</MenuItem>
             <MenuItem value={'OWNER'}>Owner</MenuItem>
           </Select>

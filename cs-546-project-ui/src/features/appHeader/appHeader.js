@@ -84,6 +84,9 @@ function AppHeader(props) {
       case 'LOGOUT':
         dispatch(logout());
         break;
+      case 'PROFILE':
+        navigate('/profile');
+        break;
       default:
         break;
     }

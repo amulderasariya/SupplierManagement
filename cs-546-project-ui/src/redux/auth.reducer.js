@@ -9,6 +9,7 @@ export const login = createAsyncThunk('auth/login', axiosUtils.postData('auth/lo
 
 export const logout = createAsyncThunk('auth/logout', axiosUtils.getData('auth/logout'));
 export const userInfo = createAsyncThunk('auth/user', axiosUtils.getData('auth/user'));
+export const postUserInfo = createAsyncThunk('auth/postuser', axiosUtils.postData('auth/user'));
 
 export const getSuppliers = createAsyncThunk('auth/users/SUPPLIERS', axiosUtils.getData('auth/users/SUPPLIER'));
 export const getOwners = createAsyncThunk('auth/users/OWNER', axiosUtils.getData('auth/users/OWNER'));
@@ -62,11 +63,19 @@ const authSlice = createSlice({
     [userInfo.rejected]: (state, action) => {
       state.isLoggedIn = false;
       state.user = null;
-      state.errors = get(action, 'error', [{ msg: 'Something went wrong' }]);
+      state.errors = JSON.parse(get(action, 'error.message', `[{ msg: 'Something went wrong' }]`));
       localStorage.setItem('user', JSON.stringify(null));
     },
     [userInfo.fulfilled]: (state, action) => {
       state.isLoggedIn = false;
+      state.user = action.payload;
+      state.errors = [];
+      localStorage.setItem('user', JSON.stringify(action.payload));
+    },
+    [postUserInfo.rejected]: (state, action) => {
+      state.errors = JSON.parse(get(action, 'error.message', `[{ msg: 'Something went wrong' }]`));
+    },
+    [postUserInfo.fulfilled]: (state, action) => {
       state.user = action.payload;
       state.errors = [];
       localStorage.setItem('user', JSON.stringify(action.payload));
@@ -76,14 +85,14 @@ const authSlice = createSlice({
     },
     [getSuppliers.rejected]: (state, action) => {
       state.suppliers = [];
-      state.errors = get(action, 'error', [{ msg: 'Something went wrong' }]);
+      state.errors = JSON.parse(get(action, 'error.message', `[{ msg: 'Something went wrong' }]`));
     },
     [getOwners.fulfilled]: (state, action) => {
       state.owners = action.payload;
     },
     [getOwners.rejected]: (state, action) => {
       state.owners = [];
-      state.errors = get(action, 'error', [{ msg: 'Something went wrong' }]);
+      state.errors = JSON.parse(get(action, 'error.message', `[{ msg: 'Something went wrong' }]`));
     },
   },
 });
