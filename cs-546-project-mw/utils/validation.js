@@ -94,7 +94,7 @@ export const validateProduct = {
           .custom((value, { req }) => {
             if (hierJSON[req.body.department] && hierJSON[req.body.department][req.body.category][value]) return value;
 
-            throw new Error('Not a valid department/ category');
+            throw new Error('Not a valid department / category / subCategory');
           }),
         body('id').exists(),
       ],
@@ -106,6 +106,45 @@ export const validateProduct = {
     validationResultExpress,
   ],
   get: [param('id', 'Incorrect id format').trim().custom(isValidMongooseId), validationResultExpress],
+  getProducts: [
+    oneOf(
+      [query('supplierID', 'Incorrect id format').trim().custom(isValidMongooseId), query('supplierID').isEmpty()],
+      'Either supplierID should be correct or should not exist'
+    ),
+    oneOf(
+      [query('department', 'Invalid Department').isString().trim().isIn(Object.keys(hierJSON)), query('department').isEmpty()],
+      'Either Department should be correct or should not exist'
+    ),
+    oneOf(
+      [
+        query('category', 'Invalid Category')
+          .isString()
+          .trim()
+          .custom((value, { req }) => {
+            if (hierJSON[req.query.department] && hierJSON[req.query.department][value]) return value;
+
+            throw new Error('Not a valid department/ category');
+          }),
+        query('category').isEmpty(),
+      ],
+      'Either category should be correct or should not exist'
+    ),
+    oneOf(
+      [
+        query('subCategory')
+          .isString()
+          .trim()
+          .custom((value, { req }) => {
+            if (hierJSON[req.query.department] && hierJSON[req.query.department][req.query.category][value]) return value;
+
+            throw new Error('Not a valid department / category / subCategory');
+          }),
+        query('subCategory').isEmpty(),
+      ],
+      'Either subCategory should be correct or should not exist'
+    ),
+    validationResultExpress,
+  ],
   remove: [param('id', 'Incorrect id format').trim().custom(isValidMongooseId), validationResultExpress],
 };
 
