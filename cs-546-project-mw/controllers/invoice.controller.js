@@ -69,6 +69,9 @@ export const approveInvoice = async (req, res) => {
     if (invoice.supplierID !== req.user.uid) {
       return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
     }
+    if (invoice.status !== "PENDING") {
+      return res.status(400).json({ errors: [{ msg: 'Invoice is not in PENDING State' }] });
+    }
     if (invoice.gross_amount > net_amount) {
       return res.status(400).json({ errors: [{ msg: 'Net amount cannot be less than gross amount' }] });
     }
@@ -112,6 +115,9 @@ export const rejectInvoice = async (req, res) => {
     if (invoice.supplierID !== req.user.uid) {
       return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
     }
+    if (invoice.status !== "PENDING") {
+      return res.status(400).json({ errors: [{ msg: 'Invoice is not in PENDING State' }] });
+    }
     invoice.status = 'REJECTED';
     await invoice.save();
     res.json(invoice.toJSON());
@@ -131,6 +137,9 @@ export const completeInvoice = async (req, res) => {
     }
     if (invoice.ownerID !== req.user.uid) {
       return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
+    }
+    if (invoice.status !== "APPROVED") {
+      return res.status(400).json({ errors: [{ msg: 'Invoice is not in APPROVED State' }] });
     }
     if (isSeedRunning[0] && !isSeedRunning[0].isSeedRunning) {
       if (deliveredDate.getTime() > new Date().getTime()) {
