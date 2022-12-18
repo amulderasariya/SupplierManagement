@@ -69,7 +69,7 @@ export const approveInvoice = async (req, res) => {
     if (invoice.supplierID !== req.user.uid) {
       return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
     }
-    if (invoice.status !== "PENDING") {
+    if (invoice.status !== 'PENDING') {
       return res.status(400).json({ errors: [{ msg: 'Invoice is not in PENDING State' }] });
     }
     if (invoice.gross_amount > net_amount) {
@@ -91,13 +91,17 @@ export const approveInvoice = async (req, res) => {
     invoice.paidAmount = paidAmount;
     invoice.net_amount = net_amount;
     invoice.status = 'APPROVED';
-    await invoice.save();
     for (let i = 0; i < invoice.invoiceProducts.length; i++) {
       let product = invoice.invoiceProducts[i].toJSON();
       const productExists = await Product.findById(product.productID);
       const supplierExists = productExists.suppliers.find((supp) => supp.supplierID === invoice.supplierID);
-      supplierExists.stock = supplierExists.stock - product.quantity;
+      if (supplierExists.stock >= product.quantity) {
+        supplierExists.stock = supplierExists.stock - product.quantity;
+      } else {
+        return res.status(400).json({ errors: [{ msg: 'Stock is lower than quantity in Invoice' }] });
+      }
       await productExists.save();
+      await invoice.save();
     }
     res.json(invoice.toJSON());
   } catch (e) {
@@ -115,7 +119,7 @@ export const rejectInvoice = async (req, res) => {
     if (invoice.supplierID !== req.user.uid) {
       return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
     }
-    if (invoice.status !== "PENDING") {
+    if (invoice.status !== 'PENDING') {
       return res.status(400).json({ errors: [{ msg: 'Invoice is not in PENDING State' }] });
     }
     invoice.status = 'REJECTED';
@@ -138,7 +142,7 @@ export const completeInvoice = async (req, res) => {
     if (invoice.ownerID !== req.user.uid) {
       return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
     }
-    if (invoice.status !== "APPROVED") {
+    if (invoice.status !== 'APPROVED') {
       return res.status(400).json({ errors: [{ msg: 'Invoice is not in APPROVED State' }] });
     }
     if (isSeedRunning[0] && !isSeedRunning[0].isSeedRunning) {
