@@ -52,8 +52,8 @@ const seedUsers = async () => {
 		await User.collection.drop();
 		res = await axios.post("http://localhost:8000/auth/register", {
 			email: "supplier1@gmail.com",
-			password: "Babloo@1",
-			repassword: "Babloo@1",
+			password: "Hello@12",
+			repassword: "Hello@12",
 			role: "SUPPLIER",
 			organization: "Beacon Community",
 		});
@@ -138,8 +138,8 @@ const seedUsers = async () => {
 		);
 		res5 = await axios.post("http://localhost:8000/auth/register", {
 			email: "owner1@gmail.com",
-			password: "Babloo@1",
-			repassword: "Babloo@1",
+			password: "Hello@12",
+			repassword: "Hello@12",
 			role: "OWNER",
 			organization: "Beacon Community",
 		});
