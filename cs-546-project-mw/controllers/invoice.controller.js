@@ -69,6 +69,9 @@ export const approveInvoice = async (req, res) => {
     if (invoice.supplierID !== req.user.uid) {
       return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
     }
+    if (invoice.status !== 'PENDING') {
+      return res.status(400).json({ errors: [{ msg: 'Invoice is not in PENDING State' }] });
+    }
     if (invoice.gross_amount > net_amount) {
       return res.status(400).json({ errors: [{ msg: 'Net amount cannot be less than gross amount' }] });
     }
@@ -88,13 +91,17 @@ export const approveInvoice = async (req, res) => {
     invoice.paidAmount = paidAmount;
     invoice.net_amount = net_amount;
     invoice.status = 'APPROVED';
-    await invoice.save();
     for (let i = 0; i < invoice.invoiceProducts.length; i++) {
       let product = invoice.invoiceProducts[i].toJSON();
       const productExists = await Product.findById(product.productID);
       const supplierExists = productExists.suppliers.find((supp) => supp.supplierID === invoice.supplierID);
-      supplierExists.stock = supplierExists.stock - product.quantity;
+      if (supplierExists.stock >= product.quantity) {
+        supplierExists.stock = supplierExists.stock - product.quantity;
+      } else {
+        return res.status(400).json({ errors: [{ msg: 'Stock is lower than quantity in Invoice' }] });
+      }
       await productExists.save();
+      await invoice.save();
     }
     res.json(invoice.toJSON());
   } catch (e) {
@@ -111,6 +118,9 @@ export const rejectInvoice = async (req, res) => {
     }
     if (invoice.supplierID !== req.user.uid) {
       return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
+    }
+    if (invoice.status !== 'PENDING') {
+      return res.status(400).json({ errors: [{ msg: 'Invoice is not in PENDING State' }] });
     }
     invoice.status = 'REJECTED';
     await invoice.save();
@@ -131,6 +141,9 @@ export const completeInvoice = async (req, res) => {
     }
     if (invoice.ownerID !== req.user.uid) {
       return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
+    }
+    if (invoice.status !== 'APPROVED') {
+      return res.status(400).json({ errors: [{ msg: 'Invoice is not in APPROVED State' }] });
     }
     if (isSeedRunning[0] && !isSeedRunning[0].isSeedRunning) {
       if (deliveredDate.getTime() > new Date().getTime()) {
@@ -204,18 +217,17 @@ export const addRating = async (req, res) => {
     }
     if (invoice.ownerID === req.user.uid || invoice.supplierID === req.user.uid) {
       if (invoice.status == 'COMPLETED') {
-        if (rating <= 5) {
-          if (req.user.role == 'OWNER') {
-            invoice.ownerRating = rating;
-            invoice.ownerReview = review;
-          } else {
-            invoice.supplierRating = rating;
-            invoice.supplierReview = review;
-          }
-          await invoice.save();
-          // await computeOverallRating(req.user.uid)
-          res.json(invoice.toJSON());
+        let rating2 = rating.toFixed(2);
+        if (req.user.role == 'SUPPLIER') {
+          invoice.ownerRating = rating2;
+          invoice.ownerReview = review;
+        } else if (req.user.role == 'OWNER') {
+          invoice.supplierRating = rating2;
+          invoice.supplierReview = review;
         }
+        await invoice.save();
+        await computeOverallRating(req.user.uid);
+        res.json(invoice.toJSON());
       }
     } else {
       return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
@@ -228,28 +240,43 @@ export const addRating = async (req, res) => {
 
 let computeOverallRating = async (userID) => {
   try {
-    const { rating } = req.body;
-    const invoice = await Invoice.findById(req.params.id);
-    if (invoice === null) {
-      return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
-    }
-    if (invoice.ownerID === req.user.uid || invoice.supplierID === req.user.uid) {
-      if (invoice.status == 'COMPLETED') {
-        if (rating <= 5) {
-          if (req.user.role == 'OWNER') {
-            invoice.ownerRating = rating;
-          } else {
-            invoice.supplierRating = rating;
+    let user = await User.findById(userID);
+    let current_rating = user.rating;
+    let total = 0;
+    let average = 0;
+    const invoices_data = await Invoice.find({
+      $and: [{ $or: [{ ownerID: userID }, { supplierID: userID }] }, { status: 'COMPLETED' }],
+    });
+    if (user.role == 'OWNER') {
+      if (invoices_data.length !== 0) {
+        invoices_data.forEach((element) => {
+          if (!isNaN(element.ownerRating)) {
+            total += element.ownerRating;
           }
-          await invoice.save();
-          res.json(invoice.toJSON());
-        }
+        });
+        average = total / invoices_data.length;
+        // console.log('total =', total);
+        average = average.toFixed(2);
+        // console.log('average =', average);
+        user.rating = average;
+        await user.save();
       }
-    } else {
-      return res.status(403).json({ errors: [{ msg: 'Forbidden' }] });
+    } else if (user.role == 'SUPPLIER') {
+      if (invoices_data.length !== 0) {
+        invoices_data.forEach((element) => {
+          if (!isNaN(element.supplierRating)) {
+            total += element.supplierRating;
+          }
+        });
+        average = total / invoices_data.length;
+        // console.log('total =', total);
+        average = average.toFixed(2);
+        // console.log('average =', average);
+        user.rating = average;
+        await user.save();
+      }
     }
   } catch (e) {
     console.log(e);
-    res.status(500).json('Something went wrong');
   }
 };
