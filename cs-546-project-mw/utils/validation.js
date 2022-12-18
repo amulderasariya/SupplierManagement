@@ -55,6 +55,7 @@ export const validateAuth = {
     ),
     validationResultExpress,
   ],
+  getUser: [param('role', 'Role should be "OWNER", "SUPPLIER"').trim().isIn(['OWNER', 'SUPPLIER']), validationResultExpress],
 };
 
 export const validateProduct = {

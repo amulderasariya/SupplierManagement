@@ -6,7 +6,7 @@ export const getSalesGraph = async (req, res) => {
     const invoice = await Invoice.aggregate([
       // First Stage
       {
-        $match: { deliveredDate: { $gte: startDate, $lt: endDate } },
+        $match: { deliveredDate: { $gte: startDate, $lt: endDate }, $or: [{ ownerID: req.user.uid }, { supplierID: req.user.uid }] },
       },
       // Second Stage
       {
@@ -37,7 +37,7 @@ export const getByDepartments = async (req, res) => {
     const project1 = `invoiceProducts.${groupBy}`;
     const pip = [
       {
-        $match: { deliveredDate: { $gte: startDate, $lt: endDate } },
+        $match: { deliveredDate: { $gte: startDate, $lt: endDate }, $or: [{ ownerID: req.user.uid }, { supplierID: req.user.uid }] },
       },
       { $unwind: '$invoiceProducts' },
       {
@@ -51,15 +51,14 @@ export const getByDepartments = async (req, res) => {
       {
         $project: {
           _id: 1,
-          gross_amount: 1,
-          //   project1: `$invoiceProducts.ProductDetails.${groupBy}`,
           'invoiceProducts.price': '$invoiceProducts.price',
+          'invoiceProducts.quantity': '$invoiceProducts.quantity',
         },
       },
       {
         $group: {
           _id: { $first: `$invoiceProducts.${groupBy}` },
-          gross_amount: { $sum: '$invoiceProducts.price' },
+          gross_amount: { $sum: { $multiply: ['$invoiceProducts.price', '$invoiceProducts.quantity'] } },
         },
       },
     ];
