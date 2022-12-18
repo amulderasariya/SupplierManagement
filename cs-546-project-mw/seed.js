@@ -858,11 +858,454 @@ const seedProduct = async () => {
 
 const seedInvoices = async () => {
 	try {
-		let dueDate= new Date();
-		let delDate= new Date();
+		let dueDate = new Date();
+		let delDate = new Date();
 		await Invoice.collection.drop();
 		await PreBuild.collection.drop();
-		let isSeedRunning=new PreBuild({isSeedRunning:true});
+		let isSeedRunning = new PreBuild({ isSeedRunning: true });
+		dueDate.setDate(dueDate.getDate() - 7);
+		delDate.setDate(dueDate.getDate() + 7);
+
+		await axios.post(
+			"http://localhost:8000/invoice",
+			{
+				supplierID: res.data.id,
+				currency: "USD",
+				invoiceProducts: [
+					{
+						productID: prod0.data._id,
+						quantity: "10",
+					},
+					{
+						productID: prod2.data._id,
+						quantity: "100",
+					},
+					{
+						productID: prod6.data._id,
+						quantity: "90",
+					},
+				],
+			},
+			{ headers: { Authorization: "Bearer " + owner_token5 } }
+		);
+		await axios.post(
+			"http://localhost:8000/invoice",
+			{
+				supplierID: res1.data.id,
+				currency: "USD",
+				invoiceProducts: [
+					{
+						productID: prod1.data._id,
+						quantity: "10",
+					},
+					{
+						productID: prod3.data._id,
+						quantity: "100",
+					},
+					{
+						productID: prod7.data._id,
+						quantity: "90",
+					},
+				],
+			},
+			{ headers: { Authorization: "Bearer " + owner_token1 } }
+		);
+
+		await axios.post(
+			"http://localhost:8000/invoice",
+			{
+				supplierID: res2.data.id,
+				currency: "USD",
+				invoiceProducts: [
+					{
+						productID: prod13.data._id,
+						quantity: "10",
+					},
+					{
+						productID: prod16.data._id,
+						quantity: "100",
+					},
+					{
+						productID: prod17.data._id,
+						quantity: "90",
+					},
+				],
+			},
+			{ headers: { Authorization: "Bearer " + owner_token4 } }
+		);
+
+		await axios.post(
+			"http://localhost:8000/invoice",
+			{
+				supplierID: res3.data.id,
+				currency: "USD",
+				invoiceProducts: [
+					{
+						productID: prod7.data._id,
+						quantity: "10",
+					},
+					{
+						productID: prod9.data._id,
+						quantity: "100",
+					},
+					{
+						productID: prod11.data._id,
+						quantity: "90",
+					},
+				],
+			},
+			{ headers: { Authorization: "Bearer " + owner_token2 } }
+		);
+		await axios.post(
+			"http://localhost:8000/invoice",
+			{
+				supplierID: res4.data.id,
+				currency: "USD",
+				invoiceProducts: [
+					{
+						productID: prod7.data._id,
+						quantity: "10",
+					},
+					{
+						productID: prod8.data._id,
+						quantity: "100",
+					},
+					{
+						productID: prod12.data._id,
+						quantity: "90",
+					},
+				],
+			},
+			{ headers: { Authorization: "Bearer " + owner_token3 } }
+		);
+
+		let inv1=await axios.post(
+			"http://localhost:8000/invoice",
+			{
+				supplierID: res.data.id,
+				currency: "USD",
+				invoiceProducts: [
+					{
+						productID: prod0.data._id,
+						quantity: "10",
+					},
+					{
+						productID: prod2.data._id,
+						quantity: "100",
+					},
+					{
+						productID: prod6.data._id,
+						quantity: "90",
+					},
+				],
+			},
+			{ headers: { Authorization: "Bearer " + owner_token5 } }
+		);
+		inv1 = await axios.post(
+			`http://localhost:8000/invoice/${inv1.data._id}/approve`,
+			{
+				due_date: dueDate.toISOString(),
+				paidAmount: 80,
+				net_amount: inv1.data.gross_amount + 0.1 * inv1.data.gross_amount,
+			},
+			{ headers: { Authorization: "Bearer " + supplier_token1 } }
+		);
+
+		let inv2=await axios.post(
+			"http://localhost:8000/invoice",
+			{
+				supplierID: res1.data.id,
+				currency: "USD",
+				invoiceProducts: [
+					{
+						productID: prod1.data._id,
+						quantity: "10",
+					},
+					{
+						productID: prod3.data._id,
+						quantity: "100",
+					},
+					{
+						productID: prod7.data._id,
+						quantity: "90",
+					},
+				],
+			},
+			{ headers: { Authorization: "Bearer " + owner_token1 } }
+		);
+		inv2 = await axios.post(
+			`http://localhost:8000/invoice/${inv2.data._id}/approve`,
+			{
+				due_date: dueDate.toISOString(),
+				paidAmount: 80,
+				net_amount: inv2.data.gross_amount + 0.1 * inv2.data.gross_amount,
+			},
+			{ headers: { Authorization: "Bearer " + supplier_token2 } }
+		);
+
+
+		let inv3=await axios.post(
+			"http://localhost:8000/invoice",
+			{
+				supplierID: res2.data.id,
+				currency: "USD",
+				invoiceProducts: [
+					{
+						productID: prod13.data._id,
+						quantity: "10",
+					},
+					{
+						productID: prod16.data._id,
+						quantity: "100",
+					},
+					{
+						productID: prod17.data._id,
+						quantity: "90",
+					},
+				],
+			},
+			{ headers: { Authorization: "Bearer " + owner_token4 } }
+		);
+		inv3 = await axios.post(
+			`http://localhost:8000/invoice/${inv3.data._id}/approve`,
+			{
+				due_date: dueDate.toISOString(),
+				paidAmount: 80,
+				net_amount: inv3.data.gross_amount + 0.1 * inv3.data.gross_amount,
+			},
+			{ headers: { Authorization: "Bearer " + supplier_token3 } }
+		);
+
+
+		let inv4=await axios.post(
+			"http://localhost:8000/invoice",
+			{
+				supplierID: res3.data.id,
+				currency: "USD",
+				invoiceProducts: [
+					{
+						productID: prod7.data._id,
+						quantity: "10",
+					},
+					{
+						productID: prod9.data._id,
+						quantity: "100",
+					},
+					{
+						productID: prod11.data._id,
+						quantity: "90",
+					},
+				],
+			},
+			{ headers: { Authorization: "Bearer " + owner_token2 } }
+		);
+		inv4 = await axios.post(
+			`http://localhost:8000/invoice/${inv4.data._id}/approve`,
+			{
+				due_date: dueDate.toISOString(),
+				paidAmount: 80,
+				net_amount: inv4.data.gross_amount + 0.1 * inv4.data.gross_amount,
+			},
+			{ headers: { Authorization: "Bearer " + supplier_token4 } }
+		);
+
+		let inv5 = await axios.post(
+			"http://localhost:8000/invoice",
+			{
+				supplierID: res4.data.id,
+				currency: "USD",
+				invoiceProducts: [
+					{
+						productID: prod7.data._id,
+						quantity: "10",
+					},
+					{
+						productID: prod8.data._id,
+						quantity: "100",
+					},
+					{
+						productID: prod12.data._id,
+						quantity: "90",
+					},
+				],
+			},
+			{ headers: { Authorization: "Bearer " + owner_token3 } }
+		);
+
+		inv5 = await axios.post(
+			`http://localhost:8000/invoice/${inv5.data._id}/approve`,
+			{
+				due_date: dueDate.toISOString(),
+				paidAmount: 80,
+				net_amount: inv5.data.gross_amount + 0.1 * inv5.data.gross_amount,
+			},
+			{ headers: { Authorization: "Bearer " + supplier_token5 } }
+		 );
+
+		 let inv01=await axios.post(
+			"http://localhost:8000/invoice",
+			{
+				supplierID: res.data.id,
+				currency: "USD",
+				invoiceProducts: [
+					{
+						productID: prod0.data._id,
+						quantity: "10",
+					},
+					{
+						productID: prod2.data._id,
+						quantity: "100",
+					},
+					{
+						productID: prod6.data._id,
+						quantity: "90",
+					},
+				],
+			},
+			{ headers: { Authorization: "Bearer " + owner_token5 } }
+		);
+		inv01 = await axios.post(
+			`http://localhost:8000/invoice/${inv01.data._id}/reject`,
+			{
+				due_date: dueDate.toISOString(),
+				paidAmount: 80,
+				net_amount: inv01.data.gross_amount + 0.1 * inv01.data.gross_amount,
+			},
+			{ headers: { Authorization: "Bearer " + supplier_token1 } }
+		);
+
+		let inv02=await axios.post(
+			"http://localhost:8000/invoice",
+			{
+				supplierID: res1.data.id,
+				currency: "USD",
+				invoiceProducts: [
+					{
+						productID: prod1.data._id,
+						quantity: "10",
+					},
+					{
+						productID: prod3.data._id,
+						quantity: "100",
+					},
+					{
+						productID: prod7.data._id,
+						quantity: "90",
+					},
+				],
+			},
+			{ headers: { Authorization: "Bearer " + owner_token1 } }
+		);
+		inv02 = await axios.post(
+			`http://localhost:8000/invoice/${inv02.data._id}/reject`,
+			{
+				due_date: dueDate.toISOString(),
+				paidAmount: 80,
+				net_amount: inv02.data.gross_amount + 0.1 * inv02.data.gross_amount,
+			},
+			{ headers: { Authorization: "Bearer " + supplier_token2 } }
+		);
+
+
+		let inv03=await axios.post(
+			"http://localhost:8000/invoice",
+			{
+				supplierID: res2.data.id,
+				currency: "USD",
+				invoiceProducts: [
+					{
+						productID: prod13.data._id,
+						quantity: "10",
+					},
+					{
+						productID: prod16.data._id,
+						quantity: "100",
+					},
+					{
+						productID: prod17.data._id,
+						quantity: "90",
+					},
+				],
+			},
+			{ headers: { Authorization: "Bearer " + owner_token4 } }
+		);
+		inv03 = await axios.post(
+			`http://localhost:8000/invoice/${inv03.data._id}/reject`,
+			{
+				due_date: dueDate.toISOString(),
+				paidAmount: 80,
+				net_amount: inv03.data.gross_amount + 0.1 * inv03.data.gross_amount,
+			},
+			{ headers: { Authorization: "Bearer " + supplier_token3 } }
+		);
+
+
+		let inv04=await axios.post(
+			"http://localhost:8000/invoice",
+			{
+				supplierID: res3.data.id,
+				currency: "USD",
+				invoiceProducts: [
+					{
+						productID: prod7.data._id,
+						quantity: "10",
+					},
+					{
+						productID: prod9.data._id,
+						quantity: "100",
+					},
+					{
+						productID: prod11.data._id,
+						quantity: "90",
+					},
+				],
+			},
+			{ headers: { Authorization: "Bearer " + owner_token2 } }
+		);
+		inv04 = await axios.post(
+			`http://localhost:8000/invoice/${inv04.data._id}/reject`,
+			{
+				due_date: dueDate.toISOString(),
+				paidAmount: 80,
+				net_amount: inv04.data.gross_amount + 0.1 * inv04.data.gross_amount,
+			},
+			{ headers: { Authorization: "Bearer " + supplier_token4 } }
+		);
+
+		let inv05 = await axios.post(
+			"http://localhost:8000/invoice",
+			{
+				supplierID: res4.data.id,
+				currency: "USD",
+				invoiceProducts: [
+					{
+						productID: prod7.data._id,
+						quantity: "10",
+					},  
+					{
+						productID: prod8.data._id,
+						quantity: "100",
+					},
+					{
+						productID: prod12.data._id,
+						quantity: "90",
+					},
+				],
+			},
+			{ headers: { Authorization: "Bearer " + owner_token3 } }
+		);
+
+		inv05 = await axios.post(
+			`http://localhost:8000/invoice/${inv05.data._id}/reject`,
+			{
+				due_date: dueDate.toISOString(),
+				paidAmount: 80,
+				net_amount: inv05.data.gross_amount + 0.1 * inv05.data.gross_amount,
+			},
+			{ headers: { Authorization: "Bearer " + supplier_token5 } }
+		 );
+
+
 		await isSeedRunning.save();
 		for (let i = 0; i < 100; i++) {
 			//1
@@ -889,29 +1332,29 @@ const seedInvoices = async () => {
 				{ headers: { Authorization: "Bearer " + owner_token1 } }
 			);
 
-			dueDate.setDate(dueDate.getDate()-7);
-			delDate.setDate(dueDate.getDate()+7);
+			dueDate.setDate(dueDate.getDate() - 7);
+			delDate.setDate(dueDate.getDate() + 7);
 
-			inv1=await axios.post(
+			inv1 = await axios.post(
 				`http://localhost:8000/invoice/${inv1.data._id}/approve`,
 				{
 					due_date: dueDate.toISOString(),
 					paidAmount: 80,
-					net_amount: inv1.data.gross_amount + 0.1*(inv1.data.gross_amount),
+					net_amount: inv1.data.gross_amount + 0.1 * inv1.data.gross_amount,
 				},
 				{ headers: { Authorization: "Bearer " + supplier_token1 } }
 			);
-			
-			inv1=await axios.post(
+
+			inv1 = await axios.post(
 				`http://localhost:8000/invoice/${inv1.data._id}/complete`,
 				{
-					deliveredDate:delDate.toISOString(),
+					deliveredDate: delDate.toISOString(),
 				},
 				{ headers: { Authorization: "Bearer " + owner_token1 } }
 			);
 
 			//2
-			let inv2= await axios.post(
+			let inv2 = await axios.post(
 				"http://localhost:8000/invoice",
 				{
 					supplierID: res1.data.id,
@@ -934,27 +1377,26 @@ const seedInvoices = async () => {
 				{ headers: { Authorization: "Bearer " + owner_token2 } }
 			);
 
-
-			inv2=await axios.post(
+			inv2 = await axios.post(
 				`http://localhost:8000/invoice/${inv2.data._id}/approve`,
 				{
 					due_date: dueDate.toISOString(),
 					paidAmount: 80,
-					net_amount: inv2.data.gross_amount + 0.1*(inv2.data.gross_amount),
+					net_amount: inv2.data.gross_amount + 0.1 * inv2.data.gross_amount,
 				},
 				{ headers: { Authorization: "Bearer " + supplier_token2 } }
 			);
-			
-			inv2=await axios.post(
+
+			inv2 = await axios.post(
 				`http://localhost:8000/invoice/${inv2.data._id}/complete`,
 				{
-					deliveredDate:delDate.toISOString(),
+					deliveredDate: delDate.toISOString(),
 				},
 				{ headers: { Authorization: "Bearer " + owner_token2 } }
 			);
 
 			// 3
-			let inv3= await axios.post(
+			let inv3 = await axios.post(
 				"http://localhost:8000/invoice",
 				{
 					supplierID: res2.data.id,
@@ -977,26 +1419,26 @@ const seedInvoices = async () => {
 				{ headers: { Authorization: "Bearer " + owner_token3 } }
 			);
 
-			inv3=await axios.post(
+			inv3 = await axios.post(
 				`http://localhost:8000/invoice/${inv3.data._id}/approve`,
 				{
 					due_date: dueDate.toISOString(),
 					paidAmount: 8,
-					net_amount: inv3.data.gross_amount + 0.1*(inv3.data.gross_amount),
+					net_amount: inv3.data.gross_amount + 0.1 * inv3.data.gross_amount,
 				},
 				{ headers: { Authorization: "Bearer " + supplier_token3 } }
 			);
-			
-			inv3=await axios.post(
+
+			inv3 = await axios.post(
 				`http://localhost:8000/invoice/${inv3.data._id}/complete`,
 				{
-					deliveredDate:delDate.toISOString(),
+					deliveredDate: delDate.toISOString(),
 				},
 				{ headers: { Authorization: "Bearer " + owner_token3 } }
 			);
 			// 4
 
-			let inv4= await axios.post(
+			let inv4 = await axios.post(
 				"http://localhost:8000/invoice",
 				{
 					supplierID: res3.data.id,
@@ -1019,26 +1461,26 @@ const seedInvoices = async () => {
 				{ headers: { Authorization: "Bearer " + owner_token4 } }
 			);
 
-			inv4=await axios.post(
+			inv4 = await axios.post(
 				`http://localhost:8000/invoice/${inv4.data._id}/approve`,
 				{
 					due_date: dueDate.toISOString(),
 					paidAmount: 8,
-					net_amount: inv4.data.gross_amount + 0.1*(inv4.data.gross_amount),
+					net_amount: inv4.data.gross_amount + 0.1 * inv4.data.gross_amount,
 				},
 				{ headers: { Authorization: "Bearer " + supplier_token4 } }
 			);
-			
-			inv4=await axios.post(
+
+			inv4 = await axios.post(
 				`http://localhost:8000/invoice/${inv4.data._id}/complete`,
 				{
-					deliveredDate:delDate.toISOString(),
+					deliveredDate: delDate.toISOString(),
 				},
 				{ headers: { Authorization: "Bearer " + owner_token4 } }
 			);
 			// 5
 
-			let inv5=await axios.post(
+			let inv5 = await axios.post(
 				"http://localhost:8000/invoice",
 				{
 					supplierID: res4.data.id,
@@ -1061,20 +1503,20 @@ const seedInvoices = async () => {
 				{ headers: { Authorization: "Bearer " + owner_token5 } }
 			);
 
-			inv5=await axios.post(
+			inv5 = await axios.post(
 				`http://localhost:8000/invoice/${inv5.data._id}/approve`,
 				{
 					due_date: dueDate.toISOString(),
 					paidAmount: 8,
-					net_amount: inv5.data.gross_amount + 0.1*(inv5.data.gross_amount),
+					net_amount: inv5.data.gross_amount + 0.1 * inv5.data.gross_amount,
 				},
 				{ headers: { Authorization: "Bearer " + supplier_token5 } }
 			);
-			
-			inv5=await axios.post(
+
+			inv5 = await axios.post(
 				`http://localhost:8000/invoice/${inv5.data._id}/complete`,
 				{
-					deliveredDate:delDate.toISOString(),
+					deliveredDate: delDate.toISOString(),
 				},
 				{ headers: { Authorization: "Bearer " + owner_token5 } }
 			);
