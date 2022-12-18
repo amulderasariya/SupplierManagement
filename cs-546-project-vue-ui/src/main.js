@@ -5,6 +5,8 @@ import VueCookies from "vue-cookies";
 import HighchartsVue from "highcharts-vue";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
+import Datepicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 
 import App from "./App.vue";
 import router from "./router";
@@ -42,5 +44,6 @@ app.use(router);
 app.use(HighchartsVue);
 app.use(VueCookies, { expires: "7d" });
 app.use(Toast, toastOptions);
+app.use("Datepicker", Datepicker);
 
 app.mount("#app");

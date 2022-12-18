@@ -26,169 +26,30 @@
 <script setup>
 import { reactive } from "vue";
 import TransactionTable from "../components/TransactionTable.vue";
+import { useToast } from "vue-toastification";
+import axios from "axios";
 
-const pendingTransactions = [
-	{
-		id: "AAPS0L",
-		company: "Chase & Co.",
-		share: "CAC",
-		commission: "+$4.37",
-		price: "$3,509.00",
-		quantity: "12.00",
-		netAmount: "$4,397.00",
-	},
-	{
-		id: "AAPS0L",
-		company: "Chase & Co.",
-		share: "CAC",
-		commission: "+$4.37",
-		price: "$3,509.00",
-		quantity: "12.00",
-		netAmount: "$4,397.00",
-	},
-	{
-		id: "AAPS0L",
-		company: "Chase & Co.",
-		share: "CAC",
-		commission: "+$4.37",
-		price: "$3,509.00",
-		quantity: "12.00",
-		netAmount: "$4,397.00",
-	},
-	{
-		id: "AAPS0L",
-		company: "Chase & Co.",
-		share: "CAC",
-		commission: "+$4.37",
-		price: "$3,509.00",
-		quantity: "12.00",
-		netAmount: "$4,397.00",
-	},
-];
-
-const activeTransactions = [
-	{
-		id: "AAPS0L",
-		company: "Active",
-		share: "CAC",
-		commission: "+$4.37",
-		price: "$3,509.00",
-		quantity: "12.00",
-		netAmount: "$4,397.00",
-	},
-	{
-		id: "AAPS0L",
-		company: "Active",
-		share: "CAC",
-		commission: "+$4.37",
-		price: "$3,509.00",
-		quantity: "12.00",
-		netAmount: "$4,397.00",
-	},
-	{
-		id: "AAPS0L",
-		company: "Active",
-		share: "CAC",
-		commission: "+$4.37",
-		price: "$3,509.00",
-		quantity: "12.00",
-		netAmount: "$4,397.00",
-	},
-	{
-		id: "AAPS0L",
-		company: "Active",
-		share: "CAC",
-		commission: "+$4.37",
-		price: "$3,509.00",
-		quantity: "12.00",
-		netAmount: "$4,397.00",
-	},
-];
-
-const fulfilledTransactions = [
-	{
-		id: "AAPS0L",
-		company: "Fulfilled",
-		share: "CAC",
-		commission: "+$4.37",
-		price: "$3,509.00",
-		quantity: "12.00",
-		netAmount: "$4,397.00",
-	},
-	{
-		id: "AAPS0L",
-		company: "Fulfilled",
-		share: "CAC",
-		commission: "+$4.37",
-		price: "$3,509.00",
-		quantity: "12.00",
-		netAmount: "$4,397.00",
-	},
-	{
-		id: "AAPS0L",
-		company: "Fulfilled",
-		share: "CAC",
-		commission: "+$4.37",
-		price: "$3,509.00",
-		quantity: "12.00",
-		netAmount: "$4,397.00",
-	},
-	{
-		id: "AAPS0L",
-		company: "Fulfilled",
-		share: "CAC",
-		commission: "+$4.37",
-		price: "$3,509.00",
-		quantity: "12.00",
-		netAmount: "$4,397.00",
-	},
-];
-
-const cancelledTransactions = [
-	{
-		id: "AAPS0L",
-		company: "Cancelled",
-		share: "CAC",
-		commission: "+$4.37",
-		price: "$3,509.00",
-		quantity: "12.00",
-		netAmount: "$4,397.00",
-	},
-	{
-		id: "AAPS0L",
-		company: "Cancelled",
-		share: "CAC",
-		commission: "+$4.37",
-		price: "$3,509.00",
-		quantity: "12.00",
-		netAmount: "$4,397.00",
-	},
-	{
-		id: "AAPS0L",
-		company: "Cancelled",
-		share: "CAC",
-		commission: "+$4.37",
-		price: "$3,509.00",
-		quantity: "12.00",
-		netAmount: "$4,397.00",
-	},
-	{
-		id: "AAPS0L",
-		company: "Cancelled",
-		share: "CAC",
-		commission: "+$4.37",
-		price: "$3,509.00",
-		quantity: "12.00",
-		netAmount: "$4,397.00",
-	},
-];
+const toast = useToast();
 
 const tabs = reactive([
-	{ name: "Pending Orders", description: "A table of placeholder pending orders data that does not make any sense.", current: true, data: pendingTransactions },
-	{ name: "Active Orders", description: "A table of placeholder active orders data that does not make any sense.", current: false, data: activeTransactions },
-	{ name: "Fulfilled Orders", description: "A table of placeholder fulfilled orders data that does not make any sense.", current: false, data: fulfilledTransactions },
-	{ name: "Cancelled Orders", description: "A table of placeholder cancelled orders data that does not make any sense.", current: false, data: cancelledTransactions },
+	{ name: "Pending Orders", description: "A table of placeholder pending orders data that does not make any sense.", current: true, data: [] },
+	{ name: "Active Orders", description: "A table of placeholder active orders data that does not make any sense.", current: false, data: [] },
+	{ name: "Fulfilled Orders", description: "A table of placeholder fulfilled orders data that does not make any sense.", current: false, data: [] },
+	{ name: "Cancelled Orders", description: "A table of placeholder cancelled orders data that does not make any sense.", current: false, data: [] },
 ]);
+
+try {
+	const { data } = await axios.get("/invoice");
+	console.log(data);
+	tabs[0].data = data.PENDING;
+	tabs[1].data = data.APPROVED;
+	tabs[2].data = data.COMPLETED;
+	tabs[3].data = data.REJECTED;
+} catch (e) {
+	e.response.data.errors.forEach((error) => {
+		toast.error(error.msg);
+	});
+}
 
 const changeCurrentTab = (item) => {
 	for (let i = 0; i < tabs.length; i++) {

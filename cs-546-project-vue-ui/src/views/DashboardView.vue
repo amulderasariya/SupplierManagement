@@ -7,10 +7,12 @@
 				</div>
 				<div class="flex flex-1 flex-col overflow-y-auto">
 					<nav class="flex-1 space-y-1 px-2 py-4">
-						<RouterLink v-for="item in navigation" :key="item.name" :to="item.href" class="text-gray-400 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-							<component :is="item.icon" class="text-gray-400 group-hover:text-white mr-3 flex-shrink-0 h-6 w-6" aria-hidden="true" />
-							{{ item.name }}
-						</RouterLink>
+						<div v-for="item in navigation">
+							<RouterLink v-if="$cookies.get('user').role === item.role || item.role === 'BOTH'" :key="item.name" :to="item.href" class="text-gray-400 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+								<component :is="item.icon" class="text-gray-400 group-hover:text-white mr-3 flex-shrink-0 h-6 w-6" aria-hidden="true" />
+								{{ item.name }}
+							</RouterLink>
+						</div>
 					</nav>
 				</div>
 				<div class="flex flex-shrink-0 bg-gray-700 p-4">
@@ -78,11 +80,11 @@ import { useToast } from "vue-toastification";
 const toast = useToast();
 
 const navigation = reactive([
-	{ name: "Dashboard Analytics", href: "/dashboard/analytics", icon: ChartBarIcon, current: true },
-	{ name: "Orders", href: "/dashboard/orders", icon: NewspaperIcon, current: false },
-	{ name: "Product Listing", href: "/dashboard/products", icon: FolderIcon, current: false },
-	{ name: "Create Product", href: "/dashboard/createproduct", icon: PlusCircleIcon, current: false },
-	{ name: "Suppliers", href: "/dashboard/suppliers", icon: UsersIcon, current: false },
+	{ name: "Dashboard Analytics", href: "/dashboard/analytics", icon: ChartBarIcon, current: true, role: "BOTH" },
+	{ name: "Orders", href: "/dashboard/orders", icon: NewspaperIcon, current: false, role: "BOTH" },
+	{ name: "Product Listing", href: "/dashboard/products", icon: FolderIcon, current: false, role: "BOTH" },
+	{ name: "Create Product", href: "/dashboard/createproduct", icon: PlusCircleIcon, current: false, role: "SUPPLIER" },
+	{ name: "Suppliers", href: "/dashboard/suppliers", icon: UsersIcon, current: false, role: "OWNER" },
 ]);
 
 const onLogout = async () => {

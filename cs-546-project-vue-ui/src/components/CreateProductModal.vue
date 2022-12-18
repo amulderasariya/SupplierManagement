@@ -25,7 +25,7 @@
 
 								<div class="w-full items-start gap-y-8 gap-x-6">
 									<h2 class="text-2xl font-bold text-gray-900 sm:pr-12">{{ props.product.name }}</h2>
-									<h4 class="text-l text-gray-900 sm:pr-12">(Edit your price and stock parameters before you join as a supplier for this product listing)</h4>
+									<h4 class="text-l text-gray-900 sm:pr-12">(Edit your price and stock parameters for this product listing)</h4>
 
 									<section aria-labelledby="options-heading" class="mt-10">
 										<h3 id="options-heading" class="sr-only">Product options</h3>
@@ -67,7 +67,7 @@
 												<ErrorMessage class="mt-2 text-sm text-red-600" name="stock" />
 											</div>
 											<button type="submit" class="mt-6 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-												Join Product Listing
+												Edit Product Listing
 											</button>
 										</Form>
 									</section>
@@ -83,7 +83,6 @@
 
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 import { Form, ErrorMessage, Field } from "vee-validate";
 import * as yup from "yup";
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from "@headlessui/vue";
@@ -93,8 +92,8 @@ import { useToast } from "vue-toastification";
 import axios from "axios";
 
 const toast = useToast();
-const router = useRouter();
 const props = defineProps(["open", "product", "currencies"]);
+const emit = defineEmits(["close", "updateProducts"]);
 const selectedCurrency = ref(props.product.currency);
 
 const schema = yup
@@ -123,8 +122,9 @@ const onSubmit = async (values) => {
 
 	try {
 		await axios.post("/products", product);
-		toast.success("Added to existing product listing");
-		router.push("/dashboard/products");
+		toast.success("Added product listing");
+		emit("updateProducts");
+		emit("close", false);
 	} catch (e) {
 		e.response.data.errors.forEach((error) => {
 			toast.error(error.msg);

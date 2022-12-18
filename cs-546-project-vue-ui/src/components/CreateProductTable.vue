@@ -31,7 +31,10 @@
 									<th scope="col" class="py-3.5 pl-2 pr-2 text-left text-sm font-semibold text-gray-900 sm:pr-6">Price</th>
 									<th scope="col" class="py-3.5 pl-2 pr-2 text-left text-sm font-semibold text-gray-900 sm:pr-6">Stock</th>
 									<th scope="col" class="relative whitespace-nowrap py-3.5 pl-3 pr-4 sm:pr-6">
-										<span class="sr-only">Join as supplier</span>
+										<span class="sr-only">Edit</span>
+									</th>
+									<th scope="col" class="relative whitespace-nowrap py-3.5 pl-3 pr-4 sm:pr-6">
+										<span class="sr-only">Delete</span>
 									</th>
 								</tr>
 							</thead>
@@ -44,13 +47,10 @@
 									<td class="whitespace-nowrap py-2 pl-2 pr-2 text-sm text-gray-500 sm:pr-6">{{ currencyFilter(product) }}</td>
 									<td class="whitespace-nowrap py-2 pl-2 pr-2 text-sm text-gray-500 sm:pr-6">{{ product.stock }}</td>
 									<td class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-										<button
-											type="button"
-											@click="onJoinProduct(product)"
-											class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-2 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-										>
-											Join
-										</button>
+										<button type="button" @click="onEditProduct(product)" class="text-indigo-600 hover:text-indigo-900">Edit</button>
+									</td>
+									<td class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+										<button type="button" @click="onDeleteProduct(product)" class="text-red-600 hover:text-red-900">Delete</button>
 									</td>
 								</tr>
 							</tbody>
@@ -60,7 +60,7 @@
 			</div>
 		</div>
 	</div>
-	<CreateProductModal v-if="open" :open="open" @close="open = false" :product="selectedProduct" :currencies="props.currencies" />
+	<CreateProductModal v-if="open" :open="open" @close="open = false" @updateProducts="getProducts()" :product="selectedProduct" :currencies="props.currencies" />
 </template>
 
 <script setup>
@@ -76,17 +76,33 @@ const search = ref("");
 const selectedProduct = ref({});
 const products = ref([]);
 
-try {
-	products.value = await axios.get("/products");
-} catch (e) {
-	e.response.data.errors.forEach((error) => {
-		toast.error(error.msg);
-	});
-}
+const getProducts = async () => {
+	try {
+		products.value = await axios.get("/products");
+	} catch (e) {
+		e.response.data.errors.forEach((error) => {
+			toast.error(error.msg);
+		});
+	}
+};
 
-const onJoinProduct = (product) => {
+await getProducts();
+
+const onEditProduct = (product) => {
 	selectedProduct.value = product;
 	open.value = true;
+};
+
+const onDeleteProduct = async (product) => {
+	try {
+		await axios.delete(`/products/${product._id}`);
+		await getProducts();
+		toast.success("Deleted product successfully!");
+	} catch (e) {
+		e.response.data.errors.forEach((error) => {
+			toast.error(error.msg);
+		});
+	}
 };
 
 const currencyFilter = (product) => {

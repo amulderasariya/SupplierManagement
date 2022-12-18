@@ -43,7 +43,7 @@ try {
 }
 
 const tabs = reactive([
-	{ name: "Join as supplier on existing product", current: true },
+	{ name: "All your existing product", current: true },
 	{ name: "Create new product for listing", current: false },
 ]);
 
