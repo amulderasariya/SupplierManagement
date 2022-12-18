@@ -6,14 +6,14 @@ const postData = (url) => async (data) => {
   try {
     if (data.newURL) url = data.newURL;
     delete data.newURL;
-    const token = JSON.parse(localStorage.getItem('token'));
+    const token = JSON.parse(sessionStorage.getItem('token'));
     const response = await axios.post(API_URL + url, data, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
     if (response.data.token) {
-      localStorage.setItem('token', JSON.stringify(response.data.token));
+      sessionStorage.setItem('token', JSON.stringify(response.data.token));
     }
     return response.data;
   } catch (e) {
@@ -24,7 +24,7 @@ const postData = (url) => async (data) => {
 
 const getData = (url) => async (data) => {
   try {
-    const token = JSON.parse(localStorage.getItem('token'));
+    const token = JSON.parse(sessionStorage.getItem('token'));
     const response = await axios.get(API_URL + url, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -32,7 +32,7 @@ const getData = (url) => async (data) => {
       ...data,
     });
     if (response.data.token) {
-      localStorage.setItem('token', JSON.stringify(response.data.token));
+      sessionStorage.setItem('token', JSON.stringify(response.data.token));
     }
     return response.data;
   } catch (e) {
