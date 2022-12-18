@@ -11,7 +11,7 @@ authRouter.post('/login', validateAuth.login, login);
 authRouter.get('/user', requireToken(), userInfo);
 authRouter.post('/user', requireToken(), validateAuth.user, updateUser);
 authRouter.get('/refresh', requireRefreshToken, refreshToken);
-authRouter.get('/users/:role', requireToken(), getUsers);
+authRouter.get('/users/:role', requireToken(), validateAuth.getUser, getUsers);
 authRouter.get('/logout', logout);
 
 export default authRouter;
