@@ -4,19 +4,40 @@ import { Button, Grid, TextField, Typography } from '@mui/material';
 import ProductAccordion from './productAccordian';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProducts, setCreateProductStatus } from '../../redux/product.reducer';
+import { useState } from 'react';
+import { debounce } from 'lodash';
 
 export default function Product() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const productState = useSelector((state) => state.products);
+  const [search, setSearch] = useState();
   const dispatch = useDispatch();
   useEffect(() => {
     if (productState.fetchProducts) dispatch(getProducts());
   }, [productState.fetchProducts]);
+
+  useEffect(() => {
+    const deb = debounce(() => {
+      dispatch(getProducts({ params: { name: search } }));
+    }, 1000);
+    deb();
+  }, [search]);
   return (
     <Box margin={3}>
       <Grid container justifyContent="space-between">
         <Grid flexGrow={1} item marginRight={2}>
-          <TextField margin="normal" fullWidth id="search" label="Search Product" name="search" autoFocus />
+          <TextField
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+            margin="normal"
+            fullWidth
+            id="search"
+            label="Search Product"
+            name="search"
+            autoFocus
+          />
         </Grid>
         <Grid item display="flex" alignContent="center" alignItems="center">
           <Button
@@ -76,10 +97,7 @@ export default function Product() {
         </Grid>
       </Grid>
       <Box>
-        {productState.allProducts &&
-          productState.allProducts.map((product) => (
-            <ProductAccordion product={product} onClose={() => setOpen(false)} />
-          ))}
+        {productState.allProducts && productState.allProducts.map((product) => <ProductAccordion product={product} onClose={() => setOpen(false)} />)}
       </Box>
     </Box>
   );

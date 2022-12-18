@@ -87,7 +87,6 @@ const navigation = reactive([
 
 const onLogout = async () => {
 	try {
-		console.log(router);
 		await axios.get("/auth/logout");
 		toast.success("Logged Out!");
 		$cookies.remove("token");

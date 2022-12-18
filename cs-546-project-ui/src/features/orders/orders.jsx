@@ -4,10 +4,19 @@ import { Accordion, AccordionDetails, AccordionSummary, Button, Grid, TextField,
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import OrderTable from './orderTable';
 import OrderDialog from './orderDialog';
+import { useDispatch, useSelector } from 'react-redux';
+import { getOrders } from '../../redux/order.reducer';
 
 export default function Orders() {
   const [open, setOpen] = React.useState(false);
 
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+
+  const orderState = useSelector((state) => state.orders);
+  useEffect(() => {
+    if (orderState.fetchOrders) dispatch(getOrders());
+  }, [orderState.fetchOrders]);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -22,17 +31,19 @@ export default function Orders() {
           <TextField margin="normal" fullWidth id="search" label="Search Orders" name="search" autoFocus />
         </Grid>
         <Grid item display="flex" alignContent="center" alignItems="center">
-          <Button variant="contained" onClick={handleClickOpen}>
-            Create New Order
-          </Button>
+          {user.role === 'OWNER' && (
+            <Button variant="contained" onClick={handleClickOpen}>
+              Create New Order
+            </Button>
+          )}
         </Grid>
       </Grid>
-      <Accordion m={1} defaultExpanded>
+      <Accordion m={1}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6">Pending orders</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <OrderTable />
+          <OrderTable columns={['Name', 'Currency', 'Gross Amount']} rows= {orderState.allOrders.PENDING}/>
         </AccordionDetails>
       </Accordion>
       <Accordion m={1} defaultExpanded>
@@ -41,7 +52,7 @@ export default function Orders() {
         </AccordionSummary>
         <AccordionDetails>Data</AccordionDetails>
       </Accordion>
-      <Accordion m={1} defaultExpanded>
+      <Accordion m={1}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6"> FullFilled orders</Typography>
         </AccordionSummary>

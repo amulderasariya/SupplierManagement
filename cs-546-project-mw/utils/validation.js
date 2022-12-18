@@ -1,5 +1,5 @@
 import CurrencyConverter from 'currency-converter-lt';
-import { body, oneOf, param } from 'express-validator';
+import { body, oneOf, param, query } from 'express-validator';
 import { isValidObjectId } from 'mongoose';
 import { Country, State, City } from 'country-state-city';
 import { validationResultExpress } from '../middlewares/validationResultExpress.js';
@@ -137,6 +137,20 @@ export const validateInvoice = {
     body('invoiceProducts.*.productID', 'Invalid Product id').trim().custom(isValidMongooseId),
     body('invoiceProducts.*.quantity', 'Quantity should be an integer with min 1').isInt({ min: 1 }),
     body('currency', 'Invalid currency').isString().trim().isIn(listOfCurrencies),
+    validationResultExpress,
+  ],
+};
+
+export const validateDashboard = {
+  salesGraph: [
+    query('startDate', 'invalid query param start date is not a valid date').isISO8601().toDate(),
+    query('endDate', 'invalid query param endDate date is not a valid date').isISO8601().toDate(),
+    validationResultExpress,
+  ],
+  group: [
+    query('startDate', 'invalid query param start date is not a valid date').isISO8601().toDate(),
+    query('endDate', 'invalid query param endDate date is not a valid date').isISO8601().toDate(),
+    query('groupBy', 'invalid query param groupby').isIn(['department', 'category', 'subCategory']),
     validationResultExpress,
   ],
 };

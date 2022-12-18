@@ -8,23 +8,6 @@
 						<p class="mt-1 text-sm text-gray-500">This information will be displayed publicly to business owner to place purchase orders</p>
 					</div>
 					<div class="mt-5 space-y-6 md:col-span-2 md:mt-0">
-						<!-- <div>
-							<label for="avatar" class="block text-sm font-medium text-gray-700">Company Logo</label>
-							<div class="mt-1 flex items-center space-x-5">
-								<div>
-									<span class="inline-block h-12 w-12 overflow-hidden rounded-full bg-gray-100">
-										<svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-											<path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-										</svg>
-									</span>
-								</div>
-								<Field name="avatar" v-slot="{ handleChange, handleBlur }" class="rounded-md border border-gray-300 bg-white py-2 px-3 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-									<input type="file" @change="handleChange" @blur="handleBlur" />
-								</Field>
-							</div>
-							<ErrorMessage class="mt-2 text-sm text-red-600" name="avatar" />
-						</div> -->
-
 						<div class="grid grid-cols-6 gap-6">
 							<div class="col-span-6 sm:col-span-3">
 								<label for="organization" class="block text-sm font-medium text-gray-700">Company name</label>
@@ -96,9 +79,7 @@ var selectCity = ref(data.city || "");
 try {
 	countryDropdown.value = await axios.get("/lookup/country");
 } catch (e) {
-	e.response.data.errors.forEach((error) => {
-		toast.error(error.msg);
-	});
+	toast.error(e.response.data.message);
 }
 
 const onSelectCountry = async () => {
@@ -111,9 +92,7 @@ const onSelectCountry = async () => {
 			},
 		});
 	} catch (e) {
-		e.response.data.errors.forEach((error) => {
-			toast.error(error.msg);
-		});
+		toast.error(e.response.data.message);
 	}
 };
 
@@ -127,9 +106,7 @@ const onSelectState = async () => {
 			},
 		});
 	} catch (e) {
-		e.response.data.errors.forEach((error) => {
-			toast.error(error.msg);
-		});
+		toast.error(e.response.data.message);
 	}
 };
 
@@ -150,7 +127,7 @@ const schema = yup
 		organization: yup
 			.string()
 			.min(3, "Company name must be at least 3 characters")
-			.max(15, "Company name must be less than 15 characters")
+			.max(50, "Company name must be less than 50 characters")
 			.matches(/^((?!\s{2}).)*$/, "Multiple spaces in between")
 			.matches(/[a-zA-Z]/, "Company name must contain only alphabet")
 			.test({
@@ -171,7 +148,7 @@ const schema = yup
 			})
 			.required("Company name is required")
 			.trim("Company name can't contain leading or trailing spaces"),
-		email: yup.string().email("Enter a valid email").required("Email field is required").trim("Email can't contain leading or trailing spaces"),
+		email: yup.string().email("Enter a valid email").required("Email field is required").max(50, "Email must be less than 50 characters").trim("Email can't contain leading or trailing spaces"),
 	})
 	.strict(true);
 

@@ -30,12 +30,11 @@ export const createInvoice = async (req, res) => {
       try {
         const currenyConvertor = new CC();
         let price = await currenyConvertor.from(supplierExists.currency).to(currency).amount(supplierExists.price).convert();
+        if (isNaN(price)) {
+          productErrors.push({ msg: `Product ${product.productID}, We are not able to convert currenct at the moment, please try again later` });
+        }
         product.price = price;
-        gross_amount += await currenyConvertor
-          .from(supplierExists.currency)
-          .to(currency)
-          .amount(supplierExists.price * product.quantity)
-          .convert();
+        gross_amount += price * product.quantity;
       } catch (e) {
         productErrors.push({ msg: e.message });
       }

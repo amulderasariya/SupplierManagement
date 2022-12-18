@@ -65,22 +65,23 @@ import { useToast } from "vue-toastification";
 
 const toast = useToast();
 const search = ref("");
+const people = ref([]);
 
 const filteredPeople = computed(() => {
-	return people.filter((person) => {
-		if (person.organization) return person.organization.toLowerCase().indexOf(search.value.toLowerCase()) != -1;
-		if (person.email) return person.email.toLowerCase().indexOf(search.value.toLowerCase()) != -1;
-		if (person.country) return person.country.toLowerCase().indexOf(search.value.toLowerCase()) != -1;
-		if (person.city) return person.city.toLowerCase().indexOf(search.value.toLowerCase()) != -1;
-		if (person.state) return person.state.toLowerCase().indexOf(search.value.toLowerCase()) != -1;
+	return people.value.filter((person) => {
+		let flag = false;
+		if (person.organization && !flag) flag = person.organization.toLowerCase().indexOf(search.value.toLowerCase()) !== -1;
+		if (person.email && !flag) flag = person.email.toLowerCase().indexOf(search.value.toLowerCase()) !== -1;
+		if (person.country && !flag) flag = person.country.toLowerCase().indexOf(search.value.toLowerCase()) !== -1;
+		if (person.state && !flag) flag = person.state.toLowerCase().indexOf(search.value.toLowerCase()) !== -1;
+		if (person.city && !flag) flag = person.city.toLowerCase().indexOf(search.value.toLowerCase()) !== -1;
+		return flag;
 	});
 });
 
-var people = reactive([]);
-
 try {
-	people = await axios.get("/auth/users/suppliers");
-	people = people.data;
+	people.value = await axios.get("/auth/users/suppliers");
+	people.value = people.value.data;
 } catch (e) {
 	e.response.data.errors.forEach((error) => {
 		toast.error(error.msg);

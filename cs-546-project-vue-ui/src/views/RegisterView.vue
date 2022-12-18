@@ -89,7 +89,7 @@ const schema = yup
 		organization: yup
 			.string()
 			.min(3, "Company name must be at least 3 characters")
-			.max(15, "Company name must be less than 15 characters")
+			.max(50, "Company name must be less than 50 characters")
 			.matches(/^((?!\s{2}).)*$/, "Multiple spaces in between")
 			.matches(/[a-zA-Z]/, "Company name must contain only alphabet")
 			.test({
@@ -110,7 +110,7 @@ const schema = yup
 			})
 			.required("Company name is required")
 			.trim("Company name can't contain leading or trailing spaces"),
-		email: yup.string().email("Enter a valid email").required("Email field is required").trim("Email can't contain leading or trailing spaces"),
+		email: yup.string().email("Enter a valid email").required("Email field is required").max(50, "Password must be less than 50 characters").trim("Email can't contain leading or trailing spaces"),
 		password: yup
 			.string()
 			.matches(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/, "Password must contain at least one special character")
@@ -119,7 +119,7 @@ const schema = yup
 			.matches(/[A-Z]/, "Password must contain at least one upper case letter")
 			.matches(/[a-z]/, "Password must contain at least one lower case letter")
 			.min(6, "Password must be at least 6 characters")
-			.max(25, "Password must be less than 25 characters")
+			.max(50, "Password must be less than 50 characters")
 			.required("Password field is required")
 			.trim("Password can't contain leading or trailing spaces"),
 		repassword: yup

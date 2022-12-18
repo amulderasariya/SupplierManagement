@@ -2,12 +2,19 @@ import { Product } from '../models/Product.js';
 export const getProducts = async (req, res) => {
   try {
     const { department, category, subCategory, name } = req.query;
-    const query = { department, category, subCategory };
+    let query = { department, category, subCategory, name: { $regex: name || '.*', $options: 'i' } };
     // name: { $regex: name || '.*' }
     Object.keys(query).forEach((key) => query[key] === undefined && delete query[key]);
-    let products = await Product.find({ 'suppliers.supplierID': req.user.uid, ...query, name: { $regex: name || '.*', $options: 'i' } });
+    let supplierID;
+    if (req.user.role === 'SUPPLIER') {
+      supplierID = req.user.uid;
+    }
+    if (req.query.supplierID) {
+      supplierID = req.query.supplierID;
+    }
+    let products = await Product.find({ 'suppliers.supplierID': supplierID, ...query });
     products = products.map((product) => {
-      const { stock, price, currency } = product.suppliers.find((supplier) => supplier.supplierID === req.user.uid);
+      const { stock, price, currency } = product.suppliers.find((supplier) => supplier.supplierID === supplierID);
       return { ...product.toJSON(), stock, price, currency, suppliers: undefined };
     });
     return res.json(products);

@@ -1,9 +1,10 @@
 <template>
-	<Listbox as="div" v-model="selected" @change="$emit('update:modelValue', $event.target.value)">
+	<Listbox as="div" :model-value="props.modelValue" @update:modelValue="(value) => emit('update:modelValue', value)">
 		<ListboxLabel class="block text-sm font-medium text-gray-700">{{ heading }}</ListboxLabel>
 		<div class="relative mt-1">
 			<ListboxButton class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
-				<span class="block truncate">{{ selected.name }}</span>
+				<span v-if="props.modelValue" class="block truncate">{{ props.modelValue.name }}</span>
+				<span v-else class="block truncate">Select</span>
 				<span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
 					<ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
 				</span>
@@ -27,12 +28,15 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 import { Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions } from "@headlessui/vue";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 
-const props = defineProps(["heading", "options", "selected"]);
-// const emit = defineEmits(["update:selected"]);
+const props = defineProps({
+	heading: String,
+	options: Array,
+	modelValue: Object,
+});
+const emit = defineEmits(["update:modelValue"]);
 
-const selected = ref(props.selected ? props.selected[0] : props.options[0]);
+// const selected = ref(props.selected ? props.selected[0] : props.options[0]);
 </script>
