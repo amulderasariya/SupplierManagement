@@ -44,6 +44,6 @@ app.use(router);
 app.use(HighchartsVue);
 app.use(VueCookies, { expires: "7d" });
 app.use(Toast, toastOptions);
-app.use("Datepicker", Datepicker);
+app.component("Datepicker", Datepicker);
 
 app.mount("#app");

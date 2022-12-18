@@ -1,37 +1,80 @@
 <template>
 	<div class="px-4 sm:px-6 lg:px-8">
-		<h3 class="text-lg ml-2 font-medium leading-6 text-gray-900">Last 30 days</h3>
-		<dl class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-3 md:divide-y-0 md:divide-x">
-			<div v-for="item in stats" :key="item.name" class="px-4 py-5 sm:p-6">
-				<dt class="text-base font-normal text-gray-900">{{ item.name }}</dt>
-				<dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
-					<div class="flex items-baseline text-2xl font-semibold text-indigo-600">
-						{{ item.stat }}
-						<span class="ml-2 text-sm font-medium text-gray-500">from {{ item.previousStat }}</span>
+		<div class="bg-white shadow sm:rounded-lg mt-2">
+			<div class="px-4 py-5 sm:p-6">
+				<div class="sm:flex sm:items-start sm:justify-between">
+					<div>
+						<label for="fromDate" class="block text-sm font-medium text-gray-700 pl-3">From Date</label>
+						<Datepicker id="fromDate" class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" v-model="fromDate" :enable-time-picker="false"></Datepicker>
 					</div>
 
-					<div :class="[item.changeType === 'increase' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800', 'inline-flex items-baseline px-2.5 py-0.5 rounded-full text-sm font-medium md:mt-2 lg:mt-0']">
-						<ArrowUpIcon v-if="item.changeType === 'increase'" class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-green-500" aria-hidden="true" />
-						<ArrowDownIcon v-else class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-red-500" aria-hidden="true" />
-						<span class="sr-only"> {{ item.changeType === "increase" ? "Increased" : "Decreased" }} by </span>
-						{{ item.change }}
+					<div>
+						<label for="toDate" class="block text-sm font-medium text-gray-700 pl-3">To Date</label>
+						<Datepicker id="toDate" class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" v-model="toDate" :enable-time-picker="false"></Datepicker>
 					</div>
-				</dd>
+
+					<div>
+						<label for="groupBy" class="block text-sm font-medium text-gray-700">Group By</label>
+						<select id="groupBy" name="groupBy" v-model="groupBy" class="mt-3 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+							<option value="department">Department</option>
+							<option value="category">Category</option>
+							<option value="subCategory">Sub Category</option>
+						</select>
+					</div>
+
+					<div class="mt-6 items-center">
+						<button type="button" @click="refresh" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm">Refresh</button>
+					</div>
+				</div>
 			</div>
-		</dl>
-	</div>
-	<div class="px-4 sm:px-6 lg:px-8 py-4">
-		<StackedLineBarChart />
+		</div>
+		<div class="pt-4 rounded-lg">
+			<LineChart />
+		</div>
+		<div class="pt-4 rounded-lg">
+			<StackedLineBarChart />
+		</div>
 	</div>
 </template>
 
 <script setup>
-import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/vue/20/solid";
+import { ref } from "vue";
+import axios from "axios";
+import { useToast } from "vue-toastification";
+import LineChart from "../components/LineChart.vue";
 import StackedLineBarChart from "../components/StackedLineBarChart.vue";
 
-const stats = [
-	{ name: "Total Subscribers", stat: "71,897", previousStat: "70,946", change: "12%", changeType: "increase" },
-	{ name: "Avg. Open Rate", stat: "58.16%", previousStat: "56.14%", change: "2.02%", changeType: "increase" },
-	{ name: "Avg. Click Rate", stat: "24.57%", previousStat: "28.62%", change: "4.05%", changeType: "decrease" },
-];
+const toast = useToast();
+
+const fromDate = ref(new Date());
+const toDate = ref(new Date());
+const groupBy = ref("department");
+const lineGraphData = ref();
+const barGraphData = ref();
+
+const refresh = async () => {
+	try {
+		lineGraphData.value = await axios.get("/dashboard/sales", {
+			params: {
+				startDate: fromDate.value,
+				endDate: toDate.value,
+			},
+		});
+		barGraphData.value = await axios.get("/dashboard/group", {
+			params: {
+				startDate: fromDate.value,
+				endDate: toDate.value,
+				groupBy: groupBy.value,
+			},
+		});
+		console.log(lineGraphData.value);
+		console.log(barGraphData.value);
+	} catch (e) {
+		e.response.data.errors.forEach((error) => {
+			toast.error(error.msg);
+		});
+	}
+};
+
+await refresh();
 </script>

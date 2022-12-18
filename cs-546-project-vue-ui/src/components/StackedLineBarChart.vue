@@ -3,6 +3,8 @@
 </template>
 
 <script setup>
+const props = defineProps(["data"]);
+
 const chartOptions = {
 	title: {
 		text: "Sales of petroleum products March, Norway",
