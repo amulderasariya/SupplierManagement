@@ -15,7 +15,7 @@ const invoiceSchema = new Schema({
   invoiceProducts: [
     {
       productID: {
-        type: String,
+        type: mongoose.Types.ObjectId,
         required: true,
         trim: true,
       },

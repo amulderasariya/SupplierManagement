@@ -8,6 +8,7 @@ import authRouter from './routes/auth.route.js';
 import productRouter from './routes/products.route.js';
 import invoiceRouter from './routes/invoice.route.js';
 import lookupRouter from './routes/lookups.route.js';
+import dashboardRouter from './routes/dashboard.route.js';
 const app = express();
 
 const whiteList = [process.env.ORIGIN1, process.env.ORIGIN2];
@@ -30,6 +31,7 @@ app.use(cookieParser());
 app.use('/auth', authRouter);
 app.use('/products', productRouter);
 app.use('/invoice', invoiceRouter);
+app.use('/dashboard', dashboardRouter);
 app.use('/lookup', lookupRouter);
 
 app.route('/', (req, res) => res.json(`Server is up and running`));
