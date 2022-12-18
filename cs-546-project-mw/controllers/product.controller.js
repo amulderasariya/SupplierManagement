@@ -9,7 +9,9 @@ export const getProducts = async (req, res) => {
     if (req.user.role === 'SUPPLIER') {
       supplierID = req.user.uid;
     }
-    supplierID = req.query.supplierID;
+    if (req.query.supplierID) {
+      supplierID = req.query.supplierID;
+    }
     let products = await Product.find({ 'suppliers.supplierID': supplierID, ...query });
     products = products.map((product) => {
       const { stock, price, currency } = product.suppliers.find((supplier) => supplier.supplierID === supplierID);
