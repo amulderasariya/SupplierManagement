@@ -31,6 +31,9 @@ const productSlice = createSlice({
       state.createProductStatus = false;
       state.errors = JSON.parse(get(action, 'error.message', `[{ msg: 'Something went wrong' }]`));
     },
+    [getProducts.pending]: (state) => {
+      state.fetchProducts = true;
+    },
     [getProducts.fulfilled]: (state, action) => {
       state.allProducts = action.payload;
       state.fetchProducts = false;

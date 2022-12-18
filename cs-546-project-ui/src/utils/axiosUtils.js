@@ -4,6 +4,8 @@ const API_URL = 'http://localhost:8000/';
 
 const postData = (url) => async (data) => {
   try {
+    if (data.newURL) url = data.newURL;
+    delete data.newURL;
     const token = JSON.parse(localStorage.getItem('token'));
     const response = await axios.post(API_URL + url, data, {
       headers: {

@@ -10,7 +10,7 @@ export const login = createAsyncThunk('auth/login', axiosUtils.postData('auth/lo
 export const logout = createAsyncThunk('auth/logout', axiosUtils.getData('auth/logout'));
 export const userInfo = createAsyncThunk('auth/user', axiosUtils.getData('auth/user'));
 
-export const getSuppliers = createAsyncThunk('auth/users/SUPPLIERS', axiosUtils.getData('auth/users/SUPPLIERS'));
+export const getSuppliers = createAsyncThunk('auth/users/SUPPLIERS', axiosUtils.getData('auth/users/SUPPLIER'));
 export const getOwners = createAsyncThunk('auth/users/OWNER', axiosUtils.getData('auth/users/OWNER'));
 
 export const registerAndFetchUser = (data) => async (dispatch, getState) => {
@@ -51,6 +51,9 @@ const authSlice = createSlice({
       state.user = null;
       state.errors = [];
       localStorage.setItem('user', JSON.stringify(null));
+
+      localStorage.setItem('token', JSON.stringify(null));
+      window.location.reload();
     },
     [logout.rejected]: (state, action) => {
       state.isLoggedIn = false;

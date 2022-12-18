@@ -23,13 +23,25 @@ export default function Orders() {
   const handleClose = () => {
     setOpen(false);
   };
+  const pendingColumns = [user.role === 'SUPPLIER' ? 'ownerName' : 'supplierName', 'currency', 'gross_amount'];
+  const approvedColumns = [
+    user.role === 'SUPPLIER' ? 'ownerName' : 'supplierName',
+    'currency',
+    'gross_amount',
+    'net_amount',
+    'paidAmount',
+    'paymentStatus',
+  ];
+  if (user.role === 'SUPPLIER') {
+    pendingColumns.push('pendingAmountPaid', 'pendingDueDate', 'pendingNetAmount', 'approveButton');
+  }
+  if (user.role === 'OWNER') {
+    approvedColumns.push('deliveredDate', 'completeButton');
+  }
   return (
     <Box margin={3}>
       <OrderDialog open={open} handleClose={handleClose} />
       <Grid container justifyContent="space-between">
-        <Grid flexGrow={1} item marginRight={2}>
-          <TextField margin="normal" fullWidth id="search" label="Search Orders" name="search" autoFocus />
-        </Grid>
         <Grid item display="flex" alignContent="center" alignItems="center">
           {user.role === 'OWNER' && (
             <Button variant="contained" onClick={handleClickOpen}>
@@ -43,20 +55,58 @@ export default function Orders() {
           <Typography variant="h6">Pending orders</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <OrderTable columns={['Name', 'Currency', 'Gross Amount']} rows= {orderState.allOrders.PENDING}/>
+          {orderState.allOrders.PENDING.length > 0 ? <OrderTable columns={pendingColumns} rows={orderState.allOrders.PENDING} /> : <div>No data</div>}
         </AccordionDetails>
       </Accordion>
       <Accordion m={1} defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6"> Active orders</Typography>
         </AccordionSummary>
-        <AccordionDetails>Data</AccordionDetails>
+        <AccordionDetails>
+          {orderState.allOrders.APPROVED.length > 0 ? (
+            <OrderTable columns={approvedColumns} rows={orderState.allOrders.APPROVED} />
+          ) : (
+            <div>No data</div>
+          )}
+        </AccordionDetails>
       </Accordion>
       <Accordion m={1}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6"> FullFilled orders</Typography>
         </AccordionSummary>
-        <AccordionDetails>Data</AccordionDetails>
+        <AccordionDetails>
+          {orderState.allOrders.COMPLETED.length > 0 ? (
+            <OrderTable
+              columns={[
+                user.role === 'SUPPLIER' ? 'ownerName' : 'supplierName',
+                'currency',
+                'gross_amount',
+                'net_amount',
+                'paidAmount',
+                'paymentStatus',
+                'rateButton',
+              ]}
+              rows={orderState.allOrders.COMPLETED}
+            />
+          ) : (
+            <div>No data</div>
+          )}
+        </AccordionDetails>
+      </Accordion>
+      <Accordion m={1}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="h6"> Rejected orders</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {orderState.allOrders.REJECTED.length > 0 ? (
+            <OrderTable
+              columns={[user.role === 'SUPPLIER' ? 'ownerName' : 'supplierName', 'currency', 'gross_amount']}
+              rows={orderState.allOrders.REJECTED}
+            />
+          ) : (
+            <div>No data</div>
+          )}
+        </AccordionDetails>
       </Accordion>
     </Box>
   );

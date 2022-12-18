@@ -224,7 +224,7 @@ const seedUsers = async () => {
     );
   } catch (error) {
     if (!error.response) {
-      console.log('Please start backend server before running seed file');
+      console.log('ERROR: Please start backend server before running seed file');
     } else {
       console.log(error.response.data.errors);
     }
@@ -857,7 +857,7 @@ const seedProduct = async () => {
     );
   } catch (error) {
     if (!error.response) {
-      console.log('Please start backend server before running seed file');
+      console.log('ERROR: Please start backend server before running seed file');
     } else {
       console.log(error.response.data.errors);
     }
@@ -868,7 +868,7 @@ const seedInvoices = async () => {
   try {
     let dueDate = new Date();
     let delDate = new Date();
-    dueDate.setFullYear(dueDate.getFullYear() - 1);
+    dueDate.setFullYear(dueDate.getFullYear());
     await Invoice.collection.drop();
     await PreBuild.collection.drop();
     let isSeedRunning = new PreBuild({ isSeedRunning: true });
@@ -885,15 +885,15 @@ const seedInvoices = async () => {
         invoiceProducts: [
           {
             productID: prod0.data._id,
-            quantity: '10',
+            quantity: '2',
           },
           {
             productID: prod2.data._id,
-            quantity: '100',
+            quantity: '1',
           },
           {
             productID: prod6.data._id,
-            quantity: '90',
+           quantity: '4',
           },
         ],
       },
@@ -907,15 +907,15 @@ const seedInvoices = async () => {
         invoiceProducts: [
           {
             productID: prod1.data._id,
-            quantity: '10',
+            quantity: '2',
           },
           {
             productID: prod3.data._id,
-            quantity: '100',
+            quantity: '1',
           },
           {
             productID: prod7.data._id,
-            quantity: '90',
+           quantity: '4',
           },
         ],
       },
@@ -930,15 +930,15 @@ const seedInvoices = async () => {
         invoiceProducts: [
           {
             productID: prod13.data._id,
-            quantity: '10',
+            quantity: '2',
           },
           {
             productID: prod16.data._id,
-            quantity: '100',
+            quantity: '1',
           },
           {
             productID: prod17.data._id,
-            quantity: '90',
+           quantity: '4',
           },
         ],
       },
@@ -953,15 +953,15 @@ const seedInvoices = async () => {
         invoiceProducts: [
           {
             productID: prod7.data._id,
-            quantity: '10',
+            quantity: '2',
           },
           {
             productID: prod9.data._id,
-            quantity: '100',
+            quantity: '1',
           },
           {
             productID: prod11.data._id,
-            quantity: '90',
+           quantity: '4',
           },
         ],
       },
@@ -975,15 +975,15 @@ const seedInvoices = async () => {
         invoiceProducts: [
           {
             productID: prod7.data._id,
-            quantity: '10',
+            quantity: '2',
           },
           {
             productID: prod8.data._id,
-            quantity: '100',
+            quantity: '1',
           },
           {
             productID: prod12.data._id,
-            quantity: '90',
+           quantity: '4',
           },
         ],
       },
@@ -998,15 +998,15 @@ const seedInvoices = async () => {
         invoiceProducts: [
           {
             productID: prod0.data._id,
-            quantity: '10',
+            quantity: '2',
           },
           {
             productID: prod2.data._id,
-            quantity: '100',
+            quantity: '1',
           },
           {
             productID: prod6.data._id,
-            quantity: '90',
+           quantity: '4',
           },
         ],
       },
@@ -1030,15 +1030,15 @@ const seedInvoices = async () => {
         invoiceProducts: [
           {
             productID: prod1.data._id,
-            quantity: '10',
+            quantity: '2',
           },
           {
             productID: prod3.data._id,
-            quantity: '100',
+            quantity: '1',
           },
           {
             productID: prod7.data._id,
-            quantity: '90',
+           quantity: '4',
           },
         ],
       },
@@ -1062,15 +1062,15 @@ const seedInvoices = async () => {
         invoiceProducts: [
           {
             productID: prod13.data._id,
-            quantity: '10',
+            quantity: '2',
           },
           {
             productID: prod16.data._id,
-            quantity: '100',
+            quantity: '1',
           },
           {
             productID: prod17.data._id,
-            quantity: '90',
+           quantity: '4',
           },
         ],
       },
@@ -1094,15 +1094,15 @@ const seedInvoices = async () => {
         invoiceProducts: [
           {
             productID: prod7.data._id,
-            quantity: '10',
+            quantity: '2',
           },
           {
             productID: prod9.data._id,
-            quantity: '100',
+            quantity: '1',
           },
           {
             productID: prod11.data._id,
-            quantity: '90',
+           quantity: '4',
           },
         ],
       },
@@ -1126,15 +1126,15 @@ const seedInvoices = async () => {
         invoiceProducts: [
           {
             productID: prod7.data._id,
-            quantity: '10',
+            quantity: '2',
           },
           {
             productID: prod8.data._id,
-            quantity: '100',
+            quantity: '1',
           },
           {
             productID: prod12.data._id,
-            quantity: '90',
+           quantity: '4',
           },
         ],
       },
@@ -1159,15 +1159,15 @@ const seedInvoices = async () => {
         invoiceProducts: [
           {
             productID: prod0.data._id,
-            quantity: '10',
+            quantity: '2',
           },
           {
             productID: prod2.data._id,
-            quantity: '100',
+            quantity: '1',
           },
           {
             productID: prod6.data._id,
-            quantity: '90',
+           quantity: '4',
           },
         ],
       },
@@ -1191,15 +1191,15 @@ const seedInvoices = async () => {
         invoiceProducts: [
           {
             productID: prod1.data._id,
-            quantity: '10',
+            quantity: '2',
           },
           {
             productID: prod3.data._id,
-            quantity: '100',
+            quantity: '1',
           },
           {
             productID: prod7.data._id,
-            quantity: '90',
+           quantity: '4',
           },
         ],
       },
@@ -1223,15 +1223,15 @@ const seedInvoices = async () => {
         invoiceProducts: [
           {
             productID: prod13.data._id,
-            quantity: '10',
+            quantity: '2',
           },
           {
             productID: prod16.data._id,
-            quantity: '100',
+            quantity: '1',
           },
           {
             productID: prod17.data._id,
-            quantity: '90',
+           quantity: '4',
           },
         ],
       },
@@ -1255,15 +1255,15 @@ const seedInvoices = async () => {
         invoiceProducts: [
           {
             productID: prod7.data._id,
-            quantity: '10',
+            quantity: '2',
           },
           {
             productID: prod9.data._id,
-            quantity: '100',
+            quantity: '1',
           },
           {
             productID: prod11.data._id,
-            quantity: '90',
+           quantity: '4',
           },
         ],
       },
@@ -1287,15 +1287,15 @@ const seedInvoices = async () => {
         invoiceProducts: [
           {
             productID: prod7.data._id,
-            quantity: '10',
+            quantity: '2',
           },
           {
             productID: prod8.data._id,
-            quantity: '100',
+            quantity: '1',
           },
           {
             productID: prod12.data._id,
-            quantity: '90',
+           quantity: '4',
           },
         ],
       },
@@ -1322,30 +1322,32 @@ const seedInvoices = async () => {
           invoiceProducts: [
             {
               productID: prod0.data._id,
-              quantity: '10',
+              quantity: '2',
             },
             {
               productID: prod2.data._id,
-              quantity: '100',
+              quantity: '1',
             },
             {
               productID: prod6.data._id,
-              quantity: '90',
+             quantity: '4',
             },
           ],
         },
         { headers: { Authorization: 'Bearer ' + owner_token1 } }
       );
 
-      dueDate.setDate(dueDate.getDate() - 7);
-      delDate.setDate(dueDate.getDate() + 7);
+      dueDate.setDate(dueDate.getDate() - Math.floor(7 * Math.random() + 1));
+
+      delDate = new Date(dueDate.getTime());
+      delDate.setDate(delDate.getDate() + Math.floor(7 * Math.random() + 1));
 
       inv1 = await axios.post(
         `http://localhost:8000/invoice/${inv1.data._id}/approve`,
         {
           due_date: dueDate.toISOString(),
           paidAmount: 80,
-          net_amount: inv1.data.gross_amount + 0.1 * inv1.data.gross_amount,
+          net_amount: inv1.data.gross_amount + Math.random() * inv1.data.gross_amount,
         },
         { headers: { Authorization: 'Bearer ' + supplier_token1 } }
       );
@@ -1367,15 +1369,15 @@ const seedInvoices = async () => {
           invoiceProducts: [
             {
               productID: prod1.data._id,
-              quantity: '10',
+              quantity: '2',
             },
             {
               productID: prod3.data._id,
-              quantity: '100',
+              quantity: '1',
             },
             {
               productID: prod7.data._id,
-              quantity: '90',
+             quantity: '4',
             },
           ],
         },
@@ -1409,15 +1411,15 @@ const seedInvoices = async () => {
           invoiceProducts: [
             {
               productID: prod13.data._id,
-              quantity: '10',
+              quantity: '2',
             },
             {
               productID: prod16.data._id,
-              quantity: '100',
+              quantity: '1',
             },
             {
               productID: prod17.data._id,
-              quantity: '90',
+             quantity: '4',
             },
           ],
         },
@@ -1451,15 +1453,15 @@ const seedInvoices = async () => {
           invoiceProducts: [
             {
               productID: prod7.data._id,
-              quantity: '10',
+              quantity: '2',
             },
             {
               productID: prod9.data._id,
-              quantity: '100',
+              quantity: '1',
             },
             {
               productID: prod11.data._id,
-              quantity: '90',
+             quantity: '4',
             },
           ],
         },
@@ -1493,15 +1495,15 @@ const seedInvoices = async () => {
           invoiceProducts: [
             {
               productID: prod7.data._id,
-              quantity: '10',
+              quantity: '2',
             },
             {
               productID: prod8.data._id,
-              quantity: '100',
+              quantity: '1',
             },
             {
               productID: prod12.data._id,
-              quantity: '90',
+             quantity: '4',
             },
           ],
         },
@@ -1529,7 +1531,7 @@ const seedInvoices = async () => {
     await PreBuild.collection.drop();
   } catch (error) {
     if (!error.response) {
-      console.log('Please start backend server before running seed file');
+      console.log('ERROR: Please start backend server before running seed file');
     } else {
       console.log(error.response.data.errors);
     }
