@@ -217,11 +217,12 @@ export const addRating = async (req, res) => {
     }
     if (invoice.ownerID === req.user.uid || invoice.supplierID === req.user.uid) {
       if (invoice.status == 'COMPLETED') {
-        if (req.user.role == 'OWNER') {
-          invoice.ownerRating = rating;
+        let rating2 = rating.toFixed(2);
+        if (req.user.role == 'SUPPLIER') {
+          invoice.ownerRating = rating2;
           invoice.ownerReview = review;
-        } else {
-          invoice.supplierRating = rating;
+        } else if (req.user.role == 'OWNER') {
+          invoice.supplierRating = rating2;
           invoice.supplierReview = review;
         }
         await invoice.save();
@@ -244,18 +245,36 @@ let computeOverallRating = async (userID) => {
     let total = 0;
     let average = 0;
     const invoices_data = await Invoice.find({
-      $and: [{ $or: [{ ownerID: req.user.uid }, { supplierID: req.user.uid }] }, { status: 'COMPLETED' }],
+      $and: [{ $or: [{ ownerID: userID }, { supplierID: userID }] }, { status: 'COMPLETED' }],
     });
-    if (invoices_data.length !== 0) {
-      invoices_data.forEach((element) => {
-        total += element.rating;
-      });
-      average = total / invoices_data.length;
-      // console.log("total =", total);
-      average = average.toFixed(2);
-      // console.log("average =", average);
-      user.rating = average;
-      await user.save();
+    if (user.role == 'OWNER') {
+      if (invoices_data.length !== 0) {
+        invoices_data.forEach((element) => {
+          if (!isNaN(element.ownerRating)) {
+            total += element.ownerRating;
+          }
+        });
+        average = total / invoices_data.length;
+        // console.log('total =', total);
+        average = average.toFixed(2);
+        // console.log('average =', average);
+        user.rating = average;
+        await user.save();
+      }
+    } else if (user.role == 'SUPPLIER') {
+      if (invoices_data.length !== 0) {
+        invoices_data.forEach((element) => {
+          if (!isNaN(element.supplierRating)) {
+            total += element.supplierRating;
+          }
+        });
+        average = total / invoices_data.length;
+        // console.log('total =', total);
+        average = average.toFixed(2);
+        // console.log('average =', average);
+        user.rating = average;
+        await user.save();
+      }
     }
   } catch (e) {
     console.log(e);
