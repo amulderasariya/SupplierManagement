@@ -226,7 +226,7 @@ export const addRating = async (req, res) => {
           invoice.supplierReview = review;
         }
         await invoice.save();
-        await computeOverallRating(req.user.uid);
+        await computeOverallRating(req.user.id == 'SUPPLIER' ? invoice.ownerID : invoice.supplierID);
         res.json(invoice.toJSON());
       }
     } else {

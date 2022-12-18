@@ -26,17 +26,15 @@ const matchPassword = (value, { req }) => {
 
 export const validateAuth = {
   register: [
-    body('*').customSanitizer((value) => {
+    body('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
       const val = JSON.stringify(value);
       return JSON.parse(xss(val));
     }),
-    query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    query('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
-    param('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
-    }),
-    body('*').customSanitizer((value) => {
+    param('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
       const val = JSON.stringify(value);
       return JSON.parse(xss(val));
     }),
@@ -50,15 +48,17 @@ export const validateAuth = {
     validationResultExpress,
   ],
   login: [
-    body('*').customSanitizer((value) => {
+    body('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
       const val = JSON.stringify(value);
       return JSON.parse(xss(val));
     }),
-    query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    query('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
-    param('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    param('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     body('email', 'Incorrect email format').trim().isEmail().normalizeEmail(),
     body('password', 'Password should have minimun 6 characters One uppercase, One lower case, one digit and a special char')
@@ -67,15 +67,17 @@ export const validateAuth = {
     validationResultExpress,
   ],
   user: [
-    body('*').customSanitizer((value) => {
+    body('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
       const val = JSON.stringify(value);
       return JSON.parse(xss(val));
     }),
-    query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    query('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
-    param('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    param('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     body('country', 'Invalid City').isIn(Country.getAllCountries().map((v) => v.isoCode)),
     body('state', 'Invalid State').custom((value, { req }) =>
@@ -95,15 +97,17 @@ export const validateAuth = {
 
 export const validateProduct = {
   upsert: [
-    body('*').customSanitizer((value) => {
+    body('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
       const val = JSON.stringify(value);
       return JSON.parse(xss(val));
     }),
-    query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    query('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
-    param('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    param('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     oneOf(
       [body('id', 'Incorrect id format').trim().custom(isValidMongooseId), body('id', 'Incorrect id format').isEmpty()],
@@ -152,29 +156,33 @@ export const validateProduct = {
     validationResultExpress,
   ],
   get: [
-    body('*').customSanitizer((value) => {
+    body('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
       const val = JSON.stringify(value);
       return JSON.parse(xss(val));
     }),
-    query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    query('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
-    param('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    param('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     param('id', 'Incorrect id format').trim().custom(isValidMongooseId),
     validationResultExpress,
   ],
   getProducts: [
-    body('*').customSanitizer((value) => {
+    body('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
       const val = JSON.stringify(value);
       return JSON.parse(xss(val));
     }),
-    query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    query('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
-    param('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    param('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     oneOf(
       [query('supplierID', 'Incorrect id format').trim().custom(isValidMongooseId), query('supplierID').isEmpty()],
@@ -215,15 +223,17 @@ export const validateProduct = {
     validationResultExpress,
   ],
   remove: [
-    body('*').customSanitizer((value) => {
+    body('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
       const val = JSON.stringify(value);
       return JSON.parse(xss(val));
     }),
-    query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    query('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
-    param('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    param('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     param('id', 'Incorrect id format').trim().custom(isValidMongooseId),
     validationResultExpress,
@@ -232,29 +242,33 @@ export const validateProduct = {
 
 export const validateInvoice = {
   get: [
-    body('*').customSanitizer((value) => {
+    body('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
       const val = JSON.stringify(value);
       return JSON.parse(xss(val));
     }),
-    query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    query('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
-    param('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    param('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     param('id', 'Incorrect id format').isString().trim().custom(isValidMongooseId),
     validationResultExpress,
   ],
   approve: [
-    body('*').customSanitizer((value) => {
+    body('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
       const val = JSON.stringify(value);
       return JSON.parse(xss(val));
     }),
-    query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    query('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
-    param('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    param('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     param('id', 'Incorrect id format').isString().trim().custom(isValidMongooseId),
     body('due_date', 'Due date is not a valid date').isISO8601().toDate(),
@@ -263,44 +277,50 @@ export const validateInvoice = {
     validationResultExpress,
   ],
   reject: [
-    body('*').customSanitizer((value) => {
+    body('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
       const val = JSON.stringify(value);
       return JSON.parse(xss(val));
     }),
-    query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    query('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
-    param('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    param('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     param('id', 'Incorrect id format').trim().custom(isValidMongooseId),
     validationResultExpress,
   ],
   complete: [
-    body('*').customSanitizer((value) => {
+    body('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
       const val = JSON.stringify(value);
       return JSON.parse(xss(val));
     }),
-    query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    query('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
-    param('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    param('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     param('id', 'Incorrect id format').isString().trim().custom(isValidMongooseId),
     body('deliveredDate', 'Delivered date is not a valid date').isISO8601().toDate(),
     validationResultExpress,
   ],
   rating: [
-    body('*').customSanitizer((value) => {
+    body('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
       const val = JSON.stringify(value);
       return JSON.parse(xss(val));
     }),
-    query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    query('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
-    param('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    param('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     param('id', 'Incorrect id format').isString().trim().custom(isValidMongooseId),
     body('rating', 'Rating should be an float with values between min 0 and max 5.0').isFloat({ min: 0.0, max: 5.0 }).toFloat(),
@@ -308,29 +328,33 @@ export const validateInvoice = {
     validationResultExpress,
   ],
   remove: [
-    body('*').customSanitizer((value) => {
+    body('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
       const val = JSON.stringify(value);
       return JSON.parse(xss(val));
     }),
-    query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    query('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
-    param('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    param('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     param('id', 'Incorrect id format').trim().custom(isValidMongooseId),
     validationResultExpress,
   ],
   create: [
-    body('*').customSanitizer((value) => {
+    body('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
       const val = JSON.stringify(value);
       return JSON.parse(xss(val));
     }),
-    query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    query('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
-    param('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    param('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     body('supplierID', 'Incorrect id format').isString().trim().custom(isValidMongooseId),
     body('invoiceProducts', 'Invoice product should be an array with min length 1').isArray({ min: 1 }),
@@ -343,30 +367,34 @@ export const validateInvoice = {
 
 export const validateDashboard = {
   salesGraph: [
-    body('*').customSanitizer((value) => {
+    body('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
       const val = JSON.stringify(value);
       return JSON.parse(xss(val));
     }),
-    query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    query('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
-    param('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    param('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     query('startDate', 'invalid query param start date is not a valid date').isISO8601().toDate(),
     query('endDate', 'invalid query param endDate date is not a valid date').isISO8601().toDate(),
     validationResultExpress,
   ],
   group: [
-    body('*').customSanitizer((value) => {
+    body('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
       const val = JSON.stringify(value);
       return JSON.parse(xss(val));
     }),
-    query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    query('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
-    param('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    param('*', 'XSS Attack Detected, Take shelter!').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     query('startDate', 'invalid query param start date is not a valid date').isISO8601().toDate(),
     query('endDate', 'invalid query param endDate date is not a valid date').isISO8601().toDate(),
