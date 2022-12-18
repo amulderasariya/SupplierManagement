@@ -80,7 +80,7 @@ const filteredPeople = computed(() => {
 });
 
 try {
-	people.value = await axios.get("/auth/users/suppliers");
+	people.value = await axios.get("/auth/users/SUPPLIER");
 	people.value = people.value.data;
 } catch (e) {
 	e.response.data.errors.forEach((error) => {

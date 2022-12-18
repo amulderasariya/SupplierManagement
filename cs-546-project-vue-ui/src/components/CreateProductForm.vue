@@ -78,31 +78,29 @@ import { ref } from "vue";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 import axios from "axios";
-import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 
 const toast = useToast();
-const router = useRouter();
 const props = defineProps(["hierarchy", "currencies"]);
 const departmentLookup = ref([]);
 const categoryLookup = ref([]);
 const subCategoryLookup = ref([]);
 
-const selectedDepartment = ref("");
-const selectedCategory = ref("");
-const selectedSubCategory = ref("");
+const selectedDepartment = ref(null);
+const selectedCategory = ref(null);
+const selectedSubCategory = ref(null);
 const selectedCurrency = ref("USD");
 
 departmentLookup.value = Object.keys(props.hierarchy);
 
 const onSelectDepartment = () => {
-	selectedCategory.value = "";
-	selectedSubCategory.value = "";
+	selectedCategory.value = null;
+	selectedSubCategory.value = null;
 	categoryLookup.value = Object.keys(props.hierarchy[selectedDepartment.value]);
 };
 
 const onSelectCategory = () => {
-	selectedSubCategory.value = "";
+	selectedSubCategory.value = null;
 	subCategoryLookup.value = Object.keys(props.hierarchy[selectedDepartment.value][selectedCategory.value]);
 };
 
@@ -132,9 +130,9 @@ const schema = yup
 			})
 			.required("Product name is required")
 			.trim("Product name can't contain leading or trailing spaces"),
-		department: yup.string().required("Department is required"),
-		category: yup.string().required("Category is required"),
-		subCategory: yup.string().required("Sub Category is required"),
+		department: yup.string().required("Department is required").nullable(),
+		category: yup.string().required("Category is required").nullable(),
+		subCategory: yup.string().required("Sub Category is required").nullable(),
 		price: yup
 			.string()
 			.required("Price field is required")
@@ -148,7 +146,7 @@ const schema = yup
 	})
 	.strict(true);
 
-const onSubmit = async (values) => {
+const onSubmit = async (values, actions) => {
 	const product = {
 		name: values.name,
 		department: values.department,
@@ -162,7 +160,7 @@ const onSubmit = async (values) => {
 	try {
 		await axios.post("/products", product);
 		toast.success("Created new product listing");
-		router.push("/dashboard/products");
+		actions.resetForm();
 	} catch (e) {
 		e.response.data.errors.forEach((error) => {
 			toast.error(error.msg);

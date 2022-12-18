@@ -23,62 +23,59 @@
 									<XMarkIcon class="h-6 w-6" aria-hidden="true" />
 								</button>
 
-								<div class="grid w-full grid-cols-1 items-start gap-y-8 gap-x-6 sm:grid-cols-12 lg:gap-x-8">
-									<div class="aspect-w-2 aspect-h-3 overflow-hidden rounded-lg bg-gray-100 sm:col-span-4 lg:col-span-5">
-										<img :src="product.imageSrc" :alt="product.imageAlt" class="object-cover object-center" />
+								<div class="w-full -mx-4 mt-2 flex flex-col sm:-mx-6 md:mx-0">
+									<h2 class="text-l text-gray-900 pb-6 pr-12">Choose the stock value you require for each product listing</h2>
+									<table class="min-w-full divide-y divide-gray-300">
+										<thead>
+											<tr>
+												<th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 md:pl-0">Products</th>
+												<th scope="col" class="hidden py-3.5 px-3 text-right text-sm font-semibold text-gray-900 sm:table-cell">Stock</th>
+												<th scope="col" class="hidden py-3.5 px-3 text-right text-sm font-semibold text-gray-900 sm:table-cell">Unit Price</th>
+												<th scope="col" class="py-3.5 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 sm:pr-6 md:pr-0">Total Price</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr v-for="product in products" :key="product._id" class="border-b border-gray-200">
+												<td class="py-4 pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
+													<div class="font-medium text-gray-900">{{ product.name }}</div>
+												</td>
+												<td class="hidden py-4 px-3 text-right text-sm text-gray-500 sm:table-cell">
+													<label for="stock" class="sr-only">{{ product.stock }}</label>
+													<input id="stock" type="text" name="stock" v-model="product.stock" class="border-none pt-2 text-right text-sm text-gray-500" />
+												</td>
+												<td class="py-4 pl-3 pr-4 text-right text-sm text-gray-500 sm:pr-6 md:pr-0">
+													{{ currencyFilter(product) }}
+												</td>
+												<td class="py-4 pl-3 pr-4 text-right text-sm text-gray-500 sm:pr-6 md:pr-0">{{ totalCurrencyFilter(product) }}</td>
+											</tr>
+										</tbody>
+										<tfoot>
+											<!-- <tr>
+												<th scope="row" colspan="3" class="hidden pl-6 pr-3 pt-6 text-right text-sm font-normal text-gray-500 sm:table-cell md:pl-0">Subtotal</th>
+												<th scope="row" class="pl-4 pr-3 pt-6 text-left text-sm font-normal text-gray-500 sm:hidden">Subtotal</th>
+												<td class="pl-3 pr-4 pt-6 text-right text-sm text-gray-500 sm:pr-6 md:pr-0">$3,900.00</td>
+											</tr>
+											<tr>
+												<th scope="row" colspan="3" class="hidden pl-6 pr-3 pt-4 text-right text-sm font-normal text-gray-500 sm:table-cell md:pl-0">Tax</th>
+												<th scope="row" class="pl-4 pr-3 pt-4 text-left text-sm font-normal text-gray-500 sm:hidden">Tax</th>
+												<td class="pl-3 pr-4 pt-4 text-right text-sm text-gray-500 sm:pr-6 md:pr-0">$585.00</td>
+											</tr> -->
+											<!-- <tr>
+												<th scope="row" colspan="3" class="hidden pl-6 pr-3 pt-4 text-right text-sm font-semibold text-gray-900 sm:table-cell md:pl-0">Total</th>
+												<th scope="row" class="pl-4 pr-3 pt-4 text-left text-sm font-semibold text-gray-900 sm:hidden">Total</th>
+												<td class="pl-3 pr-4 pt-4 text-right text-sm font-semibold text-gray-900 sm:pr-6 md:pr-0">{{ computedTotal() }}</td>
+											</tr> -->
+										</tfoot>
+									</table>
+									<div class="min-w-full flex justify-between border-b border-gray-200 pt-4">
+										<label for="currency" class="flex items-center"><span class="pr-2">Currency</span><PencilIcon class="h-4 w-4 cursor-pointer" /></label>
+										<select id="currency" name="currency" v-model="selectedCurrency" class="border-none pt-4 text-right text-sm text-gray-500">
+											<option v-for="(currency, code) in props.currencies" :value="code">{{ currency }}</option>
+										</select>
 									</div>
-									<div class="sm:col-span-8 lg:col-span-7">
-										<h2 class="text-2xl font-bold text-gray-900 sm:pr-12">{{ product.name }}</h2>
-
-										<section aria-labelledby="information-heading" class="mt-2">
-											<h3 id="information-heading" class="sr-only">Product information</h3>
-
-											<p class="text-2xl text-gray-900">{{ product.price }}</p>
-
-											<!-- Reviews -->
-											<div class="mt-6">
-												<h4 class="sr-only">Reviews</h4>
-												<div class="flex items-center">
-													<div class="flex items-center">
-														<StarIcon v-for="rating in [0, 1, 2, 3, 4]" :key="rating" :class="[product.rating > rating ? 'text-yellow-400' : 'text-gray-500', 'h-5 w-5 flex-shrink-0']" aria-hidden="true" />
-													</div>
-													<p class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">{{ product.rating }} out of 5 stars</p>
-												</div>
-											</div>
-										</section>
-
-										<section aria-labelledby="options-heading" class="mt-10">
-											<h3 id="options-heading" class="sr-only">Product options</h3>
-
-											<form>
-												<div class="-mx-4 mt-8 flex flex-col sm:-mx-6 md:mx-0">
-													<dl class="min-w-full flex justify-between border-b border-gray-200">
-														<dt>Supplier</dt>
-														<dd class="pt-4 text-right text-sm text-gray-500">{{ product.supplier }}</dd>
-													</dl>
-													<dl class="min-w-full flex justify-between border-b border-gray-200">
-														<dt>Department</dt>
-														<dd class="pt-4 text-right text-sm text-gray-500">{{ product.department }}</dd>
-													</dl>
-													<dl class="min-w-full flex justify-between border-b border-gray-200">
-														<dt>Category</dt>
-														<dd class="pt-4 text-right text-sm text-gray-500">{{ product.category }}</dd>
-													</dl>
-													<dl class="min-w-full flex justify-between border-b border-gray-200">
-														<dt>Sub Category</dt>
-														<dd class="pt-4 text-right text-sm text-gray-500">{{ product.subCategory }}</dd>
-													</dl>
-													<dl class="min-w-full flex justify-between border-b border-gray-200">
-														<dt>Stock</dt>
-														<dd class="pt-4 text-right text-sm text-gray-500">{{ product.stock }}</dd>
-													</dl>
-												</div>
-												<button type="submit" class="mt-6 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-													Place Order
-												</button>
-											</form>
-										</section>
-									</div>
+									<button type="submit" @click="onSubmit" class="mt-6 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+										Confirm Place Order
+									</button>
 								</div>
 							</div>
 						</DialogPanel>
@@ -90,22 +87,59 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from "@headlessui/vue";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
-import { StarIcon } from "@heroicons/vue/20/solid";
+import { PencilIcon } from "@heroicons/vue/24/solid";
+import { useToast } from "vue-toastification";
+import axios from "axios";
+import { useRouter } from "vue-router";
 
-const product = {
-	name: "Sony A7",
-	price: "$192",
-	rating: 4.65,
-	supplier: "Godwyn James William",
-	department: "Entertainment",
-	category: "Cameras and Supply",
-	subCategory: "Sony",
-	stock: "78",
-	imageSrc: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1638&q=80",
-	imageAlt: "Two each of gray, white, and black shirts arranged on table.",
+const router = useRouter();
+const toast = useToast();
+const props = defineProps(["open", "products", "currencies", "selectedSupplier"]);
+const emit = defineEmits(["close", "updateProducts"]);
+const selectedCurrency = ref("USD");
+const products = ref(props.products);
+
+const onSubmit = async () => {
+	const order = {
+		supplierID: props.selectedSupplier._id,
+		invoiceProducts: [],
+		currency: selectedCurrency.value,
+	};
+
+	products.value.map((product) => {
+		order.invoiceProducts.push({
+			productID: product._id,
+			quantity: product.stock,
+		});
+	});
+
+	try {
+		await axios.post("/invoice", order);
+		toast.success("Invoice Created!");
+		router.push("/dashboard/orders");
+	} catch (e) {
+		e.response.data.errors.forEach((error) => {
+			toast.error(error.msg);
+		});
+	}
 };
 
-const props = defineProps(["open"]);
+const totalCurrencyFilter = (product) => {
+	const formatter = new Intl.NumberFormat("en-US", {
+		style: "currency",
+		currency: product.currency,
+	});
+	return formatter.format(product.price * product.stock);
+};
+
+const currencyFilter = (product) => {
+	const formatter = new Intl.NumberFormat("en-US", {
+		style: "currency",
+		currency: product.currency,
+	});
+	return formatter.format(product.price);
+};
 </script>
