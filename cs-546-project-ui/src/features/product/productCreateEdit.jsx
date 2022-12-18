@@ -15,7 +15,7 @@ export default function ProductCreateDialog(props) {
   const [disabledProductFields, setDisableProdFields] = useState(props.product.name !== 'Create a Product');
 
   const [category, setCategory] = useState(props.product.category);
-  const [subCategory, setSubCategory] = useState();
+  const [subCategory, setSubCategory] = useState(props.product.subCategory);
   if (Object.keys(lookups.hierarchy).length !== 0) {
   }
   const resetForm = () => {
@@ -54,19 +54,21 @@ export default function ProductCreateDialog(props) {
     const product = productState.allProducts.find((prod) => prod.name === productName);
     if (product) {
       setPrice(product.price);
-      setStock(0);
+      setStock(product.quantity);
+      setSubCategory(product.subCategory);
       setDepartment(product.department);
       setCategory(product.category);
       setCurrency(product.currency);
       setDisableProdFields(true);
+    } else {
+      setDisableProdFields(false);
     }
   };
   return (
     <Fragment>
       {Object.keys(lookups.hierarchy).length !== 0 && (
         <Fragment>
-          {productState.errors.length > 0 &&
-            productState.errors.map((error) => <Alert severity="error">{error.msg}</Alert>)}
+          {productState.errors.length > 0 && productState.errors.map((error) => <Alert severity="error">{error.msg}</Alert>)}
           <Grid container maxWidth={true} display="flex" flexDirection="row" justifyContent="space-between">
             <Grid display="flex" flex={2} item margin={1} alignItems="center">
               {/* //this will not scale */}
@@ -136,16 +138,7 @@ export default function ProductCreateDialog(props) {
                 name="Stock"
               />
             </Grid>
-            <Grid
-              container
-              flexDirection="row"
-              justifyContent="space-between"
-              display="flex"
-              flex={2}
-              item
-              margin={1}
-              alignItems="center"
-            >
+            <Grid container flexDirection="row" justifyContent="space-between" display="flex" flex={2} item margin={1} alignItems="center">
               <Grid item flex={1} display="flex" margin={1}>
                 <Autocomplete
                   options={Object.keys(get(lookups, 'currencies', []))}

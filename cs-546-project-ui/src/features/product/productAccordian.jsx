@@ -6,12 +6,13 @@ import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
 import ProductCreateDialog from './productCreateEdit';
 import { Grid } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setErrors } from '../../redux/product.reducer';
 
 export default function ProductAccordion(props) {
   const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(props.product.name === 'Create a Product');
+  const authState = useSelector((state) => state.auth);
 
   const onClose = () => {
     setExpanded(false);
@@ -20,6 +21,7 @@ export default function ProductAccordion(props) {
   };
 
   const onOpen = () => {
+    if (authState.user.role === 'OWNER') return;
     setExpanded(true);
     dispatch(setErrors([]));
   };
@@ -29,7 +31,7 @@ export default function ProductAccordion(props) {
       <Accordion expanded={expanded}>
         <AccordionSummary
           onClick={() => (expanded ? onClose() : onOpen())}
-          expandIcon={<EditIcon />}
+          expandIcon={authState.user.role === 'OWNER' ? <div></div> : <EditIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >

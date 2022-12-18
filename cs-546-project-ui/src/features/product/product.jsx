@@ -113,17 +113,19 @@ export default function Product() {
             renderInput={(params) => <TextField {...params} label="Sub Category" />}
           />
         </Grid>
-        <Grid item display="flex" alignContent="center" alignItems="center">
-          <Button
-            variant="contained"
-            onClick={() => {
-              setOpen(true);
-              dispatch(setCreateProductStatus(false));
-            }}
-          >
-            Create New Product
-          </Button>
-        </Grid>
+        {authState.user.role === 'SUPPLIER' && (
+          <Grid item display="flex" alignContent="center" alignItems="center">
+            <Button
+              variant="contained"
+              onClick={() => {
+                setOpen(true);
+                dispatch(setCreateProductStatus(false));
+              }}
+            >
+              Create New Product
+            </Button>
+          </Grid>
+        )}
       </Grid>
       <Box>
         {open && (

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { get } from 'lodash';
 import axiosUtils from '../utils/axiosUtils';
-const user = JSON.parse(localStorage.getItem('user'));
+const user = JSON.parse(sessionStorage.getItem('user'));
 
 export const register = createAsyncThunk('auth/register', axiosUtils.postData('auth/register'));
 
@@ -51,9 +51,9 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       state.user = null;
       state.errors = [];
-      localStorage.setItem('user', JSON.stringify(null));
+      sessionStorage.setItem('user', JSON.stringify(null));
 
-      localStorage.setItem('token', JSON.stringify(null));
+      sessionStorage.setItem('token', JSON.stringify(null));
       window.location.reload();
     },
     [logout.rejected]: (state, action) => {
@@ -64,13 +64,13 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       state.user = null;
       state.errors = JSON.parse(get(action, 'error.message', `[{ msg: 'Something went wrong' }]`));
-      localStorage.setItem('user', JSON.stringify(null));
+      sessionStorage.setItem('user', JSON.stringify(null));
     },
     [userInfo.fulfilled]: (state, action) => {
       state.isLoggedIn = false;
       state.user = action.payload;
       state.errors = [];
-      localStorage.setItem('user', JSON.stringify(action.payload));
+      sessionStorage.setItem('user', JSON.stringify(action.payload));
     },
     [postUserInfo.rejected]: (state, action) => {
       state.errors = JSON.parse(get(action, 'error.message', `[{ msg: 'Something went wrong' }]`));
@@ -78,7 +78,7 @@ const authSlice = createSlice({
     [postUserInfo.fulfilled]: (state, action) => {
       state.user = action.payload;
       state.errors = [];
-      localStorage.setItem('user', JSON.stringify(action.payload));
+      sessionStorage.setItem('user', JSON.stringify(action.payload));
     },
     [getSuppliers.fulfilled]: (state, action) => {
       state.suppliers = action.payload;
