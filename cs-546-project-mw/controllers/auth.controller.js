@@ -64,7 +64,8 @@ export const userInfo = async (req, res) => {
 
 export const getUsers = async (req, res) => {
   try {
-    const users = await User.find({ role: 'SUPPLIER' });
+    const { role } = req.params;
+    const users = await User.find({ role: role });
     return res.json(users.map((user) => ({ ...user.toJSON(), password: undefined })));
   } catch (error) {
     return res.status(500).json({ errors: [{ msg: 'Something went wrong' }] });
