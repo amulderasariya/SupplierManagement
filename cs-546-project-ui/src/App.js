@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Product from './features/product/product';
 import { currencies, hierarchy } from './redux/lookup.reducer';
 import Orders from './features/orders/orders';
+import Dashboard from './features/dashboard/dashboard';
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -53,7 +54,7 @@ function App() {
             {user && (
               <Fragment>
                 <Route exact path="/login" element={<LoginScreen />}></Route>
-                <Route exact path="/" element={<div>Home </div>}></Route>
+                <Route exact path="/" element={<Dashboard />}></Route>
                 <Route exact path="/product" element={<Product />}></Route>
                 <Route exact path="/orders" element={<Orders />}></Route>
               </Fragment>

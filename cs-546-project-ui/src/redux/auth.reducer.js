@@ -51,6 +51,9 @@ const authSlice = createSlice({
       state.user = null;
       state.errors = [];
       localStorage.setItem('user', JSON.stringify(null));
+
+      localStorage.setItem('token', JSON.stringify(null));
+      window.location.reload();
     },
     [logout.rejected]: (state, action) => {
       state.isLoggedIn = false;

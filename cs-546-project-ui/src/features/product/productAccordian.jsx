@@ -43,6 +43,9 @@ export default function ProductAccordion(props) {
             <Grid item flex={2}>
               <Typography>{props.product.category}</Typography>
             </Grid>
+            <Grid item flex={2}>
+              <Typography>{props.product.subCategory}</Typography>
+            </Grid>
             <Grid item flex={1}>
               <Typography>{props.product.stock}</Typography>
             </Grid>

@@ -1,24 +1,31 @@
 import React, { useEffect } from 'react';
 import { Box } from '@mui/system';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Autocomplete, Button, Grid, TextField, Typography } from '@mui/material';
 import ProductAccordion from './productAccordian';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProducts, setCreateProductStatus } from '../../redux/product.reducer';
 import { useState } from 'react';
-import { debounce } from 'lodash';
+import { debounce, get } from 'lodash';
 
 export default function Product() {
   const [open, setOpen] = useState(false);
   const productState = useSelector((state) => state.products);
   const [search, setSearch] = useState();
   const dispatch = useDispatch();
+  const [department, setDepartment] = useState();
+  const [category, setCategory] = useState();
+  const [subCategory, setSubCategory] = useState();
+  const lookups = useSelector((state) => state.lookups);
   useEffect(() => {
-    if (productState.fetchProducts) dispatch(getProducts());
+    if (productState.fetchProducts) filterProducts();
   }, [productState.fetchProducts]);
 
+  const filterProducts = () => {
+    dispatch(getProducts({ params: { name: search, department, category, subCategory } }));
+  };
   useEffect(() => {
     const deb = debounce(() => {
-      dispatch(getProducts({ params: { name: search } }));
+      filterProducts();
     }, 1000);
     deb();
   }, [search]);
@@ -37,6 +44,48 @@ export default function Product() {
             label="Search Product"
             name="search"
             autoFocus
+          />
+        </Grid>
+        <Grid display="flex" flex={2} item margin={1} alignItems="center">
+          <Autocomplete
+            options={Object.keys(lookups.hierarchy)}
+            fullWidth
+            required
+            id="department"
+            value={department}
+            onInputChange={(event, department) => {
+              setDepartment(department || undefined);
+              filterProducts();
+            }}
+            renderInput={(params) => <TextField {...params} label="Department" />}
+          />
+        </Grid>
+        <Grid display="flex" flex={2} item margin={1} alignItems="center">
+          <Autocomplete
+            options={Object.keys(get(lookups.hierarchy, department, []))}
+            fullWidth
+            required
+            id="category"
+            value={category}
+            onInputChange={(event, category) => {
+              setCategory(category || undefined);
+              filterProducts();
+            }}
+            renderInput={(params) => <TextField {...params} label="Category" />}
+          />
+        </Grid>
+        <Grid display="flex" flex={2} item margin={1} alignItems="center">
+          <Autocomplete
+            options={Object.keys(get(lookups.hierarchy, `${department}.${category}`, []))}
+            fullWidth
+            required
+            id="subcategory"
+            value={subCategory}
+            onInputChange={(event, subcategory) => {
+              setSubCategory(subcategory || undefined);
+              filterProducts();
+            }}
+            renderInput={(params) => <TextField {...params} label="Sub Category" />}
           />
         </Grid>
         <Grid item display="flex" alignContent="center" alignItems="center">
@@ -88,6 +137,9 @@ export default function Product() {
         </Grid>
         <Grid item flex={2}>
           <Typography>Category</Typography>
+        </Grid>
+        <Grid item flex={2}>
+          <Typography>Sub Category</Typography>
         </Grid>
         <Grid item flex={1}>
           <Typography>Stock</Typography>

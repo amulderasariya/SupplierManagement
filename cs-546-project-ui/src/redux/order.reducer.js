@@ -5,7 +5,18 @@ import axiosUtils from '../utils/axiosUtils';
 export const createOrders = createAsyncThunk('addOrder', axiosUtils.postData('invoice'));
 
 export const getOrders = createAsyncThunk('getOrder', axiosUtils.getData('invoice'));
-const initialState = { createOrderStatus: false, allOrders: {}, errors: [], fetchOrders: true };
+export const approveOrders = createAsyncThunk('approve', axiosUtils.postData('invoice/${id}/approve'));
+export const completeOrders = createAsyncThunk('completed', axiosUtils.postData('invoice/${id}/approve'));
+export const rejectedOrders = createAsyncThunk('reject', axiosUtils.postData('invoice/${id}/approve'));
+
+export const rateOrder = createAsyncThunk('rate', axiosUtils.postData('invoice/${id}/rate'));
+
+const initialState = {
+  createOrderStatus: false,
+  allOrders: { PENDING: [], APPROVED: [], COMPLETED: [], REJECTED: [] },
+  errors: [],
+  fetchOrders: true,
+};
 const orderSlice = createSlice({
   name: 'order',
   initialState,
@@ -38,6 +49,42 @@ const orderSlice = createSlice({
     },
     [getOrders.rejected]: (state, action) => {
       state.errors = JSON.parse(get(action, 'error.message', `[{ msg: 'Something went wrong' }]`));
+    },
+    [approveOrders.fulfilled]: (state, action) => {
+      // state.allOrders = action.payload;
+      state.fetchOrders = true;
+      state.errors = [];
+    },
+    [approveOrders.rejected]: (state, action) => {
+      state.errors = JSON.parse(get(action, 'error.message', `[{ msg: 'Something went wrong' }]`));
+      alert(state.errors[0].msg);
+    },
+    [rejectedOrders.fulfilled]: (state, action) => {
+      // state.allOrders = action.payload;
+      state.fetchOrders = true;
+      state.errors = [];
+    },
+    [rejectedOrders.rejected]: (state, action) => {
+      state.errors = JSON.parse(get(action, 'error.message', `[{ msg: 'Something went wrong' }]`));
+      alert(state.errors[0].msg);
+    },
+    [completeOrders.fulfilled]: (state, action) => {
+      // state.allOrders = action.payload;
+      state.fetchOrders = true;
+      state.errors = [];
+    },
+    [completeOrders.rejected]: (state, action) => {
+      state.errors = JSON.parse(get(action, 'error.message', `[{ msg: 'Something went wrong' }]`));
+      alert(state.errors[0].msg);
+    },
+    [rateOrder.fulfilled]: (state, action) => {
+      // state.allOrders = action.payload;
+      state.fetchOrders = true;
+      state.errors = [];
+    },
+    [rateOrder.rejected]: (state, action) => {
+      state.errors = JSON.parse(get(action, 'error.message', `[{ msg: 'Something went wrong' }]`));
+      alert(state.errors[0].msg);
     },
   },
 });

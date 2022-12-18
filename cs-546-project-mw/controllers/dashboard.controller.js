@@ -63,8 +63,14 @@ export const getByDepartments = async (req, res) => {
       },
     ];
     pip[3].$project[project1] = `$invoiceProducts.ProductDetails.${groupBy}`;
-    const invoice = await Invoice.aggregate(pip);
-    res.json(invoice);
+    const invoiceCurrYear = await Invoice.aggregate(pip);
+    startDate.setFullYear(startDate.getFullYear() - 1);
+    endDate.setFullYear(endDate.getFullYear() - 1);
+    pip[0].$match.deliveredDate.$gte = startDate;
+    pip[0].$match.deliveredDate.$lte = endDate;
+
+    const invoicePrevYear = await Invoice.aggregate(pip);
+    res.json([invoicePrevYear, invoiceCurrYear]);
   } catch (e) {
     console.log(e);
     res.json('Something went wrong');
