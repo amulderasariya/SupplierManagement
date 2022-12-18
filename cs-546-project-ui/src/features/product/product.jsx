@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getProducts, setCreateProductStatus } from '../../redux/product.reducer';
 import { useState } from 'react';
 import { debounce, get } from 'lodash';
+import { getSuppliers } from '../../redux/auth.reducer';
 
 export default function Product() {
   const [open, setOpen] = useState(false);
@@ -15,13 +16,15 @@ export default function Product() {
   const [department, setDepartment] = useState();
   const [category, setCategory] = useState();
   const [subCategory, setSubCategory] = useState();
+  const [user, setUser] = useState({});
+  const authState = useSelector((state) => state.auth);
   const lookups = useSelector((state) => state.lookups);
   useEffect(() => {
     if (productState.fetchProducts) filterProducts();
   }, [productState.fetchProducts]);
 
   const filterProducts = () => {
-    dispatch(getProducts({ params: { name: search, department, category, subCategory } }));
+    dispatch(getProducts({ params: { name: search, department, category, subCategory, supplierID: user ? user.id : undefined } }));
   };
   useEffect(() => {
     const deb = debounce(() => {
@@ -29,6 +32,9 @@ export default function Product() {
     }, 1000);
     deb();
   }, [search]);
+  useEffect(() => {
+    dispatch(getSuppliers());
+  }, []);
   return (
     <Box margin={3}>
       <Grid container justifyContent="space-between">
@@ -46,6 +52,25 @@ export default function Product() {
             autoFocus
           />
         </Grid>
+        {authState.user.role === 'OWNER' && (
+          <Grid item display="flex" flex={2} margin={1} alignItems="center">
+            <Autocomplete
+              options={authState.suppliers.map((user) => ({
+                id: user._id,
+                label: user.email,
+              }))}
+              fullWidth
+              required
+              id="productName"
+              value={user && user.label}
+              onChange={(e, val) => {
+                setUser(val);
+                filterProducts();
+              }}
+              renderInput={(params) => <TextField {...params} label={authState.user.role === 'SUPPLIER' ? 'Owner Name' : 'Suplier Name'} />}
+            />
+          </Grid>
+        )}
         <Grid display="flex" flex={2} item margin={1} alignItems="center">
           <Autocomplete
             options={Object.keys(lookups.hierarchy)}

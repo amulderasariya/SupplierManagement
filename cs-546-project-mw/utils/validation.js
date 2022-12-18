@@ -26,8 +26,9 @@ const matchPassword = (value, { req }) => {
 
 export const validateAuth = {
   register: [
-    body('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    body('*').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
       return xss(value);
@@ -35,8 +36,9 @@ export const validateAuth = {
     param('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
       return xss(value);
     }),
-    body('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    body('*').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     body('email', 'Incorrect email format').trim().isEmail().normalizeEmail(),
     body('password', 'Password should have minimun 6 characters One uppercase, One lower case, one digit and a special char')
@@ -48,8 +50,9 @@ export const validateAuth = {
     validationResultExpress,
   ],
   login: [
-    body('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    body('*').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
       return xss(value);
@@ -64,8 +67,9 @@ export const validateAuth = {
     validationResultExpress,
   ],
   user: [
-    body('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    body('*').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
       return xss(value);
@@ -91,8 +95,9 @@ export const validateAuth = {
 
 export const validateProduct = {
   upsert: [
-    body('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    body('*').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
       return xss(value);
@@ -141,14 +146,15 @@ export const validateProduct = {
       ],
       'Either id or subCategory should exist'
     ),
-    body('stock', 'Stock should be an integer with min 0').isInt({ min: 0 }),
-    body('price', 'Price should be an float with min 0').isFloat({ min: 0 }),
+    body('stock', 'Stock should be an integer with min 0').isInt({ min: 0 }).toInt(),
+    body('price', 'Price should be an float with min 0').isFloat({ min: 0 }).toFloat(),
     body('currency', 'Invalid currency').isString().trim().isIn(listOfCurrencies),
     validationResultExpress,
   ],
   get: [
-    body('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    body('*').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
       return xss(value);
@@ -160,8 +166,9 @@ export const validateProduct = {
     validationResultExpress,
   ],
   getProducts: [
-    body('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    body('*').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
       return xss(value);
@@ -208,8 +215,9 @@ export const validateProduct = {
     validationResultExpress,
   ],
   remove: [
-    body('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    body('*').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
       return xss(value);
@@ -224,8 +232,9 @@ export const validateProduct = {
 
 export const validateInvoice = {
   get: [
-    body('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    body('*').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
       return xss(value);
@@ -237,8 +246,9 @@ export const validateInvoice = {
     validationResultExpress,
   ],
   approve: [
-    body('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    body('*').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
       return xss(value);
@@ -248,13 +258,14 @@ export const validateInvoice = {
     }),
     param('id', 'Incorrect id format').isString().trim().custom(isValidMongooseId),
     body('due_date', 'Due date is not a valid date').isISO8601().toDate(),
-    body('net_amount', 'Net Amount should be an float with min 0').isFloat({ min: 0 }),
-    body('paidAmount', 'Paid Amount should be an float with min 0').isFloat({ min: 0 }),
+    body('net_amount', 'Net Amount should be an float with min 0').isFloat({ min: 0 }).toFloat(),
+    body('paidAmount', 'Paid Amount should be an float with min 0').isFloat({ min: 0 }).toFloat(),
     validationResultExpress,
   ],
   reject: [
-    body('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    body('*').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
       return xss(value);
@@ -266,8 +277,9 @@ export const validateInvoice = {
     validationResultExpress,
   ],
   complete: [
-    body('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    body('*').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
       return xss(value);
@@ -280,8 +292,9 @@ export const validateInvoice = {
     validationResultExpress,
   ],
   rating: [
-    body('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    body('*').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
       return xss(value);
@@ -290,13 +303,14 @@ export const validateInvoice = {
       return xss(value);
     }),
     param('id', 'Incorrect id format').isString().trim().custom(isValidMongooseId),
-    body('rating', 'Rating should be an float with values between min 0 and max 5.0').isFloat({ min: 0.0, max: 5.0 }),
+    body('rating', 'Rating should be an float with values between min 0 and max 5.0').isFloat({ min: 0.0, max: 5.0 }).toFloat(),
     body('review', 'Review should be string').isString().trim(),
     validationResultExpress,
   ],
   remove: [
-    body('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    body('*').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
       return xss(value);
@@ -308,8 +322,9 @@ export const validateInvoice = {
     validationResultExpress,
   ],
   create: [
-    body('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    body('*').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
       return xss(value);
@@ -320,7 +335,7 @@ export const validateInvoice = {
     body('supplierID', 'Incorrect id format').isString().trim().custom(isValidMongooseId),
     body('invoiceProducts', 'Invoice product should be an array with min length 1').isArray({ min: 1 }),
     body('invoiceProducts.*.productID', 'Invalid Product id').trim().custom(isValidMongooseId),
-    body('invoiceProducts.*.quantity', 'Quantity should be an integer with min 1').isInt({ min: 1 }),
+    body('invoiceProducts.*.quantity', 'Quantity should be an integer with min 1').isInt({ min: 1 }).toInt(),
     body('currency', 'Invalid currency').isString().trim().isIn(listOfCurrencies),
     validationResultExpress,
   ],
@@ -328,8 +343,9 @@ export const validateInvoice = {
 
 export const validateDashboard = {
   salesGraph: [
-    body('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    body('*').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
       return xss(value);
@@ -342,8 +358,9 @@ export const validateDashboard = {
     validationResultExpress,
   ],
   group: [
-    body('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
-      return xss(value);
+    body('*').customSanitizer((value) => {
+      const val = JSON.stringify(value);
+      return JSON.parse(xss(val));
     }),
     query('*', 'XSS Attack Detected, Take shelter!').custom((value) => {
       return xss(value);

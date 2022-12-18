@@ -42,9 +42,6 @@ export default function Orders() {
     <Box margin={3}>
       <OrderDialog open={open} handleClose={handleClose} />
       <Grid container justifyContent="space-between">
-        <Grid flexGrow={1} item marginRight={2}>
-          <TextField margin="normal" fullWidth id="search" label="Search Orders" name="search" autoFocus />
-        </Grid>
         <Grid item display="flex" alignContent="center" alignItems="center">
           {user.role === 'OWNER' && (
             <Button variant="contained" onClick={handleClickOpen}>

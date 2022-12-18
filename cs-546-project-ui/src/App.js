@@ -12,6 +12,7 @@ import Product from './features/product/product';
 import { currencies, hierarchy } from './redux/lookup.reducer';
 import Orders from './features/orders/orders';
 import Dashboard from './features/dashboard/dashboard';
+import Users from './features/users/users';
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -57,6 +58,7 @@ function App() {
                 <Route exact path="/" element={<Dashboard />}></Route>
                 <Route exact path="/product" element={<Product />}></Route>
                 <Route exact path="/orders" element={<Orders />}></Route>
+                <Route exact path="/users" element={<Users />}></Route>
               </Fragment>
             )}
           </Routes>

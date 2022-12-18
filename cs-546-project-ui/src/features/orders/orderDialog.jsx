@@ -24,11 +24,7 @@ export default function OrderDialog(props) {
   const [invoiceProducts, setInvoiceProducts] = useState([]);
   const authState = useSelector((state) => state.auth);
   useEffect(() => {
-    if (authState.user.role === 'SUPPLIER') {
-      dispatch(getOwners());
-    } else {
-      dispatch(getSuppliers());
-    }
+    dispatch(getSuppliers());
   }, []);
   useEffect(() => {
     if (orderState.createOrderStatus) {
@@ -58,7 +54,7 @@ export default function OrderDialog(props) {
     };
     dispatch(createOrders(payload));
   };
-  const userDetails = authState.user.role === 'SUPPLIER' ? authState.owners : authState.suppliers;
+  const userDetails = authState.suppliers;
   return (
     <Dialog onClose={handleDialogClose} aria-labelledby="customized-dialog-title" open={open} maxWidth="xl" fullWidth>
       <DialogTitle sx={{ m: 0, p: 2 }}>

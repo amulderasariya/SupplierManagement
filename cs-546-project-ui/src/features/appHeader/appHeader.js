@@ -44,9 +44,9 @@ function AppHeader(props) {
   const authState = useSelector((state) => state.auth);
   const pages = [];
   pages.push({ title: 'Dashboard' });
-  if (authState.user.role === 'SUPPLIER') {
-    pages.push({ title: 'Products' });
-  }
+  pages.push({ title: 'Products' });
+  pages.push({ title: authState.user.role === 'SUPPLIER' ? 'Owners' : 'Suppliers' });
+
   pages.push({ title: 'Orders' });
   const handleOpenNavMenu = () => {
     setAnchorElNav('left');
@@ -66,6 +66,10 @@ function AppHeader(props) {
         break;
       case 'Orders':
         navigate('/orders');
+        break;
+      case 'Owners':
+      case 'Suppliers':
+        navigate('/users');
         break;
       default:
         break;
@@ -131,11 +135,7 @@ function AppHeader(props) {
           </Typography>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Button
-                key={page.title}
-                onClick={handleCloseNavMenu(page.title)}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
+              <Button key={page.title} onClick={handleCloseNavMenu(page.title)} sx={{ my: 2, color: 'white', display: 'block' }}>
                 {page.title}
               </Button>
             ))}

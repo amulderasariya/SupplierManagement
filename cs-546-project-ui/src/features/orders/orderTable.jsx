@@ -205,7 +205,7 @@ function Row(props) {
                 <TableCell align="center">
                   <Rating
                     name="simple-controlled"
-                    value={user.role !== 'SUPPLIER' ? row.ownerRating : row.supplierRating}
+                    value={user.role === 'SUPPLIER' ? row.ownerRating : row.supplierRating}
                     onChange={(event, newValue) => {
                       ratings[row._id] = newValue;
                       dispatch(
