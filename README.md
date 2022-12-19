@@ -51,3 +51,9 @@ The platform we are building will be targeting a niche market of independent bus
 #### Yash Ajay Panchal
 #### Godwyn James William
 #### Thrinath Reddy Adaboina
+
+## GitHub Link
+https://github.com/CS-546-Group-40/web-1
+
+## License
+MIT
