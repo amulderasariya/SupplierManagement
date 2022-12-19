@@ -28,11 +28,11 @@
 				</div>
 			</div>
 		</div>
-		<div class="pt-4 rounded-lg">
-			<LineChart />
+		<div v-if="!refreshGraph" class="pt-4 rounded-lg">
+			<LineChart :data="lineGraphData.data" />
 		</div>
-		<div class="pt-4 rounded-lg">
-			<StackedLineBarChart />
+		<div v-if="!refreshGraph" class="pt-4 rounded-lg">
+			<BarChart :data="barGraphData.data" />
 		</div>
 	</div>
 </template>
@@ -42,9 +42,10 @@ import { ref } from "vue";
 import axios from "axios";
 import { useToast } from "vue-toastification";
 import LineChart from "../components/LineChart.vue";
-import StackedLineBarChart from "../components/StackedLineBarChart.vue";
+import BarChart from "../components/BarChart.vue";
 
 const toast = useToast();
+const refreshGraph = ref(false);
 
 const fromDate = ref(new Date());
 const toDate = ref(new Date());
@@ -54,6 +55,7 @@ const barGraphData = ref();
 
 const refresh = async () => {
 	try {
+		refreshGraph.value = true;
 		lineGraphData.value = await axios.get("/dashboard/sales", {
 			params: {
 				startDate: fromDate.value,
@@ -67,8 +69,7 @@ const refresh = async () => {
 				groupBy: groupBy.value,
 			},
 		});
-		console.log(lineGraphData.value);
-		console.log(barGraphData.value);
+		refreshGraph.value = false;
 	} catch (e) {
 		e.response.data.errors.forEach((error) => {
 			toast.error(error.msg);
