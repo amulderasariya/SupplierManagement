@@ -54,7 +54,7 @@ export default function ProductCreateDialog(props) {
     const product = productState.allProducts.find((prod) => prod.name === productName);
     if (product) {
       setPrice(product.price);
-      setStock(product.quantity);
+      setStock(product.stock);
       setSubCategory(product.subCategory);
       setDepartment(product.department);
       setCategory(product.category);
@@ -132,7 +132,8 @@ export default function ProductCreateDialog(props) {
                 value={stock}
                 onChange={(event) => setStock(event.target.value)}
                 fullWidth
-                InputLabelProps={{ shrink: !isNaN(stock) }}
+                InputLabelProps={{ shrink: !isNaN(stock || props.product.stock) }}
+                type="number"
                 id="stock"
                 label="Stock"
                 name="Stock"
