@@ -242,6 +242,7 @@ let computeOverallRating = async (userID) => {
     let current_rating = user.rating;
     let total = 0;
     let average = 0;
+    let count = 0;
     const invoices_data = await Invoice.find({
       $and: [{ $or: [{ ownerID: userID }, { supplierID: userID }] }, { status: 'COMPLETED' }],
     });
@@ -250,9 +251,10 @@ let computeOverallRating = async (userID) => {
         invoices_data.forEach((element) => {
           if (!isNaN(element.ownerRating)) {
             total += element.ownerRating;
+            count++;
           }
         });
-        average = total / invoices_data.length;
+        average = total / count;
         // console.log('total =', total);
         average = average.toFixed(2);
         // console.log('average =', average);
@@ -264,9 +266,10 @@ let computeOverallRating = async (userID) => {
         invoices_data.forEach((element) => {
           if (!isNaN(element.supplierRating)) {
             total += element.supplierRating;
+            count++;
           }
         });
-        average = total / invoices_data.length;
+        average = total / count;
         // console.log('total =', total);
         average = average.toFixed(2);
         // console.log('average =', average);
