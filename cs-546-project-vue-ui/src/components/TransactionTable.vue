@@ -58,7 +58,11 @@
 									<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ transaction.quantity }}</td>
 									<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ transaction.netAmount }}</td> -->
 									<td v-if="orders.name === 'Pending Orders'" class="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-										<button type="button" @click="open = true" class="inline-flex items-center rounded-md border border-transparent bg-green-600 px-2 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+										<button
+											type="button"
+											@click="openApprove = true"
+											class="inline-flex items-center rounded-md border border-transparent bg-green-600 px-2 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+										>
 											Approve
 										</button>
 									</td>
@@ -86,6 +90,7 @@
 											<StarIcon class="ml-2 -mr-0.5 h-4 w-4" aria-hidden="true" />
 										</button>
 									</td>
+									<ApproveModal :open="openApprove" @close="openApprove = false" :invoiceID="transaction._id" :products="transaction.invoiceProducts" :currency="transaction.currency" />
 								</tr>
 							</tbody>
 						</table>
@@ -94,16 +99,25 @@
 			</div>
 		</div>
 	</div>
-	<ProductModal :open="open" @close="open = false" />
+
+	<RejectModal :open="openReject" @close="openReject = false" />
+	<SettleModal :open="openSettle" @close="openSettle = false" />
+	<RateModal :open="openRate" @close="openRate = false" />
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { StarIcon } from "@heroicons/vue/24/solid";
-import ProductModal from "./ProductModal.vue";
+import ApproveModal from "./ApproveModal.vue";
+import RejectModal from "./RejectModal.vue";
+import SettleModal from "./SettleModal.vue";
+import RateModal from "./RateModal.vue";
 import JsonCSV from "vue-json-csv";
 
-let open = ref(false);
+const openApprove = ref(false);
+const openReject = ref(false);
+const openSettle = ref(false);
+const openRate = ref(false);
 const props = defineProps(["orders"]);
 
 const grossAmountFilter = (invoice) => {

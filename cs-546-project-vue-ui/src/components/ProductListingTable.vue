@@ -6,8 +6,8 @@
 					<table class="min-w-full table-fixed divide-y divide-gray-300">
 						<thead class="bg-gray-50">
 							<tr>
-								<th scope="col" class="sr-only relative w-12 px-6 sm:w-16 sm:px-8"></th>
-								<th scope="col" class="min-w-[12rem] py-3.5 pr-3 text-left text-sm font-semibold text-gray-900">Name</th>
+								<th v-if="$cookies.get('user').role === 'OWNER'" scope="col" class="sr-only relative w-12 px-6 sm:w-16 sm:px-8"></th>
+								<th scope="col" class="min-w-[12rem] px-3 py-4 text-left text-sm font-semibold text-gray-900">Name</th>
 								<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Department</th>
 								<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Categories</th>
 								<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Sub Categories</th>
@@ -17,10 +17,10 @@
 						</thead>
 						<tbody class="divide-y divide-gray-200 bg-white">
 							<tr v-for="product in props.products" :key="product._id" :class="[selectedProductsID.includes(product) && 'bg-gray-50']">
-								<td class="relative w-12 px-6 sm:w-16 sm:px-8">
+								<td v-if="$cookies.get('user').role === 'OWNER'" class="relative w-12 px-6 sm:w-16 sm:px-8">
 									<input type="checkbox" class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 sm:left-6" :value="product" v-model="selectedProductsID" @change="$emit('update:modelValue', selectedProductsID)" />
 								</td>
-								<td :class="['whitespace-nowrap py-4 pr-3 text-sm font-medium', selectedProductsID.includes(product) ? 'text-indigo-600' : 'text-gray-900']">
+								<td :class="['whitespace-nowrap px-3 py-4 text-sm font-medium', selectedProductsID.includes(product) ? 'text-indigo-600' : 'text-gray-900']">
 									{{ product.name }}
 								</td>
 								<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
