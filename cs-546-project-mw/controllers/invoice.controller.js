@@ -82,7 +82,7 @@ export const approveInvoice = async (req, res) => {
     } else {
       invoice.paymentStatus = 'PENDING';
     }
-    if (isSeedRunning[0] && !isSeedRunning[0].isSeedRunning) {
+    if (isSeedRunning[0] ? !isSeedRunning[0].isSeedRunning : true) {
       if (due_date.getTime() < new Date().getTime()) {
         return res.status(400).json({ errors: [{ msg: 'Due date cannot be in the past' }] });
       }
@@ -135,7 +135,6 @@ export const completeInvoice = async (req, res) => {
   try {
     const { deliveredDate } = req.body;
     const invoice = await Invoice.findById(req.params.id);
-    const isSeedRunning = await PreBuild.find();
     if (invoice === null) {
       return res.status(404).json({ errors: [{ msg: 'Not Found' }] });
     }
@@ -145,13 +144,12 @@ export const completeInvoice = async (req, res) => {
     if (invoice.status !== 'APPROVED') {
       return res.status(400).json({ errors: [{ msg: 'Invoice is not in APPROVED State' }] });
     }
-    if (isSeedRunning[0] && !isSeedRunning[0].isSeedRunning) {
-      if (deliveredDate.getTime() > new Date().getTime()) {
-        return res.status(400).json({
-          errors: [{ msg: 'Delivered date date cannot be in the future' }],
-        });
-      }
+    if (deliveredDate.getTime() > new Date().getTime()) {
+      return res.status(400).json({
+        errors: [{ msg: 'Delivered date date cannot be in the future' }],
+      });
     }
+
     invoice.deliveredDate = deliveredDate;
     invoice.paymentStatus = 'PAID';
     invoice.paidAmount = invoice.net_amount;
