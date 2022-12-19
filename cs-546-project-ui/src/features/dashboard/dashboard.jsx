@@ -25,6 +25,10 @@ export default function Dashboard() {
   const [startDate, setStartDate] = useState(dayjs(today));
   const [groupByF, setGroupBy] = useState('department');
   const handleSubmit = () => {
+    if (startDate.diff(endDate) > 0) {
+      alert('Start Date cannot be less than end date');
+      return;
+    }
     dispatch(sales({ params: { startDate: startDate.format(), endDate: endDate.format() } }));
     dispatch(groupBy({ params: { startDate: startDate.format(), endDate: endDate.format(), groupBy: groupByF } }));
   };
