@@ -112,8 +112,8 @@ function Row(props) {
                     fullWidth
                     type="number"
                     id="amountPaid"
-                    label="Amount Paid"
-                    name="Amount Paid"
+                    label="Net Amount"
+                    name="Net Amount"
                   />
                 </TableCell>
               );
@@ -208,7 +208,7 @@ function Row(props) {
                     value={user.role === 'SUPPLIER' ? row.ownerRating : row.supplierRating}
                     onChange={(event, newValue) => {
                       ratings[row._id] = newValue;
-                      setRatings({...ratings});
+                      setRatings({ ...ratings });
                       dispatch(
                         rateOrder({
                           newURL: `invoice/${row._id}/rating`,

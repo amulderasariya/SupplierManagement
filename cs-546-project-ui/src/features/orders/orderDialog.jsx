@@ -58,7 +58,7 @@ export default function OrderDialog(props) {
   return (
     <Dialog onClose={handleDialogClose} aria-labelledby="customized-dialog-title" open={open} maxWidth="xl" fullWidth>
       <DialogTitle sx={{ m: 0, p: 2 }}>
-        Title
+        Create a invoice
         <IconButton
           aria-label="close"
           onClick={handleDialogClose}
