@@ -35,7 +35,7 @@ app.use('/invoice', invoiceRouter);
 app.use('/dashboard', dashboardRouter);
 app.use('/lookup', lookupRouter);
 
-app.route('/').get((req, res) => res.json(xss('<script>alert("xss");</script>')));
+app.route('/').get((req, res) => res.json(`Server is up and running`));
 app.use('*', (req, res) => res.status(404).json('Not Found'));
 
 const PORT = process.env.PORT || 8000;

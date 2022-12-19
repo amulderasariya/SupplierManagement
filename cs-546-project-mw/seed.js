@@ -55,7 +55,7 @@ const seedUsers = async () => {
       password: 'Hello@12',
       repassword: 'Hello@12',
       role: 'SUPPLIER',
-      organization: 'Beacon Community',
+      organization: 'Apex Suppliers',
     });
     supplier_token1 = res.data.token;
     //console.log(supplier_token1+"inside");
@@ -73,7 +73,7 @@ const seedUsers = async () => {
       password: 'Hello@12',
       repassword: 'Hello@12',
       role: 'SUPPLIER',
-      organization: 'Journal commute',
+      organization: 'Supreme Suppliers',
     });
     supplier_token2 = res1.data.token;
     await axios.post(
@@ -90,7 +90,7 @@ const seedUsers = async () => {
       password: 'Hello@12',
       repassword: 'Hello@12',
       role: 'SUPPLIER',
-      organization: 'American Tourister',
+      organization: 'Global Suppliers',
     });
     supplier_token3 = res2.data.token;
     await axios.post(
@@ -107,7 +107,7 @@ const seedUsers = async () => {
       password: 'Hello@12',
       repassword: 'Hello@12',
       role: 'SUPPLIER',
-      organization: 'Jersey Mills',
+      organization: 'Elite Suppliers',
     });
     supplier_token4 = res3.data.token;
     await axios.post(
@@ -124,7 +124,7 @@ const seedUsers = async () => {
       password: 'Hello@12',
       repassword: 'Hello@12',
       role: 'SUPPLIER',
-      organization: 'Journal commute',
+      organization: 'Premier Suppliers',
     });
     supplier_token5 = res4.data.token;
     await axios.post(
@@ -141,7 +141,7 @@ const seedUsers = async () => {
       password: 'Hello@12',
       repassword: 'Hello@12',
       role: 'OWNER',
-      organization: 'Beacon Community',
+      organization: 'Paramount Solutions',
     });
     owner_token1 = res5.data.token;
     //console.log(supplier_token1+"inside");
@@ -159,7 +159,7 @@ const seedUsers = async () => {
       password: 'Hello@12',
       repassword: 'Hello@12',
       role: 'OWNER',
-      organization: 'Journal commute',
+      organization: 'Dynamic Enterprises',
     });
     owner_token2 = res6.data.token;
     await axios.post(
@@ -176,7 +176,7 @@ const seedUsers = async () => {
       password: 'Hello@12',
       repassword: 'Hello@12',
       role: 'OWNER',
-      organization: 'American Tourister',
+      organization: 'Innovative Ventures',
     });
     owner_token3 = res7.data.token;
     await axios.post(
@@ -210,7 +210,7 @@ const seedUsers = async () => {
       password: 'Hello@12',
       repassword: 'Hello@12',
       role: 'OWNER',
-      organization: 'Journal commute',
+      organization: 'Global Solutions',
     });
     owner_token5 = res9.data.token;
     await axios.post(
@@ -238,12 +238,12 @@ const seedProduct = async () => {
     prod0 = await axios.post(
       'http://localhost:8000/products',
       {
-        name: 'Ahaa Subscription',
+        name: 'Avatar',
         department: 'Entertainment',
         category: 'MEDIA & GAMING',
         subCategory: '4K MOVIES',
-        stock: 1000,
-        price: 999,
+        stock: 40000,
+        price: 25,
         currency: 'USD',
       },
       { headers: { Authorization: 'Bearer ' + supplier_token1 } }
@@ -252,8 +252,8 @@ const seedProduct = async () => {
       'http://localhost:8000/products',
       {
         id: prod0.data._id,
-        stock: 400,
-        price: 799,
+        stock: 11000,
+        price: 22,
         currency: 'USD',
       },
       { headers: { Authorization: 'Bearer ' + supplier_token2 } }
@@ -262,8 +262,8 @@ const seedProduct = async () => {
       'http://localhost:8000/products',
       {
         id: prod0.data._id,
-        stock: 500,
-        price: 899,
+        stock: 5000,
+        price: 20,
         currency: 'USD',
       },
       { headers: { Authorization: 'Bearer ' + supplier_token5 } }
@@ -277,19 +277,18 @@ const seedProduct = async () => {
         department: 'Entertainment',
         category: 'CAMERAS AND SUPPLIES',
         subCategory: 'CAMERAS L3',
-        stock: 1000,
-        price: 499,
+        stock: 18000,
+        price: 670,
         currency: 'USD',
       },
       { headers: { Authorization: 'Bearer ' + supplier_token2 } }
     );
-
     prod1 = await axios.post(
       'http://localhost:8000/products',
       {
         id: prod1.data._id,
-        stock: 1500,
-        price: 459,
+        stock: 15000,
+        price: 675,
         currency: 'USD',
       },
       { headers: { Authorization: 'Bearer ' + supplier_token3 } }
@@ -298,33 +297,33 @@ const seedProduct = async () => {
       'http://localhost:8000/products',
       {
         id: prod1.data._id,
-        stock: 700,
-        price: 399,
+        stock: 7000,
+        price: 750,
         currency: 'USD',
       },
       { headers: { Authorization: 'Bearer ' + supplier_token4 } }
     );
+
     // prod 2
     prod2 = await axios.post(
       'http://localhost:8000/products',
       {
-        name: "Dunkin' Donuts Breads",
+        name: 'Quinoa Tortillas',
         department: 'Food',
         category: 'COMM BREAD',
         subCategory: 'TORTILLAS',
-        stock: 1000,
-        price: 99,
+        stock: 11000,
+        price: 5,
         currency: 'USD',
       },
       { headers: { Authorization: 'Bearer ' + supplier_token1 } }
     );
-
     prod2 = await axios.post(
       'http://localhost:8000/products',
       {
         id: prod2.data._id,
-        stock: 300,
-        price: 79,
+        stock: 3000,
+        price: 5.55,
         currency: 'USD',
       },
       { headers: { Authorization: 'Bearer ' + supplier_token5 } }
@@ -333,8 +332,8 @@ const seedProduct = async () => {
       'http://localhost:8000/products',
       {
         id: prod2.data._id,
-        stock: 500,
-        price: 89,
+        stock: 5000,
+        price: 7,
         currency: 'USD',
       },
       { headers: { Authorization: 'Bearer ' + supplier_token3 } }
@@ -349,7 +348,7 @@ const seedProduct = async () => {
         category: 'DAIRY',
         subCategory: 'MILK CREAMERS L3',
         stock: 10000,
-        price: 99,
+        price: 7.5,
         currency: 'USD',
       },
       { headers: { Authorization: 'Bearer ' + supplier_token2 } }
@@ -358,8 +357,8 @@ const seedProduct = async () => {
       'http://localhost:8000/products',
       {
         id: prod3.data._id,
-        stock: 3000,
-        price: 79,
+        stock: 30000,
+        price: 7.9,
         currency: 'USD',
       },
       { headers: { Authorization: 'Bearer ' + supplier_token3 } }
@@ -368,8 +367,8 @@ const seedProduct = async () => {
       'http://localhost:8000/products',
       {
         id: prod3.data._id,
-        stock: 5000,
-        price: 89,
+        stock: 50000,
+        price: 8.5,
         currency: 'USD',
       },
       { headers: { Authorization: 'Bearer ' + supplier_token4 } }
@@ -379,12 +378,12 @@ const seedProduct = async () => {
     prod4 = await axios.post(
       'http://localhost:8000/products',
       {
-        name: 'Trousers',
+        name: 'North Snowstorm Shell',
         department: 'Apparel',
         category: 'MENS APPAREL',
         subCategory: 'OUTERWEAR MENS',
-        stock: 10000,
-        price: 199,
+        stock: 40000,
+        price: 140,
         currency: 'USD',
       },
       { headers: { Authorization: 'Bearer ' + supplier_token1 } }
@@ -393,7 +392,7 @@ const seedProduct = async () => {
       'http://localhost:8000/products',
       {
         id: prod4.data._id,
-        stock: 3000,
+        stock: 30000,
         price: 179,
         currency: 'USD',
       },
@@ -410,46 +409,11 @@ const seedProduct = async () => {
       { headers: { Authorization: 'Bearer ' + supplier_token4 } }
     );
 
-    // // prod 5
-    // await axios.post(
-    // 	"http://localhost:8000/products",
-    // 	{
-    // 		name: "Lingere",
-    // 		department: "Apparel",
-    // 		category: "INTIMATE APPAREL",
-    // 		subCategory: "OUTERWEAR MENS",
-    // 		stock: 10000,
-    // 		price: 199,
-    // 		currency: "USD",
-    // 	},
-    // 	{ headers: { Authorization: "Bearer " + supplier_token5 } }
-    // );
-    // prod5 = await axios.post(
-    // 	"http://localhost:8000/products",
-    // 	{
-    // 		id: prod5.data._id,
-    // 		stock: 3000,
-    // 		price: 179,
-    // 		currency: "USD",
-    // 	},
-    // 	{ headers: { Authorization: "Bearer " + supplier_token3 } }
-    // );
-    // prod5 = await axios.post(
-    // 	"http://localhost:8000/products",
-    // 	{
-    // 		id: prod5.data._id,
-    // 		stock: 5000,
-    // 		price: 189,
-    // 		currency: "USD",
-    // 	},
-    // 	{ headers: { Authorization: "Bearer " + supplier_token2 } }
-    // );
-
     // prod 6
     prod6 = await axios.post(
       'http://localhost:8000/products',
       {
-        name: 'Volks A/C',
+        name: 'Goodman Central Air Conditioners',
         department: 'HL',
         category: 'HARDWARE',
         subCategory: 'AIR CONDITIONERS',
@@ -483,7 +447,7 @@ const seedProduct = async () => {
     prod7 = await axios.post(
       'http://localhost:8000/products',
       {
-        name: 'Car Batteries',
+        name: 'VoltMaster Car Batteries',
         department: 'HL',
         category: 'AUTOMOTIVE',
         subCategory: 'AUTO BATTERIES',
@@ -517,12 +481,12 @@ const seedProduct = async () => {
     prod8 = await axios.post(
       'http://localhost:8000/products',
       {
-        name: 'Hair Shampoo',
+        name: 'Dove Hair Shampoo',
         department: 'Consumables',
         category: 'PERSONAL CARE',
         subCategory: 'SHAMPOOS AND CONDITIONERS',
         stock: 10000,
-        price: 59,
+        price: 22,
         currency: 'USD',
       },
       { headers: { Authorization: 'Bearer ' + supplier_token3 } }
@@ -542,7 +506,7 @@ const seedProduct = async () => {
       {
         id: prod8.data._id,
         stock: 5000,
-        price: 39,
+        price: 25,
         currency: 'USD',
       },
       { headers: { Authorization: 'Bearer ' + supplier_token5 } }
@@ -551,7 +515,7 @@ const seedProduct = async () => {
     prod9 = await axios.post(
       'http://localhost:8000/products',
       {
-        name: 'Home Trash Bags',
+        name: 'Hecky Kitchen Trash Bags',
         department: 'Consumables',
         category: 'HOUSEHOLD PAPER GOODS',
         subCategory: 'TRASH BAGS',
@@ -689,7 +653,7 @@ const seedProduct = async () => {
     prod13 = await axios.post(
       'http://localhost:8000/products',
       {
-        name: 'HOME-OFFICE DECORS',
+        name: 'Ajanta Chairs',
         department: 'Home',
         category: 'FURNITURE',
         subCategory: 'HOME OFFICE',
@@ -723,7 +687,7 @@ const seedProduct = async () => {
     prod14 = await axios.post(
       'http://localhost:8000/products',
       {
-        name: 'KIDS BIKES',
+        name: 'SEGBIKES',
         department: 'Toys/Seasonal',
         category: 'TOYS',
         subCategory: 'BIKES KIDS',
@@ -791,10 +755,10 @@ const seedProduct = async () => {
     prod16 = await axios.post(
       'http://localhost:8000/products',
       {
-        name: 'CLINICS',
-        department: 'Others',
-        category: 'HEALTH AND WELLNESS CLINICS',
-        subCategory: 'CLINICS',
+        name: 'Yash Vodkas',
+        department: 'Food',
+        category: 'LIQUOR,WINE,BEER',
+        subCategory: 'VODKA',
         stock: 10000,
         price: 259,
         currency: 'USD',
@@ -825,10 +789,10 @@ const seedProduct = async () => {
     prod17 = await axios.post(
       'http://localhost:8000/products',
       {
-        name: 'The Fishing Store',
-        department: 'Others',
-        category: 'LOCAL SHOPS AND SOUVENIRS',
-        subCategory: 'HUNTING AND FISHING LICENSES',
+        name: 'Tackerwares',
+        department: 'Home',
+        category: 'COOK & DINE',
+        subCategory: 'DINNERWARE',
         stock: 10000,
         price: 59,
         currency: 'USD',
@@ -893,7 +857,7 @@ const seedInvoices = async () => {
           },
           {
             productID: prod6.data._id,
-           quantity: '4',
+            quantity: '4',
           },
         ],
       },
@@ -915,7 +879,7 @@ const seedInvoices = async () => {
           },
           {
             productID: prod7.data._id,
-           quantity: '4',
+            quantity: '4',
           },
         ],
       },
@@ -938,7 +902,7 @@ const seedInvoices = async () => {
           },
           {
             productID: prod17.data._id,
-           quantity: '4',
+            quantity: '4',
           },
         ],
       },
@@ -961,7 +925,7 @@ const seedInvoices = async () => {
           },
           {
             productID: prod11.data._id,
-           quantity: '4',
+            quantity: '4',
           },
         ],
       },
@@ -983,7 +947,7 @@ const seedInvoices = async () => {
           },
           {
             productID: prod12.data._id,
-           quantity: '4',
+            quantity: '4',
           },
         ],
       },
@@ -1006,7 +970,7 @@ const seedInvoices = async () => {
           },
           {
             productID: prod6.data._id,
-           quantity: '4',
+            quantity: '4',
           },
         ],
       },
@@ -1038,7 +1002,7 @@ const seedInvoices = async () => {
           },
           {
             productID: prod7.data._id,
-           quantity: '4',
+            quantity: '4',
           },
         ],
       },
@@ -1070,7 +1034,7 @@ const seedInvoices = async () => {
           },
           {
             productID: prod17.data._id,
-           quantity: '4',
+            quantity: '4',
           },
         ],
       },
@@ -1102,7 +1066,7 @@ const seedInvoices = async () => {
           },
           {
             productID: prod11.data._id,
-           quantity: '4',
+            quantity: '4',
           },
         ],
       },
@@ -1134,7 +1098,7 @@ const seedInvoices = async () => {
           },
           {
             productID: prod12.data._id,
-           quantity: '4',
+            quantity: '4',
           },
         ],
       },
@@ -1167,7 +1131,7 @@ const seedInvoices = async () => {
           },
           {
             productID: prod6.data._id,
-           quantity: '4',
+            quantity: '4',
           },
         ],
       },
@@ -1199,7 +1163,7 @@ const seedInvoices = async () => {
           },
           {
             productID: prod7.data._id,
-           quantity: '4',
+            quantity: '4',
           },
         ],
       },
@@ -1231,7 +1195,7 @@ const seedInvoices = async () => {
           },
           {
             productID: prod17.data._id,
-           quantity: '4',
+            quantity: '4',
           },
         ],
       },
@@ -1263,7 +1227,7 @@ const seedInvoices = async () => {
           },
           {
             productID: prod11.data._id,
-           quantity: '4',
+            quantity: '4',
           },
         ],
       },
@@ -1295,7 +1259,7 @@ const seedInvoices = async () => {
           },
           {
             productID: prod12.data._id,
-           quantity: '4',
+            quantity: '4',
           },
         ],
       },
@@ -1330,7 +1294,7 @@ const seedInvoices = async () => {
             },
             {
               productID: prod6.data._id,
-             quantity: '4',
+              quantity: '4',
             },
           ],
         },
@@ -1377,7 +1341,7 @@ const seedInvoices = async () => {
             },
             {
               productID: prod7.data._id,
-             quantity: '4',
+              quantity: '4',
             },
           ],
         },
@@ -1419,7 +1383,7 @@ const seedInvoices = async () => {
             },
             {
               productID: prod17.data._id,
-             quantity: '4',
+              quantity: '4',
             },
           ],
         },
@@ -1461,7 +1425,7 @@ const seedInvoices = async () => {
             },
             {
               productID: prod11.data._id,
-             quantity: '4',
+              quantity: '4',
             },
           ],
         },
@@ -1503,7 +1467,7 @@ const seedInvoices = async () => {
             },
             {
               productID: prod12.data._id,
-             quantity: '4',
+              quantity: '4',
             },
           ],
         },

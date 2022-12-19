@@ -208,6 +208,7 @@ function Row(props) {
                     value={user.role === 'SUPPLIER' ? row.ownerRating : row.supplierRating}
                     onChange={(event, newValue) => {
                       ratings[row._id] = newValue;
+                      setRatings({...ratings});
                       dispatch(
                         rateOrder({
                           newURL: `invoice/${row._id}/rating`,
