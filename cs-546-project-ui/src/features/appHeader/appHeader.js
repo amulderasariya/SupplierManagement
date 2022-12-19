@@ -134,7 +134,7 @@ function AppHeader(props) {
               textDecoration: 'none',
             }}
           >
-            Supplier Management
+            {'Supplier Management |' + authState.user.organization}
           </Typography>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (

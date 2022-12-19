@@ -49,23 +49,6 @@
 												<td class="py-4 pl-3 pr-4 text-right text-sm text-gray-500 sm:pr-6 md:pr-0">{{ totalCurrencyFilter(product) }}</td>
 											</tr>
 										</tbody>
-										<tfoot>
-											<!-- <tr>
-												<th scope="row" colspan="3" class="hidden pl-6 pr-3 pt-6 text-right text-sm font-normal text-gray-500 sm:table-cell md:pl-0">Subtotal</th>
-												<th scope="row" class="pl-4 pr-3 pt-6 text-left text-sm font-normal text-gray-500 sm:hidden">Subtotal</th>
-												<td class="pl-3 pr-4 pt-6 text-right text-sm text-gray-500 sm:pr-6 md:pr-0">$3,900.00</td>
-											</tr>
-											<tr>
-												<th scope="row" colspan="3" class="hidden pl-6 pr-3 pt-4 text-right text-sm font-normal text-gray-500 sm:table-cell md:pl-0">Tax</th>
-												<th scope="row" class="pl-4 pr-3 pt-4 text-left text-sm font-normal text-gray-500 sm:hidden">Tax</th>
-												<td class="pl-3 pr-4 pt-4 text-right text-sm text-gray-500 sm:pr-6 md:pr-0">$585.00</td>
-											</tr> -->
-											<!-- <tr>
-												<th scope="row" colspan="3" class="hidden pl-6 pr-3 pt-4 text-right text-sm font-semibold text-gray-900 sm:table-cell md:pl-0">Total</th>
-												<th scope="row" class="pl-4 pr-3 pt-4 text-left text-sm font-semibold text-gray-900 sm:hidden">Total</th>
-												<td class="pl-3 pr-4 pt-4 text-right text-sm font-semibold text-gray-900 sm:pr-6 md:pr-0">{{ computedTotal() }}</td>
-											</tr> -->
-										</tfoot>
 									</table>
 									<div class="min-w-full flex justify-between border-b border-gray-200 pt-4">
 										<label for="currency" class="flex items-center"><span class="pr-2">Currency</span><PencilIcon class="h-4 w-4 cursor-pointer" /></label>
