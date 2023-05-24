@@ -1,4 +1,4 @@
-# CS546 - Group40: Supplier Management Application
+# Supplier Management Application
 
 ## Introduction:
 
